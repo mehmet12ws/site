@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mehmet12ws</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-image: url('arka_plan_resmi.jpg'); /* Arka plan resmi */
+            background-size: cover; /* Resmin ekran boyutunda tam olarak görünmesini sağlar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white; /* Harflerin rengini beyaz olarak ayarla */
+        }
+
+        .fireworks {
+            white-space: pre; /* Önceden boşluk bırak */
+            font-size: 1.5em; /* ASCII sanatının boyutunu ayarla */
+        }
+
+        .letter {
+            position: absolute;
+            font-size: 3em;
+            white-space: nowrap;
+            transition: all 1s ease-in-out; /* Harflerin animasyonlu bir şekilde birleşmesini sağlar */
+        }
+    </style>
+</head>
+<body>
+    <div id="fireworks-container" class="fireworks">
+$$$$$$$$\ $$\   $$\  $$$$$$\  $$$$$$$\  $$$$$$$$\ $$$$$$$$\   $$\    $$$$$$\  $$\      $$\  $$$$$$\  
+\__$$  __|$$ |  $$ |$$  __$$\ $$  __$$\ $$  _____|\__$$  __|$$$$ |  $$  __$$\ $$ | $\  $$ |$$  __$$\ 
+   $$ |   $$ |  $$ |$$ /  \__|$$ |  $$ |$$ |         $$ |   \_$$ |  \__/  $$ |$$ |$$$\ $$ |$$ /  \__|
+   $$ |   $$$$$$$$ |$$ |$$$$\ $$$$$$$  |$$$$$\       $$ |     $$ |   $$$$$$  |$$ $$ $$\$$ |\$$$$$$\  
+   $$ |   $$  __$$ |$$ |\_$$ |$$  ____/ $$  __|      $$ |     $$ |  $$  ____/ $$$$  _$$$$ | \____$$\ 
+   $$ |   $$ |  $$ |$$ |  $$ |$$ |      $$ |         $$ |     $$ |  $$ |      $$$  / \$$$ |$$\   $$ |
+   $$ |   $$ |  $$ |\$$$$$$  |$$ |      $$$$$$$$\\    $$ |   $$$$$$\ $$$$$$$$\ $$  /   \$$ |\$$$$$$  |
+   \__|   \__|  \__| \______/ \__|      \________|   \__|   \______|\________|\__/     \__| \______/ 
+                                                                                                      
+    </div>
+
+    <script>
+        let isScattered = false;
+        const text = "mehmet12ws";
+        const container = document.getElementById('fireworks-container');
+        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+        const letters = [];
+
+        // Harfleri oluşturma ve başlangıç pozisyonlarını ayarlama
+        text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            span.className = 'letter';
+            span.innerText = char;
+            span.style.color = colors[index % colors.length];
+            span.style.top = Math.random() * 100 + 'vh';
+            span.style.left = Math.random() * 100 + 'vw';
+            container.appendChild(span);
+
+            letters.push({
+                element: span,
+                x: parseFloat(span.style.left),
+                y: parseFloat(span.style.top),
+                dx: Math.random() * 4 - 2,
+                dy: Math.random() * 4 - 2
+            });
+        });
+
+        function moveLetters() {
+            if (!isScattered) {
+                letters.forEach(letter => {
+                    letter.x += letter.dx;
+                    letter.y += letter.dy;
+
+                    // Duvarlara çarpma kontrolü
+                    if (letter.x <= 0 || letter.x >= window.innerWidth - letter.element.offsetWidth) {
+                        letter.dx *= -1;
+                    }
+                    if (letter.y <= 0 || letter.y >= window.innerHeight - letter.element.offsetHeight) {
+                        letter.dy *= -1;
+                    }
+
+                    letter.element.style.left = letter.x + 'px';
+                    letter.element.style.top = letter.y + 'px';
+                });
+
+                requestAnimationFrame(moveLetters);
+            }
+        }
+
+        function scatterLetters() {
+            isScattered = true;
+            letters.forEach(letter => {
+                letter.dx = Math.random() * 20 - 10; // Rastgele hız
+                letter.dy = Math.random() * 20 - 10; // Rastgele hız
+            });
+
+            setTimeout(() => {
+                isScattered = false;
+                letters.forEach(letter => {
+                    letter.dx = Math.random() * 4 - 2; // Rastgele hız
+                    letter.dy = Math.random() * 4 - 2; // Rastgele hız
+                });
+            }, 1000); // 1 saniye sonra harfleri tekrar hızlandır
+        }
+
+        moveLetters();
+        setInterval(scatterLetters, 3000); // Her 3 saniyede bir harfleri dağıt ve tekrar birleşmeye başla
+    </script>
+</body>
+</html>
