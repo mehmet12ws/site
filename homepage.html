@@ -7,52 +7,59 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             margin: 0;
             padding: 0;
-            color: #333;
+            color: #fff;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
-            background-color: #007bff;
+            background-color: #004d99;
             color: #fff;
             padding: 20px;
             position: fixed;
             top: 0;
             width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             z-index: 1000;
         }
 
         .container {
             margin-top: 80px;
-            padding: 20px;
+            padding: 40px;
             max-width: 1200px;
             margin: auto;
+            flex: 1;
         }
 
         .hero {
-            background-color: #007bff;
-            color: #fff;
-            padding: 50px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: auto;
         }
 
         .hero h1 {
-            font-size: 36px;
+            font-size: 48px;
             margin: 0;
         }
 
         .hero p {
-            font-size: 18px;
+            font-size: 24px;
+            margin-top: 10px;
         }
 
         footer {
             background-color: #333;
             color: #fff;
-            padding: 10px;
+            padding: 20px;
             position: fixed;
             bottom: 0;
             width: 100%;
@@ -67,7 +74,7 @@
     <div class="container">
         <section class="hero">
             <h1>Hoşgeldiniz!</h1>
-            <p>Ana sayfanızda hoş geldiniz mesajı burada görünecek.</p>
+            <p>Web sitemize başarıyla giriş yaptınız. Şimdi keşfe başlayabilirsiniz!</p>
         </section>
     </div>
     <footer>
