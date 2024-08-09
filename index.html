@@ -3,122 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turnstile Login</title>
+    <title>Ana Sayfa</title>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e2e2e2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #f4f4f4;
             margin: 0;
+            padding: 0;
             color: #333;
+            text-align: center;
         }
 
-        form {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
-            width: 100%;
-            box-sizing: border-box;
+        .container {
+            margin-top: 80px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
         }
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #007bff;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
+        .hero {
             background-color: #007bff;
+            color: #fff;
+            padding: 50px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 18px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #0056b3;
             border: none;
             border-radius: 8px;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
+            text-decoration: none;
             transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        .button:hover {
+            background-color: #003d7a;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
         }
 
         #turnstile-container {
-            margin-bottom: 20px;
+            margin: 20px 0;
             display: flex;
             justify-content: center;
-        }
-
-        .link {
-            display: block;
-            margin-top: 10px;
-            text-align: center;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .link:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <section class="hero">
+            <h1>Hoşgeldiniz!</h1>
+            <p>Hosgeldiniz beler çözün.</p>
+            <div id="turnstile-container"></div>
+            <button id="verify-button" class="button" onclick="checkTurnstileToken()">Doğrulama Yap</button>
+        </section>
+    </div>
+    <footer>
+        <p>© 2024 Şirket Adı. Tüm hakları saklıdır.</p>
+    </footer>
+    <script>
+        let turnstileWidgetId;
 
-<form id="myForm" action="/login" method="POST" onsubmit="return validateTurnstile()">
-    <h1>Giriş Yap</h1>
-    <input type="text" placeholder="Kullanıcı Adı" name="username" required>
-    <input type="password" placeholder="Şifre" name="password" required>
-    <div id="turnstile-container"></div>
-    <button type="submit" value="Gönder">Giriş Yap</button>
-    <a href="register.html" class="link">Kayıt Ol</a>
-    <a href="index.html" class="link">Ana Sayfa</a>
-</form>
-
-<script>
-    let turnstileWidgetId;
-
-    function onloadTurnstileCallback() {
-        turnstileWidgetId = turnstile.render('#turnstile-container', {
-            sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
-            callback: onSuccess,
-            'error-callback': onError
-        });
-    }
-
-    function onSuccess(token) {
-        document.getElementById('myForm').dataset.turnstileToken = token;
-    }
-
-    function onError(error) {
-        console.error('Turnstile error:', error);
-    }
-
-    function validateTurnstile() {
-        const token = document.getElementById('myForm').dataset.turnstileToken;
-        if (!token) {
-            alert('Lütfen Turnstile doğrulamasını tamamlayın.');
-            return false;
+        function onloadTurnstileCallback() {
+            turnstileWidgetId = turnstile.render('#turnstile-container', {
+                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
+                callback: onSuccess,
+                'error-callback': onError
+            });
         }
-        return true;
-    }
-</script>
 
+        function onSuccess(token) {
+            localStorage.setItem('turnstileToken', token);
+            document.getElementById('verify-button').disabled = false;
+        }
+
+        function onError(error) {
+            console.error('Turnstile error:', error);
+        }
+
+        function checkTurnstileToken() {
+            const token = localStorage.getItem('turnstileToken');
+            if (!token) {
+                alert('Lütfen çözünüz....');
+                return;
+            }
+            // Token'ı doğrulamak ve ana sayfaya yönlendirmek için sunucu tarafında bir doğrulama yapılmalı.
+            // Bu örnekte basit bir yönlendirme yapılacak.
+            window.location.href = 'homepage.html';  // Ana sayfanızın URL'sini burada belirtin.
+        }
+    </script>
 </body>
 </html>
