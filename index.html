@@ -1,1 +1,23 @@
-mehmet
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare Turnstile ile Doğrulama</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+
+<div class="turnstile" data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" data-callback="onSuccess"></div>
+
+<h1 id="mehmet" style="display:none;">Mehmet</h1>
+
+<script>
+    function onSuccess(token) {
+        // Doğrulama başarılı olduğunda çalışacak fonksiyon
+        document.getElementById("mehmet").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
