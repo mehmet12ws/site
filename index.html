@@ -8,13 +8,15 @@
 </head>
 <body>
 
+<!-- Turnstile Widget'ı -->
 <div class="turnstile" data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" data-callback="onSuccess"></div>
 
+<!-- "Mehmet" Yazısı -->
 <h1 id="mehmet" style="display:none;">Mehmet</h1>
 
 <script>
+    // Doğrulama başarılı olduğunda çalışacak fonksiyon
     function onSuccess(token) {
-        // Doğrulama başarılı olduğunda çalışacak fonksiyon
         document.getElementById("mehmet").style.display = "block";
     }
 </script>
