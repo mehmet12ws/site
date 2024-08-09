@@ -3,21 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robot musun lan</title>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <title>Turnstile Form Örneği</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
 
-<!-- Turnstile Widget'ı -->
-<div class="turnstile" data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" data-callback="onSuccess"></div>
-
-<!-- "Mehmet" Yazısı -->
-<h1 id="mehmet" style="display:none;">Mehmet</h1>
+<form id="myForm" action="/login" method="POST">
+    <input type="text" placeholder="Kullanıcı Adı" name="username" required>
+    <input type="password" placeholder="Şifre" name="password" required>
+    <div id="turnstile-container"></div>
+    <button type="submit" value="Gönder">Giriş Yap</button>
+</form>
 
 <script>
-    // Doğrulama başarılı olduğunda çalışacak fonksiyon
+    function onloadTurnstileCallback() {
+        turnstile.render('#turnstile-container', {
+            sitekey: 'YOUR_SITE_KEY',
+            callback: onSuccess
+        });
+    }
+
     function onSuccess(token) {
-        document.getElementById("mehmet").style.display = "block";
+        // Token başarılı olduğunda işleme alınır
+        document.getElementById('myForm').submit();
     }
 </script>
 
