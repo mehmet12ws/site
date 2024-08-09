@@ -3,66 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Sayfa</title>
+    <title>Doğrulama Ekranı</title>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             margin: 0;
             padding: 0;
-            color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             text-align: center;
         }
 
         .container {
-            margin-top: 80px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .hero {
-            background-color: #007bff;
-            color: #fff;
-            padding: 50px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .hero h1 {
-            font-size: 36px;
-            margin: 0;
-        }
-
-        .hero p {
-            font-size: 18px;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 15px 25px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #0056b3;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #003d7a;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
             width: 100%;
-            text-align: center;
+            box-sizing: border-box;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .description {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #555;
         }
 
         #turnstile-container {
@@ -70,20 +47,31 @@
             display: flex;
             justify-content: center;
         }
+
+        button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <section class="hero">
-            <h1>Hoşgeldiniz!</h1>
-            <p>Hosgeldiniz beler çözün.</p>
-            <div id="turnstile-container"></div>
-            <button id="verify-button" class="button" onclick="checkTurnstileToken()">Tıkla </button>
-        </section>
+        <h1>Giriş İçin Doğrulama Yapın</h1>
+        <p class="description">Web sitemizi ziyaret edebilmeniz için lütfen Turnstile doğrulamasını tamamlayın.</p>
+        <div id="turnstile-container"></div>
+        <button id="verify-button" onclick="checkTurnstileToken()">Doğrulama Yap</button>
     </div>
-    <footer>
-        <p>© 2024 Şirket Adı. Tüm hakları saklıdır.</p>
-    </footer>
     <script>
         let turnstileWidgetId;
 
@@ -107,7 +95,7 @@
         function checkTurnstileToken() {
             const token = localStorage.getItem('turnstileToken');
             if (!token) {
-                alert('Lütfen çözünüz....');
+                alert('Lütfen Turnstile doğrulamasını tamamlayın.');
                 return;
             }
             // Token'ı doğrulamak ve ana sayfaya yönlendirmek için sunucu tarafında bir doğrulama yapılmalı.
