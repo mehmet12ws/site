@@ -23,11 +23,12 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
+            box-sizing: border-box;
         }
 
         input[type="text"],
         input[type="password"] {
-            width: calc(100% - 22px);
+            width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
@@ -54,6 +55,8 @@
 
         #turnstile-container {
             margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
         }
     </style>
 </head>
