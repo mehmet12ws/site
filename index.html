@@ -1,1 +1,175 @@
-sadsadsadsa
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesyonel Site</title>
+    <style>
+        /* Genel Stil Ayarları */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+
+        .hero {
+            background: url('hero-background.jpg') no-repeat center center/cover;
+            color: #fff;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+        }
+
+        .form-section {
+            padding: 40px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+        }
+
+        .form-section h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Ana Sayfa</a></li>
+                <li><a href="login.html">Giriş</a></li>
+                <li><a href="register.html">Kayıt</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Hoş Geldiniz</h1>
+                <p>Gelişmiş web sitemize hoş geldiniz. Bilgi için menüyü kullanın.</p>
+            </div>
+        </section>
+
+        <section id="login" class="form-section">
+            <h2>Giriş Yap</h2>
+            <form>
+                <div class="form-group">
+                    <label for="username">Kullanıcı Adı:</label>
+                    <input type="text" id="username" name="username" placeholder="Kullanıcı adınızı girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifre:</label>
+                    <input type="password" id="password" name="password" placeholder="Şifrenizi girin" required>
+                </div>
+                <button type="submit" class="btn">Giriş Yap</button>
+            </form>
+        </section>
+
+        <section id="register" class="form-section">
+            <h2>Kayıt Ol</h2>
+            <form>
+                <div class="form-group">
+                    <label for="username">Kullanıcı Adı:</label>
+                    <input type="text" id="username" name="username" placeholder="Kullanıcı adınızı girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-posta:</label>
+                    <input type="email" id="email" name="email" placeholder="E-posta adresinizi girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifre:</label>
+                    <input type="password" id="password" name="password" placeholder="Şifrenizi girin" required>
+                </div>
+                <button type="submit" class="btn">Kayıt Ol</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Profesyonel Site. Tüm Hakları Saklıdır.</p>
+    </footer>
+</body>
+</html>
