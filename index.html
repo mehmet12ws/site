@@ -1,1 +1,235 @@
-sad
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Yayını</title>
+    <style>
+        /* Genel sayfa stili */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #00c6ff, #0072ff); /* Gradyan arka plan */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Konteyner stil */
+        .container {
+            display: flex;
+            max-width: 1400px; /* Daha geniş bir konteyner */
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9); /* Hafif beyaz arka plan */
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        /* Video bölümü */
+        .video-section {
+            flex: 3;
+            padding-right: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .video-container {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Oynatma listesi bölümü */
+        .playlist-section {
+            flex: 1;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* İçeriğin görünmesini sağlamak için */
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .category {
+            margin-bottom: 20px;
+        }
+
+        .category h3 {
+            color: #007bff;
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+            cursor: pointer; /* Tıklanabilir olduğunu belirten imleç */
+        }
+
+        .category-content {
+            display: none; /* Başlangıçta gizli */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-content li {
+            margin-bottom: 10px;
+        }
+
+        .category-content a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f8f9fa;
+            transition: background 0.3s ease;
+        }
+
+        .category-content a:hover {
+            background: #e9ecef;
+        }
+
+        .category-content a:active {
+            background: #dee2e6;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="video-section">
+            <h1>IPTV Yayını</h1>
+            <div class="video-container">
+                <video id="video" controls>
+                    <!-- Video kaynakları HLS ve MP4 için -->
+                    <source src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/6014.m3u" type="application/x-mpegURL">
+                    <source src="http://vip.sehzade5.com:2095/movie/cn1897/SPyzXdWt5QGZ/27132.mp4" type="video/mp4">
+                    Tarayıcınız video formatını desteklemiyor.
+                </video>
+            </div>
+        </div>
+        <div class="playlist-section">
+            <h2>Kanal Kategorileri</h2>
+            <div class="category">
+                <h3>Filmler</h3>
+                <ul class="category-content">
+                    <li><a href="#" data-src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/6014.m3u">Spiderman 7/24 4K UHD</a></li>
+                    <li><a href="#" data-src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/6016.m3u">Godzilla Vs Kong</a></li>  
+                </ul>       
+            </div>
+            <div class="category">
+                <h3>Spor</h3>
+                <ul class="category-content">
+                    <li><a href="#" data-src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/139892.m3u">Bein Sport 4K UHD</a></li>
+                    <li><a href="#" data-src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/5850.m3u">BEİNSPORT TİCARİ YAYIN</a></li>
+                    <li><a href="#" data-src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/159509.m3u">BEİNSPORT 4K 2160P</a></li>
+                    <li><a href="#" data-src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/159509.m3u">BEİNSPORT FHD</a></li>
+                    <li><a href="#" data-src="http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/104794.m3u">BEİNSPORT 2</a></li>
+                </ul>
+            </div>
+            <div class="category">
+                <h3>FİL-SPORTS</h3>
+                <ul class="category-content">
+                    <li><a href="#" data-src="http://xxdeneme1452.ydns.eu:2095/play/hls/eyJpdiI6ImNkekdLRXBjWTJoeHlSaWFNVDB3akE9PSIsInZhbHVlIjoiM09ZVkJXOE1zV1VnbkFLZmRjZEVjNkR1QmZSTHMvaU41bEltWEt5di9UbG5DMkdHN1ZjdE43ZXBnZXNvYmswWCIsIm1hYyI6IjQzMzBlZTQxOGEyYWEzOWNjMTQwYmU4ZTZhOGYxZDJlZGFmNTdiY2JkZjQ5N2MwM2UyNGQ1MzBjNzZhNzBmZTQiLCJ0YWciOiIifQ==/3d344a6c-56d8-4b60-b492-370c4e9cdcfe.m3u8?lvtoken=eyJpdiI6IjZrMHZYL2dUT2V6cFA5NUxQZ2JRS1E9PSIsInZhbHVlIjoiRXAzaXZDWXBndDg0bGJVS3RHQ1Noa1B3MmJyTXc0WExsNGh3b2pTK2ZwNU5VVGNBQlV5VjY3ZldBUHVndkxJYWRwd0NlV041aUhrUUhnV0xWcitMVDcrNm51YTN6eDJrdkxid1RtQXFncDJwa3dGVWhtTkZUQWZUcXZSL1VxMStGbStQcG5Db296QkFsT2puckllYlN4VjYyK2dsYnpKWkVNZFpobXA4Z3pEVkdKekpiNm1nRzdQRVRVaklyNW1WaTdSRTVPUEgvbldFQ2dlZ3ZQSHROUT09IiwibWFjIjoiYmMyZTgyOTQ0YTVlZGU2ZTMyYmEzNWY1MTk3N2M2YTY4NDk3MWE1ZDVmYjY4NmY1ODI0YTUyMzc3ZmRmYjU3NyIsInRhZyI6IiJ9&r=a84d78&rt=0f2cea73c6f1a156087cfcd6e1f90928">FİL SPORT 1 MAÇ ZAMANI AKTİF</a></li>
+                    <li><a href="#" data-src="http://karagull77.dynuddns.com:2095/play/hls/eyJpdiI6IkMrK2ZUdHlKT0w5YlVoQ0JYTGJXSlE9PSIsInZhbHVlIjoiU1Vpek1tcW1mNWR0TzkwaTAyaGxRWWhhSnZrUEtHVFJLRm0yWmpEOXgvbWoxcHhCWFByNTJhM1hxUVJpQy9MKyIsIm1hYyI6ImJmYjlkNmMzMjdhMDI2MDlhMzI0OTJmNDkxMDFlZDkxMjhhYjc5MDBiMzc1NjVlYTAxOWQ5Njc2ODAyOGZkMTIiLCJ0YWciOiIifQ==/c5bdd11d-0134-46e5-b1e1-b8c4e17f590b.m3u8?lvtoken=eyJpdiI6IkpreHg5MXcwTW9OLy9EYjlNc2IvbVE9PSIsInZhbHVlIjoidHYvK2YzZEMzdm1YK0x5UGI4alRQVTBleW1WdkUvZnJyOU51UXl0czFZUGRaTjAybWNqbDNVNGp6OStRc0N3ZHRWaTgvVUZjbWZ3L01yZ3VCQ1VLOVFzU05rTzVtakI5ZWU3TS96TnpsR0dGQVRqZ1B1cTVTRDVkb01ScDVTVjA4Wm9CNEJZWHdCdG1EQzZvai93UXlLSWxMOG9mQ2hNUHBuN29qR2V3YVdYcnV5NXFlSmIrL2dtY1JQWkQwVHlwNU9PMWEzWmdFdUw2RUtZbmh5amY1QT09IiwibWFjIjoiMGIyMWEwYzQ5OThmMGI3NzU5MmY3NDQ2MDg4NDBkZTkwNTc5MGIxZmNhNjdjOWU4MzYxZDAzODRlMjRjYTI1NSIsInRhZyI6IiJ9&r=3a7472&rt=5650fffb3cfb3618fafcdf0afc6c06b0">FİL SPORT 2</a></li>
+                </ul>
+            </div>
+            <div class="category">
+                <h3>E4XEN</h3>
+                <ul class="category-content">
+                    <li><a href="#" data-src="http://xxdeneme1452.ydns.eu:2095/play/hls/eyJpdiI6InVvaTFUOC9SaGxvdlV3b2dVcmRUZUE9PSIsInZhbHVlIjoieHkrdGF6ekEyS2FIR1NFOW50MG9FcjJoUmo4aE9ETWZwZXZQeDFDdXRDZzRNVDhaZjJVT1RFUXBmVXBYVWk3VCIsIm1hYyI6IjEzNTg3NTYwZjIwOTliNjc3NGRmNTBkMjAxOWNjZWE3ZGVhNmQxNzMwYTBhNTY2YzE5MWQ4ZDQ2OTU1YzgyZDIiLCJ0YWciOiIifQ==/c9523690-c0d5-44da-8777-f7c542f0dd64.m3u8?lvtoken=eyJpdiI6ImFSQ09Yc3Naa0dvNGZaQmVsdmJSelE9PSIsInZhbHVlIjoibEpoSnJkTFY1aVFPM2hmUis1WXBidjZMQ1M1TEZsOTFTRUQ4OG50aWJ2WnVCS1VrWUV3eGd5TCtLSDFUZitnYmkyT3Y5U2k2SXpVS0ZNaDl2eXE2eGNGelJSajhVU0RHa2lKTEg0ajU3emFVWUpJU005cmhlNFl5RFVickRGVUVUbmdybThLZUZ0MFp2aUNwdHE1L0RtaHF6WEdwTGF0ZmNxVlcwS0hDeVY0NXFLakpJRHdzUjR3M0ZqaklFUVQ0UXVaNDVsSHhyUmpMQVpVN0RXS25KZz09IiwibWFjIjoiNjk3MWY0MDk5YjkxMjljMTgxYTZiNDBiM2EwM2JmN2ExMzM0M2M4ZDM3ZTZjNmFjNWMxMGY5YjI1YjQ1YjRhMyIsInRhZyI6IiJ9&r=098ea8&rt=5a15a0d613d7a197f43b3615ae213859">E4XEN 1 HD</a></li>
+                    <li><a href="#" data-src="http://xxdeneme1452.ydns.eu:2095/play/hls/eyJpdiI6IjlpWWdudTM3YzlGV3QrWWY4eGJWREE9PSIsInZhbHVlIjoiZ0o3ZDZKd1VucWpUYXRjYXpzdlZFQlBneFFWVlhJWnM5Z3NPVWNiVWRwZkVCcy9ZSWxLVnUzelgyVzRINFpTaCIsIm1hYyI6ImM3NDMzMjVhZTI5NjJiNDFjOTFkMDgzZDIyMDI0YjhkZjFmZGU4ZmE2NGYxY2NhYmVmMDllZWQ5NTExOTExNWYiLCJ0YWciOiIifQ==/ac26d113-9576-4df5-8937-3f81b837d5e6.m3u8?lvtoken=eyJpdiI6Im9GNVhTNGN6T25iRndITk1sV25mSGc9PSIsInZhbHVlIjoiQ3BEM283OHhzMFVQRVpZcC9HN0syeExTMlJRMkVGUU0yVjl4cTRVdW5mdUtXenRielZMZEovdGFtWkMvMDFZcy9TMS9yR1A0czdnZWVHTnFJT1J1aHJJaGdVaGxkSlBWeWNka3ZUc0dNZUFibWJva2l5c2hLUktnclZWNUxNZVBpbHhzNEk1UkpxM2JIN09jZkM1azZNY3BrbmJSOExSUTFjd0pZcVhwT3NRQS96Wm0wZ3JOUjY5MTZpdHFmaDhrRENNeXRCaDU2YkJpN3BPNVY3Z3hPZz09IiwibWFjIjoiZWI5MWIyOTJjNzRlYmQ0ZThkZmY2MDA1YWRmMDMyNjUzMjQ4N2FkZmEwZWY5ZjljYzc2YmE2ZTY5YjBhZTE4MyIsInRhZyI6IiJ9&r=417e35&rt=41cfa2458439c4782fb698a124b80df7">E4XEN 2 FHD</a></li>
+                    <li><a href="#" data-src="http://xxdeneme1452.ydns.eu:2095/play/hls/eyJpdiI6IkV4emI2Uk5LOEIrMnlVckV3UzUyOGc9PSIsInZhbHVlIjoiTkpXVE9Fa05EcjZ6UzRxdlNyQ2FnODB5NWFkYy9Rc0FyZUZJZXBVTkVuVzlqNVFZZmhrMWtObHlnUjlscElFbSIsIm1hYyI6IjIyZTk0N2JiMGQwMjQ4MjY2MTc5MGRlMDU5NTJlNzI2NDQzMjg1ZDc1MWFiNDllMjRhYWVmYjE1ZWI0ZWM0M2UiLCJ0YWciOiIifQ==/b98f966b-6567-4942-8f14-0a2fef5c4972.m3u8?lvtoken=eyJpdiI6IklBMWFXcUJXV2R2R1AzdHY4RVlFWGc9PSIsInZhbHVlIjoiVkZ2U1ZSeVk3VEp6TXc4NitqM1dweWJyY3Qyd3phQldqNDlPMTgzcU10N3p5Y3RDODN5OEdTNnpxQ0E5QW91bGFkcVpaZEE3aUtjdTdmb014WUpFV1dsM1dsclJES1VBTEFEdEJpTUovcnduaFhWdklhWEtSZEluL0pBZUZYM3d3eUpFVmtRWkRvVDRWYmtKMFY3aUVxN1FJVTF5NVhrV1cwOFVoVTBocVIySEVEVVc4K0U2YWlnUDQxSnA5ZEEzeGNSZG9iNjFTYXdEUVdZeDdPQUYyZz09IiwibWFjIjoiY2RmZTRmYmM5ZjEyNzViZjJhYjI4YzdiNzUwY2ViMDE2MTQ1ODk5NDk1NzhiZTU5MDBjNTBiZmExODU3OWVkYSIsInRhZyI6IiJ9&r=2232b5&rt=597faf8a128ca25bead8f805fd99270b">E4XEN 3 FHD</a></li>
+                    <li><a href="#" data-src="http://xxdeneme1452.ydns.eu:2095/play/hls/eyJpdiI6IlJtMGhZbkp3ajVGN2Q3bU1DOUpMQ0E9PSIsInZhbHVlIjoiMWpwbVlTQjVpNGx5U1VEWmhsb3NBaE93ZVpFVU40aTNQSFpGbExtcC9BR093N2pTN3Fwc0s1by9FVVQ5UldNTiIsIm1hYyI6ImVkZTBmNDYyYWExZWI4YTMzNDQ2Mjc3YTFjODE0NjQzZTAxZTU4MjdiNzE5MGYxNDkyMmJiYWYyNGE3NjdlYjgiLCJ0YWciOiIifQ==/c9523690-c0d5-44da-8777-f7c542f0dd64.m3u8?lvtoken=eyJpdiI6InZvaUNQSi8wOW1CYWU1U1dPOHJkZkE9PSIsInZhbHVlIjoielVXZXpMYmdiWEZxZWloOERKSVJmWDhwVlNjelIzTEFQanhDUlloMlVNWFRXOU5nelpuZTBPanJCZGJqUG9DbTBibXFobzl2WXkySUw3YmxERTA5WjgzMTdQSHViOXlWbGI1RFRteUlIUG1rWUpTVkZicUpGbVNXOTVzam9KRDNlSThXMm9yVlRaNmVyYmtBVkp4aWdGYlRMcExSTkhEeVU1bWoyZUQ3NlBkblptdVRQWDRrNUFkYUJ6RU02dmErMkdXdjhXcERxamlIdC93bklON1BGdz09IiwibWFjIjoiNmE2OGE5Yjc1MDQyMmUwODNmNDYxNzRiZDkyODU4NTk5ZDcxMzU5ZWNjZTc4MWYwMjIwZGMzNDg0YTg2MGY4ZiIsInRhZyI6IiJ9&r=1e643a&rt=60b5e250883ca86464f444183a290e10">E4XEN 4 SD</a></li>
+                </div>
+                <div class="category">
+                    <h3>CANLI WEBTV</h3>
+                    <ul class="category-content">                
+                        <li><a href="#" data-src="http://iptvturkpro.com:8080/live/arzudto/01112022frd/159327.m3u8">CANLI TODTV 1</a></li>
+                        <li><a href="#" data-src="http://iptvturkpro.com:8080/live/arzudto/01112022frd/159329.m3u8">CANLI TODTV 2</a></li>
+                        <li><a href="#" data-src="http://iptvturkpro.com:8080/live/arzudto/01112022frd/159330.m3u8">CANLI TODTV 3</a></li>
+
+
+                    </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        var video = document.getElementById('video');
+        var playlistLinks = document.querySelectorAll('.category-content a');
+        var initialSrc = 'http://vip.sehzade5.com:2095/live/cn1897/SPyzXdWt5QGZ/6014.m3u'; 
+
+        // HLS.js destekleniyorsa
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(initialSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+
+            playlistLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var src = link.getAttribute('data-src');
+                    hls.loadSource(src);
+                    video.play();
+                });
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = initialSrc;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+
+            playlistLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var src = link.getAttribute('data-src');
+                    video.src = src;
+                    video.play();
+                });
+            });
+        } else {
+            console.error('HLS desteklenmiyor.');
+        }
+
+        // Kategori açma ve kapama işlevi
+        document.querySelectorAll('.category h3').forEach(function(categoryHeader) {
+            categoryHeader.addEventListener('click', function() {
+                var content = categoryHeader.nextElementSibling;
+                var isVisible = content.style.display === 'block';
+                
+                document.querySelectorAll('.category-content').forEach(function(catContent) {
+                    catContent.style.display = 'none';
+                });
+
+                content.style.display = isVisible ? 'none' : 'block';
+            });
+        });
+    </script>
+</body>
+</html>
