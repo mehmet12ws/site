@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             color: #333;
+            background: #f4f4f4;
         }
 
         header {
@@ -43,32 +44,33 @@
         }
 
         .hero {
-            background: url('hero-background.jpg') no-repeat center center/cover;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://source.unsplash.com/1600x900/?nature,water') no-repeat center center/cover;
             color: #fff;
             text-align: center;
             padding: 100px 20px;
         }
 
         .hero-content {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
         .hero h1 {
-            font-size: 3em;
+            font-size: 4em;
             margin: 0;
         }
 
         .hero p {
-            font-size: 1.2em;
+            font-size: 1.5em;
         }
 
         .form-section {
             padding: 40px 20px;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
-            background-color: #f4f4f4;
+            background-color: #fff;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .form-section h2 {
@@ -82,26 +84,29 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
+            font-weight: bold;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
         }
 
         .btn {
             display: inline-block;
             background-color: #333;
             color: #fff;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             text-align: center;
             text-decoration: none;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         .btn:hover {
@@ -114,15 +119,41 @@
             text-align: center;
             padding: 15px 0;
         }
+
+        /* Tablo Stil Ayarları */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
     <header>
         <nav>
             <ul>
-                <li><a href="index.html">Ana Sayfa</a></li>
-                <li><a href="login.html">Giriş</a></li>
-                <li><a href="register.html">Kayıt</a></li>
+                <li><a href="#home">Ana Sayfa</a></li>
+                <li><a href="#login">Giriş</a></li>
+                <li><a href="#register">Kayıt</a></li>
+                <li><a href="#view-users">Kullanıcılar</a></li>
             </ul>
         </nav>
     </header>
@@ -166,6 +197,35 @@
                 </div>
                 <button type="submit" class="btn">Kayıt Ol</button>
             </form>
+        </section>
+
+        <section id="view-users" class="form-section">
+            <h2>Kullanıcıları Görüntüle</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>Email</th>
+                    <th>IP Adresi</th>
+                    <th>Kayıt Tarihi</th>
+                </tr>
+                <!-- Örnek veriler, gerçek veriler PHP veya başka bir backend ile dinamik olarak eklenmelidir -->
+                <tr>
+                    <td>1</td>
+                    <td>user1</td>
+                    <td>user1@example.com</td>
+                    <td>192.168.1.1</td>
+                    <td>2024-08-09 12:34:56</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>user2</td>
+                    <td>user2@example.com</td>
+                    <td>192.168.1.2</td>
+                    <td>2024-08-09 13:45:67</td>
+                </tr>
+                <!-- Dinamik veriler buraya eklenecektir -->
+            </table>
         </section>
     </main>
     <footer>
