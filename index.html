@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turnstile Form Örneği</title>
+    <title>Turnstile </title>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <style>
         body {
@@ -62,7 +62,7 @@
 </head>
 <body>
 
-<form id="myForm" action="/login" method="POST">
+<form id="myForm" action="/login" method="POST" onsubmit="return validateTurnstile()">
     <input type="text" placeholder="Kullanıcı Adı" name="username" required>
     <input type="password" placeholder="Şifre" name="password" required>
     <div id="turnstile-container"></div>
@@ -70,15 +70,33 @@
 </form>
 
 <script>
+    let turnstileWidgetId;
+
     function onloadTurnstileCallback() {
-        turnstile.render('#turnstile-container', {
-            sitekey: 'YOUR_SITE_KEY',
-            callback: onSuccess
+        turnstileWidgetId = turnstile.render('#turnstile-container', {
+            sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
+            callback: onSuccess,
+            'error-callback': onError
         });
     }
 
     function onSuccess(token) {
-        document.getElementById('myForm').submit();
+        // Token başarılı olduğunda formu göndermeye izin ver
+        document.getElementById('myForm').dataset.turnstileToken = token;
+    }
+
+    function onError(error) {
+        console.error('Turnstile error:', error);
+    }
+
+    function validateTurnstile() {
+        const token = document.getElementById('myForm').dataset.turnstileToken;
+        if (!token) {
+            alert('Lütfen Turnstile doğrulamasını tamamlayın.');
+            return false;
+        }
+        // Token mevcutsa, formun gönderilmesine izin ver
+        return true;
     }
 </script>
 
