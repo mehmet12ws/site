@@ -7,7 +7,7 @@ const secret = 'your-256-bit-secret'; // Güvenli bir şekilde saklayın
 const base64Password = 'WHg0NDI0WHM0NGR8'; // 
 
 const payload = {
-    password: base64Password // 
+    password: base64Password // Base64 kodlanmış şifre
 };
 
 // JWT token oluşturma
