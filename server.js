@@ -29,7 +29,7 @@ app.post('/login', async (req, res) => {
         // Turnstile token'ını doğrulama
         const turnstileResponse = await axios.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', null, {
             params: {
-                secret: '0x4AAAAAAAg6TPsvG2tZIEkk', // Turnstile'ın secret anahtarını buraya ekleyin
+                secret: '0x4AAAAAAAg6TDS6kf69wBpjwnJ6cZ7Tq-8', // Turnstile'ın secret anahtarını buraya ekleyin
                 response: turnstileToken
             }
         });
