@@ -25,22 +25,21 @@ function createJwtToken(payload, secret) {
     const encodedHeader = base64UrlEncode(JSON.stringify(header));
     const encodedPayload = base64UrlEncode(JSON.stringify(payload));
 
-    const signature = CryptoJS.HmacSHA256(encodedHeader + "." + encodedPayload, secret).toString(CryptoJS.enc.Base64)
+    const signature = CryptoJS.HmacSHA256(`${encodedHeader}.${encodedPayload}`, secret).toString(CryptoJS.enc.Base64)
         .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
     return `${encodedHeader}.${encodedPayload}.${signature}`;
 }
 
-const secret = "your-256-bit-secret"; // Güvenli bir şekilde saklanmalı
-
-// Base64 ile kodlanmış şifreyi payload olarak ekle
-const encodedPassword = "BASE64_ENCODED_PASSWORD"; // Base64 kodlanmış şifreyi buraya yapıştırın
+// Örnek kullanım (unutmayın, secret değişkeni güvenli bir şekilde saklanmalıdır):
+const secretKey = "your-256-bit-secret"; // Güvenli bir şekilde saklanmalı
+const encodedPassword = "WHg0NDI0WHM0NGR8"; // Base64 kodlanmış şifreyi buraya yapıştırın
 
 const payload = {
     password: encodedPassword
 };
 
 // JWT token oluşturma
-const jwtToken = createJwtToken(payload, secret);
+const jwtToken = createJwtToken(payload, secretKey);
 
 console.log("JWT Token:", jwtToken);
