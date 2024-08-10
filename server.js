@@ -2,7 +2,6 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const crypto = require('crypto'); // Rastgele token oluşturmak için
 
 const app = express();
 const secret = 'your-256-bit-secret'; // Gizli anahtar
