@@ -1,6 +1,5 @@
-// JWT ve Base64 Kodlama için gerekli kütüphaneyi dahil edin
-// CryptoJS kütüphanesini kullanarak JWT oluşturacağız
-// Token oluşturma ve doğrulama işlevlerini burada tanımlıyoruz
+// JWT oluşturmak ve doğrulamak için gerekli işlevler
+// CryptoJS kütüphanesi gerekli
 
 function base64UrlEncode(str) {
     return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -34,9 +33,11 @@ function createJwtToken(payload, secret) {
 
 const secret = "your-256-bit-secret"; // Güvenli bir şekilde saklanmalı
 
-// Şifreyi payload olarak ekle
+// Base64 ile kodlanmış şifreyi payload olarak ekle
+const encodedPassword = "BASE64_ENCODED_PASSWORD"; // Base64 kodlanmış şifreyi buraya yapıştırın
+
 const payload = {
-    password: "Xx4424Xs44d"
+    password: encodedPassword
 };
 
 // JWT token oluşturma
