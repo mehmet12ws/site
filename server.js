@@ -13,9 +13,9 @@ app.post('/generate-token', (req, res) => {
     const { password, turnstileToken } = req.body;
 
     if (password && turnstileToken) {
-        // Şifreyi JWT token'a dönüştür
+        // Şifreye göre JWT token oluşturma
         const token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
-        
+
         // JWT token ve Turnstile token'ı JSON yanıtında döndür
         res.json({ token, turnstileToken });
     } else {
