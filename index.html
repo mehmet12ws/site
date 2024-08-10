@@ -35,10 +35,14 @@
             color: #333;
         }
 
-        #turnstile-container {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
+        input[type="password"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         button {
@@ -57,39 +61,25 @@
             background-color: #0056b3;
         }
     </style>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
-        <div id="turnstile-container"></div>
+        <input type="password" id="password" placeholder="Şifrenizi girin">
         <button onclick="login()">Giriş Yap</button>
     </div>
     <script>
-        let turnstileToken = '';
-
-        function onloadTurnstileCallback() {
-            turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk', 
-                callback: function (token) {
-                    turnstileToken = token;
-                },
-                'error-callback': function (error) {
-                    console.error('Turnstile error:', error);
-                }
-            });
-        }
-
         async function login() {
-            // Önce token oluşturma isteği gönderiyoruz
+            const password = document.getElementById('password').value;
+
+            // Önce JWT token oluşturma isteği gönderiyoruz
             const tokenResponse = await fetch('/generate-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    password: 'Xx4424Xs44d', // Şifreniz
-                    turnstileToken: turnstileToken
+                    password: password // Şifreyi gönderiyoruz
                 })
             });
 
@@ -104,7 +94,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        password: jwtToken // JWT token'ı password olarak kullanıyoruz
+                        token: jwtToken // JWT token'ı password olarak kullanıyoruz
                     })
                 });
 
