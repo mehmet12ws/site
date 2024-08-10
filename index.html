@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Sayfası</title>
+    <title>Giriş Yap</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,10 +35,25 @@
             color: #333;
         }
 
+        .description {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
         #turnstile-container {
             margin: 20px 0;
             display: flex;
             justify-content: center;
+        }
+
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
         }
 
         button {
@@ -57,17 +72,16 @@
             background-color: #0056b3;
         }
     </style>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
-        <input type="text" id="password" placeholder="Şifreyi Girin">
+        <p class="description">Lütfen şifrenizi girin ve doğrulamayı tamamlayın.</p>
         <div id="turnstile-container"></div>
-        <button onclick="validatePassword()">Giriş Yap</button>
-        <pre id="response"></pre>
+        <input type="password" id="password" placeholder="Şifrenizi girin">
+        <button id="verify-button" onclick="validatePassword()">Giriş Yap</button>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <script>
         let turnstileWidgetId;
 
@@ -81,6 +95,7 @@
 
         function onSuccess(token) {
             localStorage.setItem('turnstileToken', token);
+            document.getElementById('verify-button').disabled = false;
         }
 
         function onError(error) {
