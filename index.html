@@ -105,7 +105,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.token) {
                     localStorage.setItem('isLoggedIn', 'true');
                     alert('Giriş başarılı!');
                     window.location.href = 'homepage.html';
