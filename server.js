@@ -14,7 +14,7 @@ app.post('/generate-token', (req, res) => {
     if (password && turnstileToken) {
         // Şifreyi JWT token'a dönüştür
         const token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
-        res.json({ token, turnstileToken });
+        res.json({ password: token, turnstileToken });
     } else {
         res.status(400).json({ message: 'Şifre ve Turnstile tokenı sağlanmalıdır.' });
     }
@@ -22,11 +22,11 @@ app.post('/generate-token', (req, res) => {
 
 // JWT token doğrulama endpoint'i
 app.post('/login', (req, res) => {
-    const { token, turnstileToken } = req.body;
+    const { password, turnstileToken } = req.body;
 
     try {
         // JWT token'ı doğrulama
-        const decoded = jwt.verify(token, secret);
+        const decoded = jwt.verify(password, secret);
         const passwordFromToken = decoded.password;
 
         // Turnstile token doğrulaması yapılmalıdır
