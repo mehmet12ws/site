@@ -30,7 +30,6 @@ app.post('/login', (req, res) => {
         const passwordFromToken = decoded.password;
 
         // Turnstile token doğrulaması yapılmalıdır
-        // Burada şifre doğrulaması yapabilirsiniz (önceden belirlenen şifre ile karşılaştırabilirsiniz)
         if (passwordFromToken === 'Xx4424Xs44d' && turnstileToken) {
             res.json({ message: 'Giriş başarılı' });
         } else {
