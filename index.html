@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap</title>
+    <title>Giriş Sayfası</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,25 +35,10 @@
             color: #333;
         }
 
-        .description {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #555;
-        }
-
         #turnstile-container {
             margin: 20px 0;
             display: flex;
             justify-content: center;
-        }
-
-        input[type="password"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
         }
 
         button {
@@ -77,79 +62,46 @@
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
-        <p class="description">Lütfen şifrenizi girin ve doğrulamayı tamamlayın.</p>
         <div id="turnstile-container"></div>
-        <input type="password" id="password" placeholder="Şifrenizi girin">
-        <button id="verify-button" onclick="validatePassword()">Giriş Yap</button>
+        <button onclick="login()">Giriş Yap</button>
     </div>
     <script>
-        let turnstileWidgetId;
+        let turnstileToken = '';
 
         function onloadTurnstileCallback() {
-            turnstileWidgetId = turnstile.render('#turnstile-container', {
+            turnstile.render('#turnstile-container', {
                 sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
-                callback: onSuccess,
-                'error-callback': onError
+                callback: function (token) {
+                    turnstileToken = token;
+                },
+                'error-callback': function (error) {
+                    console.error('Turnstile error:', error);
+                }
             });
         }
 
-        function onSuccess(token) {
-            localStorage.setItem('turnstileToken', token);
-            document.getElementById('verify-button').disabled = false;
-        }
+        async function login() {
+            const jwtToken = 'YOUR_BASE64_ENCODED_TOKEN'; // Base64 kodlanmış JWT token'ınızı buraya ekleyin
 
-        function onError(error) {
-            console.error('Turnstile error:', error);
-        }
-
-        function validatePassword() {
-            const userPassword = document.getElementById('password').value;
-            const turnstileToken = localStorage.getItem('turnstileToken');
-            
-            if (!turnstileToken) {
-                alert('Lütfen CAPTCHA doğrulamasını tamamlayın.');
-                return;
-            }
-
-            // JWT token'ı oluşturmak için
-            fetch('/generate-token', {
+            const response = await fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ password: userPassword, turnstileToken: turnstileToken })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.token) {
-                    // JWT token'ını doğrulama için kullanılır
-                    fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ jwtToken: data.token })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message === 'Giriş başarılı') {
-                            window.location.href = 'homepage.html';
-                        } else {
-                            alert(data.message || 'Geçersiz şifre. Lütfen tekrar deneyin.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Giriş sırasında hata:', error);
-                        alert('Giriş sırasında bir hata oluştu.');
-                    });
-                } else {
-                    alert('JWT token oluşturulamadı.');
-                }
-            })
-            .catch(error => {
-                console.error('Token oluşturma sırasında hata:', error);
-                alert('Token oluşturma sırasında bir hata oluştu.');
+                body: JSON.stringify({
+                    token: jwtToken,
+                    turnstileToken: turnstileToken
+                })
             });
+
+            const result = await response.json();
+            if (response.ok) {
+                // Başarı durumu
+                console.log('Başarı:', result);
+            } else {
+                // Hata durumu
+                console.error('Hata:', result);
+            }
         }
     </script>
 </body>
