@@ -68,17 +68,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <script>
-        let validBase64Token;
-
-        fetch('/get-token')
-            .then(response => response.json())
-            .then(data => {
-                validBase64Token = data.token;
-            })
-            .catch(error => console.error('Token alırken hata:', error));
-
-        const secret = 'your-256-bit-secret'; // Aynı gizli anahtarı kullanın
-
         let turnstileWidgetId;
 
         function onloadTurnstileCallback() {
@@ -107,23 +96,27 @@
                 return;
             }
 
-            // Kullanıcı şifresini Base64 ile kodla
-            const encodedPassword = btoa(userPassword);
-
-            // JWT token oluşturma (gizli anahtar ve Base64 kodlanmış şifre ile)
-            const userToken = jwt.sign({ password: encodedPassword }, secret, { expiresIn: '1h' });
-            
-            // Token'ı Base64 ile şifrele
-            const base64UserToken = btoa(userToken);
-
-            // Doğrulama
-            if (base64UserToken === validBase64Token) {
-                localStorage.setItem('isLoggedIn', 'true');
-                alert('Giriş başarılı!');
-                window.location.href = 'homepage.html';
-            } else {
-                alert('Geçersiz şifre. Lütfen tekrar deneyin.');
-            }
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: userPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    alert('Giriş başarılı!');
+                    window.location.href = 'homepage.html';
+                } else {
+                    alert(data.message || 'Geçersiz şifre. Lütfen tekrar deneyin.');
+                }
+            })
+            .catch(error => {
+                console.error('Giriş sırasında hata:', error);
+                alert('Giriş sırasında bir hata oluştu.');
+            });
         }
     </script>
 </body>
