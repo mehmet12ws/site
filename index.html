@@ -66,7 +66,7 @@
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
-        <input type="password" id="password" placeholder="Şifrenizi girin">
+        <input type="password" id="password" placeholder="Şifrenizi girin" required>
         <div id="turnstile-container"></div>
         <button onclick="login()">Giriş Yap</button>
     </div>
@@ -88,26 +88,32 @@
         async function login() {
             const password = document.getElementById('password').value;
 
-            // Yeni Turnstile doğrulaması almak için tekrar render yapar
-            turnstile.reset();
+            if (!password || !turnstileToken) {
+                alert('Lütfen şifrenizi girin ve doğrulamayı tamamlayın.');
+                return;
+            }
 
-            // JWT token oluşturma isteği gönderiyoruz
-            const tokenResponse = await fetch('/generate-token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    password: password,
-                    turnstileToken: turnstileToken
-                })
-            });
+            try {
+                // JWT token oluşturma isteği gönderiyoruz
+                const tokenResponse = await fetch('/generate-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        password: password,
+                        turnstileToken: turnstileToken
+                    })
+                });
 
-            const tokenResult = await tokenResponse.json();
-            if (tokenResponse.ok) {
+                const tokenResult = await tokenResponse.json();
+                if (!tokenResponse.ok) {
+                    throw new Error('Token Oluşturma Hatası: ' + tokenResult.message);
+                }
+
                 const jwtToken = tokenResult.token;
 
-                // Şimdi JWT token'ı kullanarak giriş yapma isteği gönderiyoruz
+                // JWT token'ı kullanarak giriş yapma isteği gönderiyoruz
                 const loginResponse = await fetch('/login', {
                     method: 'POST',
                     headers: {
@@ -120,14 +126,15 @@
                 });
 
                 const loginResult = await loginResponse.json();
-                if (loginResponse.ok) {
-                    console.log('Başarı:', loginResult);
-                    window.location.href = 'homepage.html'; // Başarıyla giriş yapıldığında yönlendirme
-                } else {
-                    console.error('Hata:', loginResult);
+                if (!loginResponse.ok) {
+                    throw new Error('Giriş Hatası: ' + loginResult.message);
                 }
-            } else {
-                console.error('Token Oluşturma Hatası:', tokenResult);
+
+                console.log('Başarı:', loginResult);
+                window.location.href = 'homepage.html'; // Başarıyla giriş yapıldığında yönlendirme
+            } catch (error) {
+                console.error(error.message);
+                alert('Giriş işlemi sırasında bir hata oluştu.');
             }
         }
     </script>
