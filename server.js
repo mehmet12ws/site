@@ -9,14 +9,14 @@ app.use(bodyParser.json()); // JSON verileri işlemek için
 
 // JWT token oluşturma endpoint'i
 app.post('/generate-token', (req, res) => {
-    const { password } = req.body;
+    const { password, turnstileToken } = req.body;
 
-    if (password) {
+    if (password && turnstileToken) {
         // JWT token oluşturma
-        const token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
+        const token = jwt.sign({ password, turnstileToken }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
         res.json({ token });
     } else {
-        res.status(400).json({ message: 'Şifre sağlanmalıdır.' });
+        res.status(400).json({ message: 'Şifre ve Turnstile tokenı sağlanmalıdır.' });
     }
 });
 
