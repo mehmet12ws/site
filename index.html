@@ -61,25 +61,42 @@
             background-color: #0056b3;
         }
     </style>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
+        <div id="turnstile-container"></div>
         <button onclick="login()">Giriş Yap</button>
     </div>
     <script>
+        let turnstileToken = '';
+
+        function onloadTurnstileCallback() {
+            turnstile.render('#turnstile-container', {
+                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk', 
+                callback: function (token) {
+                    turnstileToken = token;
+                },
+                'error-callback': function (error) {
+                    console.error('Turnstile error:', error);
+                }
+            });
+        }
+
         async function login() {
             const password = document.getElementById('password').value;
 
-            // Önce JWT token oluşturma isteği gönderiyoruz
+            // JWT token oluşturma isteği gönderiyoruz
             const tokenResponse = await fetch('/generate-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    password: password // Şifreyi gönderiyoruz
+                    password: password,
+                    turnstileToken: turnstileToken // Turnstile token'ını da gönderiyoruz
                 })
             });
 
