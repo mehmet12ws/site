@@ -71,12 +71,10 @@
     </footer>
     <script>
         (function() {
-            // Kullanıcının giriş yapıp yapmadığını kontrol et
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn !== 'true') {
-                // Kullanıcı giriş yapmamışsa, giriş sayfasına yönlendir
                 alert('Bu sayfaya erişmek için giriş yapmanız gerekiyor.');
-                window.location.href = 'index.html';  // Giriş sayfanızın URL'si
+                window.location.href = 'index.html'; // Giriş sayfasının URL'si
             }
         })();
     </script>
