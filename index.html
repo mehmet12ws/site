@@ -5,66 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş Sayfası</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
-            margin: 0;
-            padding: 0;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
-            color: #333;
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .description {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #555;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            box-sizing: border-box;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
+        /* Stil kodlarınız burada olacak */
     </style>
 </head>
 <body>
@@ -74,18 +15,8 @@
         <input type="text" id="access-code" placeholder="Giriş Kodunuzu Girin">
         <button onclick="validateCode()">Giriş Yap</button>
     </div>
-    <script>
-        function validateCode() {
-            const userCode = document.getElementById('access-code').value;
-            const validCode = 'gizli_kod';  // Bu kodu kendi belirlediğiniz kodla değiştirin.
 
-            if (userCode === validCode) {
-                alert('Giriş başarılı!');
-                window.location.href = 'homepage.html';  // Ana sayfanızın URL'sini burada belirtin.
-            } else {
-                alert('Geçersiz kod. Lütfen tekrar deneyin.');
-            }
-        }
-    </script>
+    <!-- login.js dosyasını buradan çağırıyoruz -->
+    <script src="login.js"></script>
 </body>
 </html>
