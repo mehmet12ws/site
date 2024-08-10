@@ -22,18 +22,20 @@ app.post('/generate-token', (req, res) => {
 
 // Giriş yapma endpoint'i
 app.post('/login', (req, res) => {
-    const { token } = req.body; // Burada token, şifrenin şifrelenmiş hali olacak
+    const { token, turnstileToken } = req.body;
 
     try {
         // JWT token'ını doğrulama
         const decoded = jwt.verify(token, secret);
         const passwordFromToken = decoded.password;
+        const turnstileFromToken = decoded.turnstileToken;
 
+        // Turnstile token doğrulaması yapılmalıdır
         // Burada şifre doğrulaması yapabilirsiniz (önceden belirlenen şifre ile karşılaştırabilirsiniz)
-        if (passwordFromToken === 'Xx4424Xs44d') {
+        if (passwordFromToken === 'Xx4424Xs44d' && turnstileFromToken === turnstileToken) {
             res.json({ message: 'Giriş başarılı' });
         } else {
-            res.status(401).json({ message: 'Geçersiz şifre' });
+            res.status(401).json({ message: 'Geçersiz şifre veya Turnstile token' });
         }
     } catch (err) {
         res.status(401).json({ message: 'Geçersiz token' });
