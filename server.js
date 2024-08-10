@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const app = express();
 
-const secret = 'your-256-bit-secret'; // Gizli anahtarınız
+const secret = 'your-256-bit-secret'; // Gizli anahtar
 
-app.use(bodyParser.json()); // JSON verileri işlemek için
+app.use(bodyParser.json()); // JSON verilerini işlemek için
 
 // JWT token oluşturma endpoint'i
 app.post('/generate-token', (req, res) => {
