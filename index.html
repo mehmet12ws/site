@@ -68,8 +68,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <script>
-        // Base64 şifreli token'ınızı burada tanımlayın
-        const validBase64Token = 'YOUR_BASE64_ENCODED_TOKEN'; // Bu değeri generateToken.js ile alın
+        let validBase64Token;
+
+        fetch('/get-token')
+            .then(response => response.json())
+            .then(data => {
+                validBase64Token = data.token;
+            })
+            .catch(error => console.error('Token alırken hata:', error));
 
         const secret = 'your-256-bit-secret'; // Aynı gizli anahtarı kullanın
 
