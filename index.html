@@ -81,29 +81,30 @@
         }
 
         async function login() {
-            const response = await fetch('/generate-token', {
+            // Önce token oluşturma isteği gönderiyoruz
+            const tokenResponse = await fetch('/generate-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    password: 'Xx4424Xs44d', // Burada şifrenizi kullanarak JWT token oluşturun
+                    password: 'Xx4424Xs44d', // Şifreniz
                     turnstileToken: turnstileToken
                 })
             });
 
-            const result = await response.json();
-            if (response.ok) {
-                const jwtToken = result.token;
+            const tokenResult = await tokenResponse.json();
+            if (tokenResponse.ok) {
+                const jwtToken = tokenResult.token;
 
-                // Şimdi JWT token'ı kullanarak giriş yapma isteği gönderin
+                // Şimdi JWT token'ı kullanarak giriş yapma isteği gönderiyoruz
                 const loginResponse = await fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        password: jwtToken // Burada JWT token'ı password olarak kullanın
+                        password: jwtToken // JWT token'ı password olarak kullanıyoruz
                     })
                 });
 
@@ -114,7 +115,7 @@
                     console.error('Hata:', loginResult);
                 }
             } else {
-                console.error('Token Oluşturma Hatası:', result);
+                console.error('Token Oluşturma Hatası:', tokenResult);
             }
         }
     </script>
