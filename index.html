@@ -66,23 +66,28 @@
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
-        <input type="text" id="jwt-token" placeholder="JWT Tokenınızı Girin">
-        <button onclick="validateToken()">Giriş Yap</button>
+        <input type="text" id="password" placeholder="Şifreyi Girin">
+        <button onclick="validatePassword()">Giriş Yap</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="jwt-utils.js"></script>
     <script>
-        // Örnek JWT token (gerçek uygulamada bu token dinamik olarak üretilir)
         const validToken = 'JWT_TOKEN'; // Yukarıdaki örnekte oluşturulan JWT token
 
-        function validateToken() {
-            const userToken = document.getElementById('jwt-token').value;
-
+        function validatePassword() {
+            const userPassword = document.getElementById('password').value;
+            
+            // Şifre ile JWT oluştur
+            const userPayload = { password: userPassword };
+            const userToken = createJwtToken(userPayload, 'your-256-bit-secret');
+            
+            // Doğrulama
             if (userToken === validToken) {
                 localStorage.setItem('isLoggedIn', 'true');
                 alert('Giriş başarılı!');
                 window.location.href = 'homepage.html';
             } else {
-                alert('Geçersiz token. Lütfen tekrar deneyin.');
+                alert('Geçersiz şifre. Lütfen tekrar deneyin.');
             }
         }
     </script>
