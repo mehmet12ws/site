@@ -29,7 +29,6 @@ async function login() {
     turnstile.reset();
 
     try {
-        // Token oluşturma isteği
         const tokenResponse = await fetch('/generate-token', {
             method: 'POST',
             headers: {
@@ -45,13 +44,6 @@ async function login() {
         if (tokenResponse.ok) {
             const jwtToken = tokenResult.token;
 
-            // Token'i ekranda göster
-            showMessage(`JWT Token: ${jwtToken}`, 'success');
-            
-            // Token'i tarayıcıda sakla (örneğin, localStorage kullanarak)
-            localStorage.setItem('jwtToken', jwtToken);
-
-            // Giriş yapma isteği
             const loginResponse = await fetch('/login', {
                 method: 'POST',
                 headers: {
