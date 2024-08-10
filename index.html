@@ -68,7 +68,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <script>
-        const validBase64Token = 'YOUR_BASE64_ENCODED_TOKEN'; // Buraya Base64 şifreli token'ınızı yapıştırın
+        // Base64 şifreli token'ınızı burada tanımlayın
+        const validBase64Token = 'YOUR_BASE64_ENCODED_TOKEN'; // Bu değeri generateToken.js ile alın
+
         const secret = 'your-256-bit-secret'; // Aynı gizli anahtarı kullanın
 
         let turnstileWidgetId;
