@@ -7,12 +7,12 @@ const secret = 'your-256-bit-secret'; // Gizli anahtar
 
 app.use(bodyParser.json()); // JSON verilerini işlemek için
 
-// JWT token oluşturma endpoint'i
+// Şifreyi JWT token'a dönüştüren endpoint
 app.post('/generate-token', (req, res) => {
     const { password, turnstileToken } = req.body;
 
     if (password && turnstileToken) {
-        // JWT token oluşturma
+        // Şifreyi JWT token'a dönüştür
         const token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
         res.json({ token, turnstileToken });
     } else {
@@ -20,12 +20,12 @@ app.post('/generate-token', (req, res) => {
     }
 });
 
-// Giriş yapma endpoint'i
+// JWT token doğrulama endpoint'i
 app.post('/login', (req, res) => {
     const { token, turnstileToken } = req.body;
 
     try {
-        // JWT token'ını doğrulama
+        // JWT token'ı doğrulama
         const decoded = jwt.verify(token, secret);
         const passwordFromToken = decoded.password;
 
