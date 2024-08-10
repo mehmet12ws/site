@@ -45,7 +45,7 @@ app.post('/login', async (req, res) => {
         });
 
         if (!turnstileResponse.data.success) {
-            return res.status(401).json({ message: 'Geçersiz Turnstile token', token, turnstileToken });
+            return res.status(401).json({ message: 'Geçersiz Turnstile token' });
         }
 
         // JWT token'ı doğrulama
@@ -56,10 +56,10 @@ app.post('/login', async (req, res) => {
         if (passwordFromToken) {
             res.json({ message: 'Giriş başarılı', token, turnstileToken });
         } else {
-            res.status(401).json({ message: 'Geçersiz şifre', token, turnstileToken });
+            res.status(401).json({ message: 'Geçersiz şifre' });
         }
     } catch (err) {
-        res.status(401).json({ message: 'Geçersiz token', token, turnstileToken });
+        res.status(401).json({ message: 'Geçersiz token' });
     }
 });
 
