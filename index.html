@@ -1,148 +1,38 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gasdsadpiriş</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
-            margin: 0;
-            padding: 0;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
-            color: #333;
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        input[type="password"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
+    <title>JWT İstemci Tarafı</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsrsasign@10.1.15/lib/jsrsasign-all-min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Giriş Yap</h1>
-        <input type="password" id="password" placeholder="Şifrenizi girin">
-        <div id="turnstile-container"></div>
-        <button onclick="login()">Giriş Yap</button>
-        <div id="message"></div>
-    </div>
+    <h1>JWT İstemci Tarafı</h1>
+    <button id="generateToken">Token Oluştur</button>
+    <button id="verifyToken">Token Doğrula</button>
+    <pre id="output"></pre>
+
     <script>
-        let turnstileToken = '';
+        const secretKey = 'your_secret_key'; // Gizli anahtarınız
 
-        function onloadTurnstileCallback() {
-            turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
-                callback: function (token) {
-                    turnstileToken = token;
-                },
-                'error-callback': function (error) {
-                    showMessage('Turnstile doğrulama hatası: ' + error.message);
-                }
-            });
-        }
+        document.getElementById('generateToken').addEventListener('click', () => {
+            const header = { alg: 'HS256', typ: 'JWT' };
+            const payload = { username: 'user', role: 'admin' };
 
-        function showMessage(message, type = 'error') {
-            const messageElement = document.getElementById('message');
-            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
-            messageElement.textContent = message;
-        }
+            const token = KJUR.jws.JWS.sign('HS256', JSON.stringify(header), JSON.stringify(payload), secretKey);
+            document.getElementById('output').textContent = `Token: ${token}`;
+        });
 
-        async function login() {
-            const password = document.getElementById('password').value;
-
-            if (!password || !turnstileToken) {
-                showMessage('Şifre veya Turnstile token boş olamaz.');
-                return;
-            }
-
-            turnstile.reset();
+        document.getElementById('verifyToken').addEventListener('click', () => {
+            const token = document.getElementById('output').textContent.replace('Token: ', '');
 
             try {
-                const tokenResponse = await fetch('/generate-token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        password: password,
-                        turnstileToken: turnstileToken
-                    })
-                });
-
-                const tokenResult = await tokenResponse.json();
-                if (tokenResponse.ok) {
-                    const jwtToken = tokenResult.token;
-
-                    const loginResponse = await fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            token: jwtToken,
-                            turnstileToken: turnstileToken
-                        })
-                    });
-
-                    const loginResult = await loginResponse.json();
-                    if (loginResponse.ok) {
-                        showMessage('Başarıyla giriş yaptınız.', 'success');
-                        window.location.href = 'homepage.html';
-                    } else {
-                        showMessage('Giriş hatası: ' + loginResult.message);
-                    }
-                } else {
-                    showMessage('Token oluşturma hatası: ' + tokenResult.message);
-                }
-            } catch (error) {
-                showMessage('Bir hata oluştu: ' + error.message);
+                const decoded = KJUR.jws.JWS.verifyJWT(token, secretKey, { alg: ['HS256'] });
+                document.getElementById('output').textContent += `\nDoğrulama Başarılı!\nPayload: ${JSON.stringify(decoded)}`;
+            } catch (e) {
+                document.getElementById('output').textContent += `\nDoğrulama Başarısız: ${e.message}`;
             }
-        }
+        });
     </script>
 </body>
 </html>
