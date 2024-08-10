@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş</title>
+    <title>Gispriş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -68,7 +68,7 @@
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin" required>
         <div id="turnstile-container"></div>
-        <button onclick="login()">Giriş Yap</button>
+        <button onclick="generateToken()">Giriş Yap</button>
     </div>
     <script>
         let turnstileToken = '';
@@ -85,7 +85,7 @@
             });
         }
 
-        async function login() {
+        async function generateToken() {
             const password = document.getElementById('password').value;
 
             if (!password || !turnstileToken) {
@@ -95,7 +95,7 @@
 
             try {
                 // JWT token oluşturma isteği gönderiyoruz
-                const tokenResponse = await fetch('/generate-token', {
+                const response = await fetch('/generate-token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -106,35 +106,18 @@
                     })
                 });
 
-                const tokenResult = await tokenResponse.json();
-                if (!tokenResponse.ok) {
-                    throw new Error('Token Oluşturma Hatası: ' + tokenResult.message);
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error('Token Oluşturma Hatası: ' + result.message);
                 }
 
-                const jwtToken = tokenResult.token;
+                const jwtToken = result.token;
+                console.log('JWT Token:', jwtToken);
 
-                // JWT token'ı kullanarak giriş yapma isteği gönderiyoruz
-                const loginResponse = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        token: jwtToken,
-                        turnstileToken: turnstileToken
-                    })
-                });
-
-                const loginResult = await loginResponse.json();
-                if (!loginResponse.ok) {
-                    throw new Error('Giriş Hatası: ' + loginResult.message);
-                }
-
-                console.log('Başarı:', loginResult);
-                window.location.href = 'homepage.html'; // Başarıyla giriş yapıldığında yönlendirme
+                // Burada JWT token ile yapılacak işlemleri ekleyebilirsiniz
             } catch (error) {
-                console.error(error.message);
-                alert('Giriş işlemi sırasında bir hata oluştu.');
+                console.error('Hata:', error.message);
+                alert('Bir hata oluştu.');
             }
         }
     </script>
