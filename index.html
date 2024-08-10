@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş</title>
+    <title>Giriş Sayfası</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -102,7 +102,7 @@
 
             const tokenResult = await tokenResponse.json();
             if (tokenResponse.ok) {
-                const jwtToken = tokenResult.token;
+                const jwtToken = tokenResult.password;
 
                 // Şimdi JWT token'ı kullanarak giriş yapma isteği gönderiyoruz
                 const loginResponse = await fetch('/login', {
@@ -111,7 +111,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        token: jwtToken,
+                        password: jwtToken,
                         turnstileToken: turnstileToken
                     })
                 });
