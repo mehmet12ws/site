@@ -81,7 +81,14 @@
         }
 
         async function login() {
-            const jwtToken = 'YOUR_BASE64_ENCODED_TOKEN'; // Base64 kodlanmış JWT token'ınızı buraya ekleyin
+            // JWT token almak için backend'e istek yapın
+            const jwtResponse = await fetch('/generate-jwt', { method: 'GET' });
+            if (!jwtResponse.ok) {
+                console.error('JWT Token alınamadı.');
+                return;
+            }
+            const jwtData = await jwtResponse.json();
+            const jwtToken = jwtData.token; // Backend'den alınan JWT token
 
             const response = await fetch('/login', {
                 method: 'POST',
