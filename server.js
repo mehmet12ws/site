@@ -3,30 +3,30 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const app = express();
 
-const secret = 'your-256-bit-secret'; // Aynı gizli anahtarı kullanın
+const secret = 'your-256-bit-secret'; // Gizli anahtarınız
 
 app.use(bodyParser.json()); // JSON verileri işlemek için
 
-// Token oluşturma endpoint'i
+// JWT token oluşturma endpoint'i
 app.post('/generate-token', (req, res) => {
-    const { password, turnstileToken } = req.body;
+    const { password } = req.body;
 
-    if (password && turnstileToken) {
+    if (password) {
         // JWT token oluşturma
-        const token = jwt.sign({ password, turnstileToken }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
+        const token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
         res.json({ token });
     } else {
-        res.status(400).json({ message: 'Şifre ve Turnstile tokenı sağlanmalıdır.' });
+        res.status(400).json({ message: 'Şifre sağlanmalıdır.' });
     }
 });
 
 // Giriş yapma endpoint'i
 app.post('/login', (req, res) => {
-    const { password } = req.body; // Burada password alanı JWT token'ı temsil eder
+    const { token } = req.body; // Burada token, şifrenin şifrelenmiş hali olacak
 
     try {
         // JWT token'ını doğrulama
-        const decoded = jwt.verify(password, secret);
+        const decoded = jwt.verify(token, secret);
         const passwordFromToken = decoded.password;
 
         // Burada şifre doğrulaması yapabilirsiniz (önceden belirlenen şifre ile karşılaştırabilirsiniz)
