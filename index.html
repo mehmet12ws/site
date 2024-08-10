@@ -111,7 +111,8 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        token: jwtToken // JWT token'ı password olarak kullanıyoruz
+                        token: jwtToken,
+                        turnstileToken: turnstileToken
                     })
                 });
 
