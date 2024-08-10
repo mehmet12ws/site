@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Şimşek McQueen</title>
+    <title>Kelebek Animasyonu</title>
     <style>
         body {
             margin: 0;
@@ -20,16 +20,14 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-        }
-
-        .mcqueen {
-            width: 300px;
-            margin-bottom: 20px;
+            position: relative;
         }
 
         .message {
             text-align: center;
             color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
 
         .button {
@@ -41,11 +39,12 @@
             margin: 10px;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
 
         #butterflies {
@@ -53,41 +52,53 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
         }
 
         .butterfly {
             position: absolute;
-            width: 50px;
-            height: 50px;
-            background: url('https://example.com/butterfly.png') no-repeat center center;
+            width: 100px;
+            height: 100px;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9dAaaokZxB3XFRMG7xUtflLJbuJ59ztzoJg&s') no-repeat center center;
             background-size: cover;
-            animation: flutter 10s infinite;
+            animation: fly 10s infinite, colorChange 5s infinite;
         }
 
-        @keyframes flutter {
+        @keyframes fly {
             0% {
-                transform: translate(0, 0);
+                transform: translate(-50px, -50px);
             }
             25% {
-                transform: translate(calc(100vw - 50px), 0);
+                transform: translate(calc(100vw - 50px), -50px);
             }
             50% {
                 transform: translate(calc(100vw - 50px), calc(100vh - 50px));
             }
             75% {
-                transform: translate(0, calc(100vh - 50px));
+                transform: translate(-50px, calc(100vh - 50px));
             }
             100% {
-                transform: translate(0, 0);
+                transform: translate(-50px, -50px);
+            }
+        }
+
+        @keyframes colorChange {
+            0%, 100% {
+                filter: hue-rotate(0deg);
+            }
+            50% {
+                filter: hue-rotate(180deg);
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="https://example.com/lightning-mcqueen.png" alt="Şimşek McQueen" class="mcqueen">
         <div class="message">
-            <p>Benimleee çıkarmısınız Edasss?</p>
+            <p>Beni çıkarmısın?</p>
             <button id="yes-button" class="button">Evet</button>
             <button id="no-button" class="button">Hayır</button>
         </div>
@@ -102,15 +113,13 @@
 
         document.getElementById('yes-button').addEventListener('click', function() {
             const butterfliesContainer = document.getElementById('butterflies');
-
-            // Temizle eski kelebekleri
             butterfliesContainer.innerHTML = '';
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 5; i++) {
                 const butterfly = document.createElement('div');
                 butterfly.className = 'butterfly';
-                butterfly.style.top = Math.random() * (window.innerHeight - 50) + 'px';
-                butterfly.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+                butterfly.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+                butterfly.style.left = Math.random() * (window.innerWidth - 100) + 'px';
                 butterfly.style.animationDelay = Math.random() * 10 + 's'; // Rastgele başlangıç süresi
                 butterfliesContainer.appendChild(butterfly);
             }
