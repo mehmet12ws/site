@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const axios = require('axios'); // Turnstile doğrulama için gerekli
 const app = express();
 
 const secret = 'your-256-bit-secret'; // Gizli anahtar
@@ -21,19 +22,31 @@ app.post('/generate-token', (req, res) => {
 });
 
 // JWT token doğrulama endpoint'i
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { password, turnstileToken } = req.body;
 
     try {
+        // Turnstile token'ını doğrulama
+        const turnstileResponse = await axios.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', null, {
+            params: {
+                secret: 'YOUR_TURNSTILE_SECRET_KEY', // Turnstile'ın secret anahtarını buraya ekleyin
+                response: turnstileToken
+            }
+        });
+
+        if (!turnstileResponse.data.success) {
+            return res.status(401).json({ message: 'Geçersiz Turnstile token' });
+        }
+
         // JWT token'ı doğrulama
         const decoded = jwt.verify(password, secret);
         const passwordFromToken = decoded.password;
 
-        // Turnstile token doğrulaması yapılmalıdır
-        if (passwordFromToken === 'asdasdad' && turnstileToken) {
+        // Şifreyi kontrol et
+        if (passwordFromToken === 'asdasdad') {
             res.json({ message: 'Giriş başarılı' });
         } else {
-            res.status(401).json({ message: 'Geçersiz şifre veya Turnstile token' });
+            res.status(401).json({ message: 'Geçersiz şifre' });
         }
     } catch (err) {
         res.status(401).json({ message: 'Geçersiz token' });
