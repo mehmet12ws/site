@@ -17,7 +17,7 @@
             height: 100vh;
             text-align: center;
         }
-        
+
         .container {
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
@@ -80,7 +80,6 @@
 
         function onSuccess(token) {
             localStorage.setItem('turnstileToken', token);
-            document.getElementById('verify-button').disabled = false;
         }
 
         function onError(error) {
