@@ -31,13 +31,13 @@ app.post('/login', async (req, res) => {
         // Turnstile token'ını doğrulama
         const turnstileResponse = await axios.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', null, {
             params: {
-                secret: '0x4AAAAAAAg6TDS6kf69wBpjwnJ6cZ7Tq-8',
+                secret: '6LfnifsnAAAAAGJgf6kF8OiL-20-wIsK68QXP7x-',
                 response: turnstileToken
             }
         });
 
         if (!turnstileResponse.data.success) {
-            return res.status(401).json({ message: 'Geçersiz Turnstile token' });
+            return res.status(401).json({ message: 'Geçersiz Turnstile token', token, turnstileToken });
         }
 
         // JWT token'ı doğrulama
@@ -48,10 +48,10 @@ app.post('/login', async (req, res) => {
         if (passwordFromToken) {
             res.json({ message: 'Giriş başarılı', token, turnstileToken });
         } else {
-            res.status(401).json({ message: 'Geçersiz token' });
+            res.status(401).json({ message: 'Geçersiz şifre', token, turnstileToken });
         }
     } catch (err) {
-        res.status(401).json({ message: 'Geçersiz token' });
+        res.status(401).json({ message: 'Geçersiz token', token, turnstileToken });
     }
 });
 
