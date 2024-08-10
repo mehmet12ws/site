@@ -7,37 +7,38 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff6f61, #d9a7c7, #d6e0f0);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             margin: 0;
             padding: 0;
             color: #fff;
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
             justify-content: center;
             align-items: center;
+            height: 100vh;
             text-align: center;
         }
-
+        
         .container {
             background: rgba(255, 255, 255, 0.9);
-            color: #333;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 400px;
+            max-width: 500px;
             width: 100%;
+            box-sizing: border-box;
+            color: #333;
         }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            box-sizing: border-box;
-            border: 2px solid #ccc;
-            border-radius: 4px;
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #turnstile-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
         }
 
         button {
@@ -55,34 +56,60 @@
         button:hover {
             background-color: #0056b3;
         }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
         <input type="text" id="password" placeholder="Şifreyi Girin">
+        <div id="turnstile-container"></div>
         <button onclick="validatePassword()">Giriş Yap</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="jwt-utils.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
     <script>
-        const validToken = 'JWT_TOKEN'; // Yukarıdaki örnekte oluşturulan JWT token
+        const validBase64Token = 'YOUR_BASE64_ENCODED_TOKEN'; // Buraya Base64 şifreli token'ınızı yapıştırın
+        const secret = 'your-256-bit-secret'; // Aynı gizli anahtarı kullanın
+
+        let turnstileWidgetId;
+
+        function onloadTurnstileCallback() {
+            turnstileWidgetId = turnstile.render('#turnstile-container', {
+                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
+                callback: onSuccess,
+                'error-callback': onError
+            });
+        }
+
+        function onSuccess(token) {
+            localStorage.setItem('turnstileToken', token);
+            document.getElementById('verify-button').disabled = false;
+        }
+
+        function onError(error) {
+            console.error('Turnstile error:', error);
+        }
 
         function validatePassword() {
             const userPassword = document.getElementById('password').value;
+            const turnstileToken = localStorage.getItem('turnstileToken');
             
-            // Şifre ile JWT oluştur
-            const userPayload = { password: userPassword };
-            const userToken = createJwtToken(userPayload, 'your-256-bit-secret');
+            if (!turnstileToken) {
+                alert('Lütfen CAPTCHA doğrulamasını tamamlayın.');
+                return;
+            }
+
+            // Kullanıcı şifresini Base64 ile kodla
+            const encodedPassword = btoa(userPassword);
+
+            // JWT token oluşturma (gizli anahtar ve Base64 kodlanmış şifre ile)
+            const userToken = jwt.sign({ password: encodedPassword }, secret, { expiresIn: '1h' });
             
+            // Token'ı Base64 ile şifrele
+            const base64UserToken = btoa(userToken);
+
             // Doğrulama
-            if (userToken === validToken) {
+            if (base64UserToken === validBase64Token) {
                 localStorage.setItem('isLoggedIn', 'true');
                 alert('Giriş başarılı!');
                 window.location.href = 'homepage.html';
