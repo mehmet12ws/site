@@ -22,13 +22,13 @@ app.post('/generate-token', (req, res) => {
 
 // Giriş yapma endpoint'i
 app.post('/login', (req, res) => {
-    const { jwtToken } = req.body;
+    const { password } = req.body; // Burada password alanı JWT token'ı temsil eder
 
     try {
         // JWT token'ını doğrulama
-        const decoded = jwt.verify(jwtToken, secret);
+        const decoded = jwt.verify(password, secret);
         const passwordFromToken = decoded.password;
-        
+
         // Burada şifre doğrulaması yapabilirsiniz (önceden belirlenen şifre ile karşılaştırabilirsiniz)
         if (passwordFromToken === 'Xx4424Xs44d') {
             res.json({ message: 'Giriş başarılı' });
