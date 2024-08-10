@@ -13,8 +13,8 @@ app.post('/generate-token', (req, res) => {
 
     if (password && turnstileToken) {
         // JWT token oluşturma
-        const token = jwt.sign({ password, turnstileToken }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
-        res.json({ token });
+        const token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
+        res.json({ token, turnstileToken });
     } else {
         res.status(400).json({ message: 'Şifre ve Turnstile tokenı sağlanmalıdır.' });
     }
@@ -28,11 +28,10 @@ app.post('/login', (req, res) => {
         // JWT token'ını doğrulama
         const decoded = jwt.verify(token, secret);
         const passwordFromToken = decoded.password;
-        const turnstileFromToken = decoded.turnstileToken;
 
         // Turnstile token doğrulaması yapılmalıdır
         // Burada şifre doğrulaması yapabilirsiniz (önceden belirlenen şifre ile karşılaştırabilirsiniz)
-        if (passwordFromToken === 'Xx4424Xs44d' && turnstileFromToken === turnstileToken) {
+        if (passwordFromToken === 'Xx4424Xs44d' && turnstileToken) {
             res.json({ message: 'Giriş başarılı' });
         } else {
             res.status(401).json({ message: 'Geçersiz şifre veya Turnstile token' });
