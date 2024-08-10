@@ -63,10 +63,22 @@
 </head>
 <body>
     <div class="hero">
-        <p>Test amaçlı kurdum beler relax</p>
+        <h1>Hoşgeldiniz!</h1>
+        <p>Test amaçlı kurdum, beler relax</p>
     </div>
     <footer>
         <p>© 2024 Tüm hakları saklıdır.</p>
     </footer>
+    <script>
+        (function() {
+            // Kullanıcının giriş yapıp yapmadığını kontrol et
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn !== 'true') {
+                // Kullanıcı giriş yapmamışsa, giriş sayfasına yönlendir
+                alert('Bu sayfaya erişmek için giriş yapmanız gerekiyor.');
+                window.location.href = 'index.html';  // Giriş sayfanızın URL'si
+            }
+        })();
+    </script>
 </body>
 </html>
