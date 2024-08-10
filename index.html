@@ -3,82 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gasdsadpiriş</title>
+    <title>Şimşek McQueen</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             margin: 0;
             padding: 0;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            overflow: hidden;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
-            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
-        h1 {
-            font-size: 36px;
+        .mcqueen {
+            width: 300px;
             margin-bottom: 20px;
-            color: #333;
         }
 
-        input[type="password"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box;
+        .message {
+            text-align: center;
         }
 
-        button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
+        .button {
             background-color: #007bff;
             border: none;
-            border-radius: 8px;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
             cursor: pointer;
+            border-radius: 5px;
             transition: background-color 0.3s ease;
         }
 
-        button:hover {
+        .button:hover {
             background-color: #0056b3;
         }
 
-        .success-message {
-            color: green;
+        #fireworks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
 
-        .error-message {
-            color: red;
+        .firework {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%);
+            animation: explosion 1s ease-out;
+        }
+
+        @keyframes explosion {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
         }
     </style>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
-    <script src="app.js" defer></script> <!-- JavaScript dosyasını dahil edin -->
 </head>
 <body>
     <div class="container">
-        <h1>Giriş Yap</h1>
-        <input type="password" id="password" placeholder="Şifrenizi girin">
-        <div id="turnstile-container"></div>
-        <button onclick="login()">Giriş Yap</button>
-        <div id="message"></div>
+        <img src="https://example.com/lightning-mcqueen.png" alt="Şimşek McQueen" class="mcqueen">
+        <div class="message">
+            <p>Beni çıkarmısın?</p>
+            <button id="yes-button" class="button">Evet</button>
+            <button id="no-button" class="button">Hayır</button>
+        </div>
+        <div id="fireworks"></div>
     </div>
+    <script>
+        document.getElementById('no-button').addEventListener('click', function() {
+            this.style.position = 'absolute';
+            this.style.top = Math.random() * window.innerHeight + 'px';
+            this.style.left = Math.random() * window.innerWidth + 'px';
+        });
+
+        document.getElementById('yes-button').addEventListener('click', function() {
+            const fireworksContainer = document.getElementById('fireworks');
+
+            for (let i = 0; i < 30; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.width = Math.random() * 10 + 5 + 'px';
+                firework.style.height = firework.style.width;
+                firework.style.top = Math.random() * window.innerHeight + 'px';
+                firework.style.left = Math.random() * window.innerWidth + 'px';
+                firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                fireworksContainer.appendChild(firework);
+
+                setTimeout(() => {
+                    firework.remove();
+                }, 1000);
+            }
+        });
+    </script>
 </body>
 </html>
