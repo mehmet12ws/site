@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş31 </title>
+    <title>Giriş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -122,6 +122,7 @@
                 const loginResult = await loginResponse.json();
                 if (loginResponse.ok) {
                     console.log('Başarı:', loginResult);
+                    window.location.href = 'homepage.html'; // Başarıyla giriş yapıldığında yönlendirme
                 } else {
                     console.error('Hata:', loginResult);
                 }
