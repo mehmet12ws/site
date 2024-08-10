@@ -9,8 +9,9 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background: #f0f0f0;
             overflow: hidden;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWq19RmDbplvK5hHdtBUrgiKMwpxCiXAcp6w&s') no-repeat center center fixed;
+            background-size: cover;
         }
 
         .container {
@@ -28,6 +29,7 @@
 
         .message {
             text-align: center;
+            color: white;
         }
 
         .button {
@@ -46,28 +48,37 @@
             background-color: #0056b3;
         }
 
-        #fireworks {
+        #butterflies {
             position: absolute;
             width: 100%;
             height: 100%;
             pointer-events: none;
         }
 
-        .firework {
+        .butterfly {
             position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%);
-            animation: explosion 1s ease-out;
+            width: 50px;
+            height: 50px;
+            background: url('https://example.com/butterfly.png') no-repeat center center;
+            background-size: cover;
+            animation: flutter 10s infinite;
         }
 
-        @keyframes explosion {
+        @keyframes flutter {
             0% {
-                transform: scale(0);
-                opacity: 1;
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(calc(100vw - 50px), 0);
+            }
+            50% {
+                transform: translate(calc(100vw - 50px), calc(100vh - 50px));
+            }
+            75% {
+                transform: translate(0, calc(100vh - 50px));
             }
             100% {
-                transform: scale(3);
-                opacity: 0;
+                transform: translate(0, 0);
             }
         }
     </style>
@@ -80,7 +91,7 @@
             <button id="yes-button" class="button">Evet</button>
             <button id="no-button" class="button">Hayır</button>
         </div>
-        <div id="fireworks"></div>
+        <div id="butterflies"></div>
     </div>
     <script>
         document.getElementById('no-button').addEventListener('click', function() {
@@ -90,21 +101,18 @@
         });
 
         document.getElementById('yes-button').addEventListener('click', function() {
-            const fireworksContainer = document.getElementById('fireworks');
+            const butterfliesContainer = document.getElementById('butterflies');
 
-            for (let i = 0; i < 30; i++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.style.width = Math.random() * 10 + 5 + 'px';
-                firework.style.height = firework.style.width;
-                firework.style.top = Math.random() * window.innerHeight + 'px';
-                firework.style.left = Math.random() * window.innerWidth + 'px';
-                firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                fireworksContainer.appendChild(firework);
+            // Temizle eski kelebekleri
+            butterfliesContainer.innerHTML = '';
 
-                setTimeout(() => {
-                    firework.remove();
-                }, 1000);
+            for (let i = 0; i < 10; i++) {
+                const butterfly = document.createElement('div');
+                butterfly.className = 'butterfly';
+                butterfly.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+                butterfly.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+                butterfly.style.animationDelay = Math.random() * 10 + 's'; // Rastgele başlangıç süresi
+                butterfliesContainer.appendChild(butterfly);
             }
         });
     </script>
