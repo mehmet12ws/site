@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>testı</title>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
+    <title>Giriş Sayfası</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -42,10 +41,13 @@
             color: #555;
         }
 
-        #turnstile-container {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
         }
 
         button {
@@ -67,40 +69,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>test</h1>
-        <p class="description">test.</p>
-        <div id="turnstile-container"></div>
-        <button id="verify-button" onclick="checkTurnstileToken()">Doğrulama Yap</button>
+        <h1>Giriş</h1>
+        <p class="description">Lütfen giriş kodunuzu girin.</p>
+        <input type="text" id="access-code" placeholder="Giriş Kodunuzu Girin">
+        <button onclick="validateCode()">Giriş Yap</button>
     </div>
     <script>
-        let turnstileWidgetId;
+        function validateCode() {
+            const userCode = document.getElementById('access-code').value;
+            const validCode = 'gizli_kod';  // Bu kodu kendi belirlediğiniz kodla değiştirin.
 
-        function onloadTurnstileCallback() {
-            turnstileWidgetId = turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
-                callback: onSuccess,
-                'error-callback': onError
-            });
-        }
-
-        function onSuccess(token) {
-            localStorage.setItem('turnstileToken', token);
-            document.getElementById('verify-button').disabled = false;
-        }
-
-        function onError(error) {
-            console.error('Turnstile error:', error);
-        }
-
-        function checkTurnstileToken() {
-            const token = localStorage.getItem('turnstileToken');
-            if (!token) {
-                alert('Lütfen Turnstile doğrulamasını tamamlayın.');
-                return;
+            if (userCode === validCode) {
+                alert('Giriş başarılı!');
+                window.location.href = 'homepage.html';  // Ana sayfanızın URL'sini burada belirtin.
+            } else {
+                alert('Geçersiz kod. Lütfen tekrar deneyin.');
             }
-            // Token'ı doğrulamak ve ana sayfaya yönlendirmek için sunucu tarafında bir doğrulama yapılmalı.
-            // Bu örnekte basit bir yönlendirme yapılacak.
-            window.location.href = 'homepage.html';  // Ana sayfanızın URL'sini burada belirtin.
         }
     </script>
 </body>
