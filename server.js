@@ -13,7 +13,8 @@ app.post('/login', (req, res) => {
     try {
         // JWT token'ını doğrulama
         const decoded = jwt.verify(jwtToken, secret);
-        const passwordFromToken = Buffer.from(decoded.password, 'base64').toString('utf8');
+        // Token'dan şifreyi al
+        const passwordFromToken = decoded.password;
         
         // Burada şifre doğrulaması yapabilirsiniz (önceden belirlenen şifre ile karşılaştırabilirsiniz)
         if (passwordFromToken === 'Xx4424Xs44d') {
