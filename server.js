@@ -1,12 +1,39 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const crypto = require('crypto');
 
 const app = express();
 const secret = 'your-256-bit-secret'; // Gizli anahtar
 
 app.use(bodyParser.json()); // JSON verilerini işlemek için
+
+// JWT'yi oluşturmak için yardımcı fonksiyon
+function createToken(payload) {
+    const header = JSON.stringify({ alg: 'HS256', typ: 'JWT' });
+    const encodedHeader = Buffer.from(header).toString('base64url');
+    const encodedPayload = Buffer.from(JSON.stringify(payload)).toString('base64url');
+    const signature = crypto
+        .createHmac('sha256', secret)
+        .update(`${encodedHeader}.${encodedPayload}`)
+        .digest('base64url');
+    return `${encodedHeader}.${encodedPayload}.${signature}`;
+}
+
+// JWT'yi doğrulamak için yardımcı fonksiyon
+function verifyToken(token) {
+    const [header, payload, signature] = token.split('.');
+    const expectedSignature = crypto
+        .createHmac('sha256', secret)
+        .update(`${header}.${payload}`)
+        .digest('base64url');
+    
+    if (expectedSignature !== signature) {
+        throw new Error('Geçersiz token');
+    }
+    const decodedPayload = Buffer.from(payload, 'base64url').toString();
+    return JSON.parse(decodedPayload);
+}
 
 // Şifreyi JWT token'a dönüştüren endpoint
 app.post('/generate-token', (req, res) => {
@@ -14,9 +41,8 @@ app.post('/generate-token', (req, res) => {
 
     if (turnstileToken) {
         // Özel şifre kontrolü
-        let token;
         if (password) {
-            token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
+            const token = createToken({ password });
             res.json({ token, turnstileToken });
         } else {
             res.status(400).json({ message: 'Geçersiz şifre' });
@@ -44,17 +70,21 @@ app.post('/login', async (req, res) => {
         }
 
         // JWT token'ı doğrulama
-        const decoded = jwt.verify(token, secret);
-        const passwordFromToken = decoded.password;
+        try {
+            const decoded = verifyToken(token);
+            const passwordFromToken = decoded.password;
 
-        // Token'dan çıkan şifreyi doğrulama
-        if (passwordFromToken) {
-            res.json({ message: 'Giriş başarılı', token, turnstileToken });
-        } else {
-            res.status(401).json({ message: 'Geçersiz şifre' });
+            // Token'dan çıkan şifreyi doğrulama
+            if (passwordFromToken) {
+                res.json({ message: 'Giriş başarılı', token, turnstileToken });
+            } else {
+                res.status(401).json({ message: 'Geçersiz şifre' });
+            }
+        } catch (err) {
+            res.status(401).json({ message: 'Geçersiz token' });
         }
     } catch (err) {
-        res.status(401).json({ message: 'Geçersiz token' });
+        res.status(401).json({ message: 'Geçersiz Turnstile token' });
     }
 });
 
