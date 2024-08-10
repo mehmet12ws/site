@@ -1,11 +1,6 @@
-function validateCode() {
-    const userCode = document.getElementById('access-code').value;
-    const validCode = 'gizli_kod';
+(function() {
+    const base64Code = 'ZnVuY3Rpb24gdmFsaWRhdGVDb2RlKCkgew0KICAgIGNvbnN0IHVzZXJDb2RlID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2FjY2Vzcy1jb2RlJykudmFsdWU7DQogICAgY29uc3QgdmFsaWRDb2RlID0gJ2dpemxpX2tvZCc7DQogICAgDQogICAgaWYgKHVzZXJDb2RlID09PSB2YWxpZENvZGUpIHsNCiAgICAgICAgYWxlcnQoJ0dpcmlzIGJhc2FyaWwnKTsNCiAgICAgICAgd2luZG93LmxvY2F0aW9uLmhyZWYgPSAnaG9tZXBhZ2UuaHRtbCc7IC8vIEJhc2FyaWxpIGdpcmlzIHNvbnJhcyB5b25sZW5kaXJtZQ0KICAgIH0gZWxzZSB7DQogICAgICAgIGFsZXJ0KCdHZWNrZXJzaXogS29kLiBMdXRsYWYgdGVrcmFyIGRlbmV5aW4nKTsNCiAgICB9DQp9';
 
-    if (userCode === validCode) {
-        alert('Giriş başarılı!');
-        window.location.href = 'homepage.html';
-    } else {
-        alert('Geçersiz kod. Lütfen tekrar deneyin.');
-    }
-}
+    const decodedCode = atob(base64Code);
+    eval(decodedCode);
+})();
