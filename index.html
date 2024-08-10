@@ -64,6 +64,7 @@
         <input type="text" id="password" placeholder="Şifreyi Girin">
         <div id="turnstile-container"></div>
         <button onclick="validatePassword()">Giriş Yap</button>
+        <pre id="response"></pre>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
@@ -100,13 +101,13 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ password: userPassword })
+                body: JSON.stringify({ password: userPassword, turnstileToken: turnstileToken })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.token) {
+                    document.getElementById('response').innerText = 'JWT Token: ' + data.token;
                     localStorage.setItem('isLoggedIn', 'true');
-                    alert('Giriş başarılı!');
                     window.location.href = 'homepage.html';
                 } else {
                     alert(data.message || 'Geçersiz şifre. Lütfen tekrar deneyin.');
