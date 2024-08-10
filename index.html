@@ -96,7 +96,8 @@
                 return;
             }
 
-            fetch('/login', {
+            // Token'ı oluşturmak için önce JWT token'ı almak gerekir.
+            fetch('/generate-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,16 +107,33 @@
             .then(response => response.json())
             .then(data => {
                 if (data.token) {
-                    document.getElementById('response').innerText = 'JWT Token: ' + data.token;
-                    localStorage.setItem('isLoggedIn', 'true');
-                    window.location.href = 'homepage.html';
+                    // JWT token'ını doğrulama için kullanılır
+                    fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ jwtToken: data.token })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Giriş başarılı') {
+                            window.location.href = 'homepage.html';
+                        } else {
+                            alert(data.message || 'Geçersiz şifre. Lütfen tekrar deneyin.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Giriş sırasında hata:', error);
+                        alert('Giriş sırasında bir hata oluştu.');
+                    });
                 } else {
-                    alert(data.message || 'Geçersiz şifre. Lütfen tekrar deneyin.');
+                    alert('JWT token oluşturulamadı.');
                 }
             })
             .catch(error => {
-                console.error('Giriş sırasında hata:', error);
-                alert('Giriş sırasında bir hata oluştu.');
+                console.error('Token oluşturma sırasında hata:', error);
+                alert('Token oluşturma sırasında bir hata oluştu.');
             });
         }
     </script>
