@@ -7,38 +7,28 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            background: linear-gradient(135deg, #ff6f61, #d9a7c7, #d6e0f0);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             margin: 0;
             padding: 0;
             color: #fff;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             text-align: center;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.9);
+            color: #333;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
+            max-width: 400px;
             width: 100%;
-            box-sizing: border-box;
-            color: #333;
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .description {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #555;
         }
 
         input[type="text"] {
@@ -65,22 +55,36 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Giriş</h1>
-        <p class="description">Lütfen giriş kodunuzu girin.</p>
-        <input type="text" id="access-code" placeholder="Giriş Kodunuzu Girin">
-        <button onclick="validateCode()">Giriş Yap</button>
+        <h1>Giriş Yap</h1>
+        <input type="text" id="jwt-token" placeholder="JWT Tokenınızı Girin">
+        <button onclick="validateToken()">Giriş Yap</button>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
-        (function() {
-            const base64Code = 'ZnVuY3Rpb24gdmFsaWRhdGVDb2RlKCkgew0KICAgIGNvbnN0IHVzZXJDb2RlID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2FjY2Vzcy1jb2RlJykudmFsdWU7DQogICAgY29uc3QgdmFsaWRDb2RlID0gJ2dpemxpX2tvZCc7DQogICAgDQogICAgaWYgKHVzZXJDb2RlID09PSB2YWxpZENvZGUpIHsNCiAgICAgICAgYWxlcnQoJ0dpcmlzIGJhc2FyaWwnKTsNCiAgICAgICAgd2luZG93LmxvY2F0aW9uLmhyZWYgPSAnaG9tZXBhZ2UuaHRtbCc7DQogICAgfSBlbHNlIHsNCiAgICAgICAgYWxlcnQoJ0dlY2tlcnNpeiBLb2QuIEx1dGZlbiB0ZWtyYXIgZGVuZXlpbicpOw0KICAgIH0NCn0=';
+        // Örnek JWT token (gerçek uygulamada bu token dinamik olarak üretilir)
+        const validToken = 'JWT_TOKEN'; // Yukarıdaki örnekte oluşturulan JWT token
 
-            const decodedCode = atob(base64Code);
-            eval(decodedCode);
-        })();
+        function validateToken() {
+            const userToken = document.getElementById('jwt-token').value;
+
+            if (userToken === validToken) {
+                localStorage.setItem('isLoggedIn', 'true');
+                alert('Giriş başarılı!');
+                window.location.href = 'homepage.html';
+            } else {
+                alert('Geçersiz token. Lütfen tekrar deneyin.');
+            }
+        }
     </script>
 </body>
 </html>
