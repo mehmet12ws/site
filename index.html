@@ -114,7 +114,7 @@
         function createToken(prefix) {
             const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
             let token = prefix;
-            for (let i = 0; i < 150; i++) {
+            for (let i = 0; i < 100; i++) {
                 token += charset.charAt(Math.floor(Math.random() * charset.length));
             }
             return token;
@@ -153,19 +153,19 @@
                         })
                     });
 
-                    const responseText = await response.text(); 
+                    const responseText = await response.text();
                     console.log('Sunucu Yanıtı:', responseText);
 
                     let result;
                     try {
                         result = JSON.parse(responseText);
                     } catch (e) {
-                        showMessage('Yanıt JSON formatında değil.', 'error');
+                        showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
                         return;
                     }
 
-                    if (response.ok) {
-                        window.location.href = 'https://mehmet12ws.online/homepage.html';
+                    if (result.success) {
+                        window.location.href = '/homepage.html'; // Başarıyla giriş yaptıktan sonra yönlendirme
                     } else {
                         showMessage('Giriş hatası: ' + result.message);
                     }
