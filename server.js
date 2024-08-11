@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/login', (req, res) => {
-    const { password } = req.body;
+    const password = req.body.password;
     const mehmetToken = req.headers['mehmet'];
     const mehmet12wsToken = req.headers['mehmet12ws'];
     const ismyokawkToken = req.headers['ismyokawk'];
@@ -18,10 +18,11 @@ app.post('/login', (req, res) => {
     console.log('Beklenen Şifre:', expectedPassword);
     console.log('ismyokawk Token:', ismyokawkToken);
 
-    if (password === expectedPassword) {
+    // Doğru şifre ve başlıkların kontrolü
+    if (password === expectedPassword && ismyokawkToken === sha512Encode(turnstileToken)) {
         res.json({ message: 'Başarıyla giriş yaptınız.' });
     } else {
-        res.status(400).json({ message: 'Şifre hatalı.' });
+        res.status(400).json({ message: 'Şifre veya başlıklar hatalı.' });
     }
 });
 
