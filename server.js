@@ -3,7 +3,7 @@ const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-const bcrypt = require('bcrypt');
+const CryptoJS = require('crypto-js');
 
 // MySQL veritabanı bağlantısı
 const db = mysql.createConnection({
@@ -33,25 +33,18 @@ app.use(session({
 }));
 
 // Şifre belirleme işlemi
-app.post('/set-password', async (req, res) => {
+app.post('/set-password', (req, res) => {
     const { password } = req.body;
 
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
+    const query = 'INSERT INTO users (username, password) VALUES (?, ?) ON DUPLICATE KEY UPDATE password = ?';
+    db.query(query, ['admin', password, password], (err) => {
+        if (err) {
+            console.error('Veritabanı hatası:', err);
+            return res.status(500).json({ message: 'Veritabanı hatası' });
+        }
 
-        const query = 'INSERT INTO users (username, password) VALUES (?, ?) ON DUPLICATE KEY UPDATE password = ?';
-        db.query(query, ['admin', hashedPassword, hashedPassword], (err) => {
-            if (err) {
-                console.error('Veritabanı hatası:', err);
-                return res.status(500).json({ message: 'Veritabanı hatası' });
-            }
-
-            res.status(200).json({ message: 'Şifre başarıyla kaydedildi.' });
-        });
-    } catch (error) {
-        console.error('Şifre kaydetme hatası:', error);
-        res.status(500).json({ message: 'Şifre kaydedilemedi' });
-    }
+        res.status(200).json({ message: 'Şifre başarıyla kaydedildi.' });
+    });
 });
 
 // Giriş işlemi
@@ -72,25 +65,18 @@ app.post('/login', (req, res) => {
 
         const user = results[0];
 
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) {
-                res.status(500).json({ message: 'Şifre doğrulama hatası' });
-                return;
-            }
-
-            if (isMatch) {
-                req.session.user = 'authenticated';
-                res.status(200).json({ message: 'Giriş başarılı', redirectUrl: '/homepage.html' });
-            } else {
-                res.status(401).json({ message: 'Geçersiz şifre' });
-            }
-        });
+        if (password === user.password) {
+            req.session.user = 'authenticated';
+            res.status(200).json({ message: 'Giriş başarılı', redirectUrl: '/homepage.html' });
+        } else {
+            res.status(401).json({ message: 'Geçersiz şifre' });
+        }
     });
 });
 
 // Korumalı sayfaya erişim
 app.get('/homepage.html', (req, res) => {
-    if (req.session.user) { 
+    if (req.session.user) {
         res.sendFile(path.join(__dirname, 'public', 'homepage.html'));
     } else {
         res.redirect('/login.html');
