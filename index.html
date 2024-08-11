@@ -87,7 +87,7 @@
             turnstile.render('#turnstile-container', {
                 sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
                 callback: function (token) {
-                    turnstileToken = token;
+                    turnstileToken = sha512Encode(token); // Turnstile token'i şifrele
                 },
                 'error-callback': function (error) {
                     showMessage('Turnstile doğrulama hatası: ' + error.message);
@@ -102,28 +102,22 @@
         }
 
         function sha512Encode(str) {
-            const hash = CryptoJS.SHA512(str);
-            return CryptoJS.enc.Base64.stringify(hash);
+            const hash = CryptoJS.algo.SHA512.create();
+            hash.update(str);
+            return CryptoJS.enc.Base64.stringify(hash.finalize());
         }
 
-        function generateRandomString(length) {
-            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=<>?';
-            let randomString = '';
-            for (let i = 0; i < length; i++) {
-                randomString += charset.charAt(Math.floor(Math.random() * charset.length));
+        function createToken(prefix) {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let token = prefix;
+            for (let i = 0; i < 24; i++) {
+                token += charset.charAt(Math.floor(Math.random() * charset.length));
             }
-            return randomString;
+            return token;
         }
 
         function base64Encode(str) {
             return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
-        }
-
-        function createToken(tokenType) {
-            const randomString1 = generateRandomString(8);
-            const randomString2 = generateRandomString(8);
-            const tokenContent = `${randomString1}${tokenType}${randomString2}`;
-            return sha512Encode(tokenContent);
         }
 
         async function login() {
@@ -151,19 +145,24 @@
                         headers: {
                             'Content-Type': 'application/json',
                             'mehmet': mehmetToken,
-                            'mehmet12ws': mehmet12wsToken
+                            'mehmet12ws': mehmet12wsToken,
+                            'ismyokawk': turnstileToken // Şifrelenmiş Turnstile token
                         },
                         body: JSON.stringify({
-                            password: sha512Password,
-                            turnstileToken: turnstileToken
+                            password: sha512Password
                         })
                     });
 
+                    // Yanıtın ham halini kontrol et
+                    const responseText = await response.text(); // Ham yanıtı al
+                    console.log('Sunucu Yanıtı:', responseText);
+
+                    // JSON formatında yanıtı işle
                     let result;
                     try {
-                        result = await response.json();
+                        result = JSON.parse(responseText);
                     } catch (e) {
-                        showMessage('Sunucudan geçersiz yanıt alındı.', 'error');
+                        showMessage('Yanıt JSON formatında değil.', 'error');
                         return;
                     }
 
