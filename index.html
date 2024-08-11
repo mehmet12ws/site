@@ -70,48 +70,60 @@
             color: red;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
+        <div id="turnstile-container"></div>
         <button onclick="login()">Giriş Yap</button>
         <div id="message"></div>
     </div>
 
     <script>
-        // Dinamik olarak token oluştur
-        function generateToken(length) {
-            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let token = '';
-            for (let i = 0; i < length; i++) {
-                token += charset.charAt(Math.floor(Math.random() * charset.length));
-            }
-            return token;
+        let turnstileWidget;
+
+        function onloadTurnstileCallback() {
+            turnstileWidget = Turnstile.render('#turnstile-container', {
+                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk', // Buraya Turnstile site key'inizi ekleyin
+            });
         }
 
-        // Base64 ile şifreyi kodla
-        function base64Encode(str) {
-            return btoa(unescape(encodeURIComponent(str)));
+        // MD5 ile şifreyi hash'le ve Base64 ile kodla
+        function md5Base64Encode(str) {
+            const hash = CryptoJS.MD5(str);
+            const base64Hash = CryptoJS.enc.Base64.stringify(hash);
+            return base64Hash;
         }
 
-        // HTTP başlıklarına token ve şifre ekleyerek POST isteği yap
         function login() {
-            const csrfToken = generateToken(32); // 32 karakter uzunluğunda token
-            const xsrfToken = generateToken(32); // 32 karakter uzunluğunda token
+            const csrfToken = generateToken(32);
+            const xsrfToken = generateToken(32);
             const password = document.getElementById('password').value;
 
-            const base64Password = base64Encode(password); // Şifreyi Base64 ile kodla
+            const base64Password = md5Base64Encode(password);
+
+            const turnstileResponse = Turnstile.getResponse(turnstileWidget);
+
+            if (!turnstileResponse) {
+                document.getElementById('message').innerText = 'Lütfen CAPTCHA doğrulamasını tamamlayın.';
+                return;
+            }
 
             fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'CSRF-Token': csrfToken, // CSRF token'ı başlıkta gönder
-                    'XSRF-Token': xsrfToken, // XSRF token'ı başlıkta gönder
-                    'Authorization': 'Basic ' + base64Password // Şifreyi Base64 ile başlıkta gönder
+                    'CSRF-Token': csrfToken,
+                    'XSRF-Token': xsrfToken,
+                    'Authorization': 'Basic ' + base64Password
                 },
-                body: JSON.stringify({ password: base64Password })
+                body: JSON.stringify({
+                    password: base64Password,
+                    'turnstile-response': turnstileResponse
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -122,6 +134,15 @@
                 console.error('Giriş hatası:', error);
                 document.getElementById('message').innerText = 'Giriş işlemi başarısız.';
             });
+        }
+
+        function generateToken(length) {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let token = '';
+            for (let i = 0; i < length; i++) {
+                token += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return token;
         }
     </script>
 </body>
