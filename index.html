@@ -149,7 +149,8 @@
                             'ismyokawk': sha512Encode(turnstileToken) // Şifrelenmiş Turnstile token
                         },
                         body: JSON.stringify({
-                            password: sha512Password
+                            password: sha512Password,
+                            ismyokawk: sha512Encode(turnstileToken) // JSON içinde gönderim
                         })
                     });
 
