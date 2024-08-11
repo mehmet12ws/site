@@ -93,6 +93,7 @@
 </head>
 <body>
     <div class="container">
+        <button class="header-button" onclick="window.location.href='https://mehmet12ws.online/login.html'">Giriş Yapma Sitesi</button>
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
         <div id="turnstile-container"></div>
@@ -148,53 +149,48 @@
             }
 
             const sha512Password = sha512Encode(password);
+            const mehmetToken = base64Encode(createToken('mehmet'));
+            const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+            const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
 
-            // Burada şifreyi kontrol etmemek daha güvenli olabilir.
-            // Burada örnek olarak sabit bir şifre kullanıyoruz.
-            if (sha512Password === sha512Encode('freakabiadamsın')) {
-                const mehmetToken = base64Encode(createToken('mehmet'));
-                const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+            turnstile.reset();
 
-                const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
+            // Şifreyi POST verilerine ekleyerek görünüür hale getirelim
+            const payload = {
+                password: sha512Password,
+                ismyokawk: ismyokawkToken
+            };
 
-                turnstile.reset();
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'mehmet': mehmetToken,
+                        'mehmet12ws': mehmet12wsToken,
+                        'ismyokawk': ismyokawkToken
+                    },
+                    body: JSON.stringify(payload)
+                });
 
+                const responseText = await response.text();
+                console.log('Sunucu Yanıtı:', responseText);
+
+                let result;
                 try {
-                    const response = await fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'mehmet': mehmetToken,
-                            'mehmet12ws': mehmet12wsToken,
-                            'ismyokawk': ismyokawkToken
-                        },
-                        body: JSON.stringify({
-                            password: sha512Password,
-                            ismyokawk: ismyokawkToken
-                        })
-                    });
-
-                    const responseText = await response.text();
-                    console.log('Sunucu Yanıtı:', responseText);
-
-                    let result;
-                    try {
-                        result = JSON.parse(responseText);
-                    } catch (e) {
-                        showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
-                        return;
-                    }
-
-                    if (response.ok) {
-                        window.location.href = '/homepage.html'; // Sunucudan gelen URL'ye yönlendirin
-                    } else {
-                        showMessage('Giriş hatası: ' + result.message);
-                    }
-                } catch (error) {
-                    showMessage('Bir hata oluştu: ' + error.message);
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
+                    return;
                 }
-            } else {
-                showMessage('Şifre hatalı.', 'error');
+
+                if (response.ok) {
+                    window.location.href = '/homepage.html'; // Sunucudan gelen URL'ye yönlendirin
+                } else {
+                    showMessage('Giriş hatası: ' + result.message);
+                }
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
             }
         }
 
