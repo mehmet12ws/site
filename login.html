@@ -5,14 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş</title>
     <style>
-        /* Stil tanımları */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="password"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .header-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: white;
+            border: none;
+        }
+
+        .header-button:hover {
+            background-color: #0056b3;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
+    <button class="header-button" onclick="window.location.href='https://mehmet12ws.online/login.html'">Giriş Yapma Sitesi</button>
     <div class="container">
-        <button class="header-button" onclick="window.location.href='https://mehmet12ws.online/login.html'">Giriş Yapma Sitesi</button>
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
         <div id="turnstile-container"></div>
@@ -61,40 +143,36 @@
 
             const sha512Password = CryptoJS.SHA512(password).toString(CryptoJS.enc.Base64);
 
-            if (sha512Password === serverHashedPassword) {
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        password: sha512Password,
+                        turnstileToken: turnstileToken
+                    })
+                });
+
+                const responseText = await response.text();
+                console.log('Sunucu Yanıtı:', responseText);
+
+                let result;
                 try {
-                    const response = await fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            password: password,
-                            turnstileToken: turnstileToken
-                        })
-                    });
-
-                    const responseText = await response.text();
-                    console.log('Sunucu Yanıtı:', responseText);
-
-                    let result;
-                    try {
-                        result = JSON.parse(responseText);
-                    } catch (e) {
-                        showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
-                        return;
-                    }
-
-                    if (response.ok) {
-                        window.location.href = '/homepage.html';  // Başarıyla giriş yaptıktan sonra yönlendirme
-                    } else {
-                        showMessage('Giriş hatası: ' + result.message);
-                    }
-                } catch (error) {
-                    showMessage('Bir hata oluştu: ' + error.message);
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
+                    return;
                 }
-            } else {
-                showMessage('Şifre hatalı.', 'error');
+
+                if (response.ok) {
+                    window.location.href = '/homepage.html';  // Başarıyla giriş yaptıktan sonra yönlendirme
+                } else {
+                    showMessage('Giriş hatası: ' + result.message);
+                }
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
             }
         }
 
