@@ -1,71 +1,59 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
-const axios = require('axios');
+async function login() {
+    const password = document.getElementById('password').value;
 
-const app = express();
-const secret = process.env.JWT_SECRET || 'your-256-bit-secret'; // Gizli anahtar
-
-app.use(bodyParser.json()); // JSON verilerini işlemek için
-
-// Şifreyi JWT token'a dönüştüren endpoint
-app.post('/generate-token', (req, res) => {
-    const { password, turnstileToken } = req.body;
-
-    if (turnstileToken) {
-        // Turnstile doğrulamasını yapın
-        axios.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', null, {
-            params: {
-                secret: '6LfnifsnAAAAAGJgf6kF8OiL-20-wIsK68QXP7x-',
-                response: turnstileToken
-            }
-        }).then(turnstileResponse => {
-            if (turnstileResponse.data.success) {
-                // Şifre doğrulaması ve JWT oluşturma
-                if (password) {
-                    const token = jwt.sign({ password }, secret, { expiresIn: '1h' }); // Token 1 saat geçerli
-                    res.json({ token, turnstileToken });
-                } else {
-                    res.status(400).json({ message: 'Geçersiz şifre' });
-                }
-            } else {
-                res.status(401).json({ message: 'Geçersiz Turnstile token' });
-            }
-        }).catch(error => {
-            res.status(500).json({ message: 'Turnstile doğrulama hatası' });
-        });
-    } else {
-        res.status(400).json({ message: 'Turnstile tokenı sağlanmalıdır.' });
+    if (!password || !turnstileToken) {
+        showMessage('Şifre veya Turnstile token boş olamaz.');
+        return;
     }
-});
 
-// JWT token doğrulama endpoint'i
-app.post('/login', (req, res) => {
-    const { token, turnstileToken } = req.body;
+    // Şifreyi SHA-512 ile şifrele
+    const sha512Password = sha512Encode(password);
 
-    // Turnstile doğrulamasını yapın
-    axios.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', null, {
-        params: {
-            secret: '6LfnifsnAAAAAGJgf6kF8OiL-20-wIsK68QXP7x-',
-            response: turnstileToken
-        }
-    }).then(turnstileResponse => {
-        if (turnstileResponse.data.success) {
-            // JWT token'ı doğrulama
+    if (password === 'freakabiadamsın') {
+        // Token oluştur
+        const mehmetToken = base64Encode(createToken('mehmet'));
+        const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+
+        // Turnstile CAPTCHA doğrulamasını sıfırla
+        turnstile.reset();
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'mehmet': mehmetToken,
+                    'mehmet12ws': mehmet12wsToken
+                },
+                body: JSON.stringify({
+                    password: sha512Password,
+                    turnstileToken: turnstileToken
+                })
+            });
+
+            // Yanıtın ham halini kontrol et
+            const responseText = await response.text(); // Ham yanıtı al
+            console.log('Sunucu Yanıtı:', responseText);
+
+            // JSON formatında yanıtı işle
+            let result;
             try {
-                const decoded = jwt.verify(token, secret);
-                res.json({ message: 'Giriş başarılı', token, turnstileToken });
-            } catch (err) {
-                res.status(401).json({ message: 'Geçersiz token' });
+                result = JSON.parse(responseText);
+            } catch (e) {
+                showMessage('Yanıt JSON formatında değil.', 'error');
+                return;
             }
-        } else {
-            res.status(401).json({ message: 'Geçersiz Turnstile token' });
-        }
-    }).catch(error => {
-        res.status(500).json({ message: 'Turnstile doğrulama hatası' });
-    });
-});
 
-app.listen(3000, () => {
-    console.log('Sunucu çalışıyor');
-});
+            if (response.ok) {
+                // Başarıyla giriş yaptıktan sonra yönlendirme
+                window.location.href = 'https://mehmet12ws.online/homepage.html';
+            } else {
+                showMessage('Giriş hatası: ' + result.message);
+            }
+        } catch (error) {
+            showMessage('Bir hata oluştu: ' + error.message);
+        }
+    } else {
+        showMessage('Şifre hatalı.', 'error');
+    }
+}
