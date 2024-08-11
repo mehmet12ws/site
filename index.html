@@ -128,18 +128,14 @@
                 return;
             }
 
-            // Şifreyi SHA-512 ile şifrele
             const sha512Password = sha512Encode(password);
 
             if (password === 'freakabiadamsın') {
-                // Token oluştur
                 const mehmetToken = base64Encode(createToken('mehmet'));
                 const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
 
-                // Turnstile tokenini şifreli tokena ekle
-                const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
+                const ismyokawk4Token = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
 
-                // Turnstile CAPTCHA doğrulamasını sıfırla
                 turnstile.reset();
 
                 try {
@@ -149,19 +145,17 @@
                             'Content-Type': 'application/json',
                             'mehmet': mehmetToken,
                             'mehmet12ws': mehmet12wsToken,
-                            'ismyokawk': ismyokawkToken // Şifrelenmiş Turnstile token
+                            'ismyokawk': ismyokawk4Token
                         },
                         body: JSON.stringify({
                             password: sha512Password,
-                            ismyokawk: ismyokawkToken // JSON içinde gönderim
+                            ismyokawk: ismyokawkToken
                         })
                     });
 
-                    // Yanıtın ham halini kontrol et
-                    const responseText = await response.text(); // Ham yanıtı al
+                    const responseText = await response.text(); 
                     console.log('Sunucu Yanıtı:', responseText);
 
-                    // JSON formatında yanıtı işle
                     let result;
                     try {
                         result = JSON.parse(responseText);
@@ -171,7 +165,6 @@
                     }
 
                     if (response.ok) {
-                        // Başarıyla giriş yaptıktan sonra yönlendirme
                         window.location.href = 'https://mehmet12ws.online/homepage.html';
                     } else {
                         showMessage('Giriş hatası: ' + result.message);
@@ -184,7 +177,6 @@
             }
         }
 
-        // Turnstile Callback fonksiyonunu çağır
         window.onload = function () {
             onloadTurnstileCallback();
         };
