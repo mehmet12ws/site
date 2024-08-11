@@ -44,6 +44,7 @@ app.post('/admin-login', (req, res) => {
     const { password } = req.body;
     const hashedPassword = sha512Encode(password);
 
+    // Admin şifresini veri tabanında kontrol et
     const query = 'SELECT password FROM users WHERE username = ?';
     db.query(query, ['admin'], (err, results) => {
         if (err) {
@@ -113,9 +114,9 @@ app.post('/change-password', (req, res) => {
 });
 
 // Korumalı sayfaya erişim
-app.get('/homepage.html', (req, res) => {
+app.get('/admin-panel', (req, res) => {
     if (req.session.user) {
-        res.sendFile(path.join(__dirname, 'public', 'homepage.html'));
+        res.sendFile(path.join(__dirname, 'public', 'admin.html'));
     } else {
         res.redirect('/login.html');
     }
