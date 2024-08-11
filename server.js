@@ -1,42 +1,55 @@
 const express = require('express');
+const session = require('express-session');
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
 const path = require('path');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(express.static(__dirname));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Giriş İşlemi
-app.post('/login', (req, res) => {
-    const password = req.body.password;
-    const ismyokawkToken = req.body.ismyokawk;
-    const mehmetToken = req.headers['mehmet'];
-    const mehmet12wsToken = req.headers['mehmet12ws'];
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+}));
 
-    const expectedPassword = sha512Encode('freakabiadamsın');
-    const expectedIsmyokawkToken = sha512Encode('eYjsa4sa4sa');
-
-    if (password === expectedPassword && ismyokawkToken === expectedIsmyokawkToken) {
-        res.json({ message: 'Başarıyla giriş yaptınız.' }); // JSON formatında yanıt
+// Kullanıcının giriş yapıp yapmadığını kontrol eden bir middleware
+function isAuthenticated(req, res, next) {
+    if (req.session.authenticated) {
+        return next();
     } else {
-        res.status(400).json({ message: 'Şifre veya başlıklar hatalı.' }); // JSON formatında yanıt
+        res.redirect('/login.html');
     }
-});
+}
 
-// Sayfa Yönlendirme
-app.get('/homepage.html', (req, res) => {
+// Giriş yapılmış kullanıcılar için korunan bir route
+app.get('/homepage.html', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'homepage.html'));
 });
 
-// Şifreyi SHA-512 ile şifreleme
-function sha512Encode(str) {
-    const hash = crypto.createHash('sha512');
-    hash.update(str);
-    return hash.digest('base64');
-}
+// Giriş yapma işlemi
+app.post('/login', (req, res) => {
+    if (req.body.password === 'freakabiadamsın') {
+        req.session.authenticated = true;
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ message: 'Giriş hatalı' });
+    }
+});
 
-// Sunucuyu başlatma
+// Giriş çıkış işlemi
+app.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: 'Çıkış hatası' });
+        }
+        res.json({ success: true });
+    });
+});
+
+// Diğer statik dosyalar
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.listen(3000, () => {
-    console.log('Sunucu başlatıldı');
+    console.log('Sunucu 3000 portunda çalışıyor.');
 });
