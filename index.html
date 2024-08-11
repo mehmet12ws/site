@@ -90,20 +90,28 @@
             return token;
         }
 
-        // HTTP başlıklarına token ekleyerek POST isteği yap
+        // Base64 ile şifreyi kodla
+        function base64Encode(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        // HTTP başlıklarına token ve şifre ekleyerek POST isteği yap
         function login() {
             const csrfToken = generateToken(32); // 32 karakter uzunluğunda token
             const xsrfToken = generateToken(32); // 32 karakter uzunluğunda token
             const password = document.getElementById('password').value;
+
+            const base64Password = base64Encode(password); // Şifreyi Base64 ile kodla
 
             fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'CSRF-Token': csrfToken, // CSRF token'ı başlıkta gönder
-                    'XSRF-Token': xsrfToken  // XSRF token'ı başlıkta gönder
+                    'XSRF-Token': xsrfToken, // XSRF token'ı başlıkta gönder
+                    'Authorization': 'Basic ' + base64Password // Şifreyi Base64 ile başlıkta gönder
                 },
-                body: JSON.stringify({ password })
+                body: JSON.stringify({ password: base64Password })
             })
             .then(response => response.json())
             .then(data => {
