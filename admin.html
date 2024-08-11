@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Şifre Belirleme</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #333;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="password"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Şifre Belirle</h1>
+        <input type="password" id="password" placeholder="Yeni şifreyi girin">
+        <button onclick="setPassword()">Şifreyi Belirle</button>
+        <div id="message"></div>
+    </div>
+    <script>
+        function showMessage(message, type = 'error') {
+            const messageElement = document.getElementById('message');
+            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+            messageElement.textContent = message;
+        }
+
+        function sha512Encode(str) {
+            const hash = CryptoJS.algo.SHA512.create();
+            hash.update(str);
+            return CryptoJS.enc.Base64.stringify(hash.finalize());
+        }
+
+        async function setPassword() {
+            const password = document.getElementById('password').value;
+
+            if (!password) {
+                showMessage('Şifre boş olamaz.');
+                return;
+            }
+
+            const sha512Password = sha512Encode(password);
+
+            try {
+                const response = await fetch('/set-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password: sha512Password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('Şifre başarıyla kaydedildi.', 'success');
+                } else {
+                    showMessage('Şifre kaydedilemedi: ' + result.message);
+                }
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
