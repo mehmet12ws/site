@@ -101,6 +101,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     document.getElementById('admin-section').style.display = 'block';
+                    window.location.href = '/admin-panel'; // Admin paneline yönlendir
                 } else {
                     showMessage(result.message);
                 }
