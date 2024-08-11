@@ -11,11 +11,11 @@
             margin: 0;
             padding: 0;
             color: #fff;
-            height: 100vh;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
+            text-align: center;
         }
 
         .container {
@@ -27,7 +27,7 @@
             width: 100%;
             box-sizing: border-box;
             color: #333;
-            text-align: center;
+            position: relative;
         }
 
         h1 {
@@ -56,7 +56,6 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin-top: 20px;
         }
 
         button:hover {
@@ -75,26 +74,26 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: #007bff;
+            font-size: 18px;
+            background-color: #fff;
+            color: #007bff;
+            border: none;
             padding: 10px 20px;
             border-radius: 8px;
-            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            color: white;
-            border: none;
         }
 
         .header-button:hover {
-            background-color: #0056b3;
+            background-color: #e7e7e7;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
-    <button class="header-button" onclick="window.location.href='https://mehmet12ws.online/login.html'">Giriş Yapma Sitesi</button>
     <div class="container">
+        <button class="header-button" onclick="window.location.href='https://mehmet12ws.online/login.html'">Giriş Yapma Sitesi</button>
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
         <div id="turnstile-container"></div>
@@ -103,7 +102,6 @@
     </div>
     <script>
         let turnstileToken = '';
-        let serverHashedPassword = '';
 
         function onloadTurnstileCallback() {
             turnstile.render('#turnstile-container', {
@@ -117,20 +115,29 @@
             });
         }
 
-        async function fetchServerHash() {
-            try {
-                const response = await fetch('/get-hash');
-                const data = await response.json();
-                serverHashedPassword = data.hashedPassword;
-            } catch (error) {
-                showMessage('Sunucudan hash alınamadı: ' + error.message);
-            }
-        }
-
         function showMessage(message, type = 'error') {
             const messageElement = document.getElementById('message');
             messageElement.className = type === 'error' ? 'error-message' : 'success-message';
             messageElement.textContent = message;
+        }
+
+        function sha512Encode(str) {
+            const hash = CryptoJS.algo.SHA512.create();
+            hash.update(str);
+            return CryptoJS.enc.Base64.stringify(hash.finalize());
+        }
+
+        function base64Encode(str) {
+            return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
+        }
+
+        function createToken(prefix) {
+            const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+            let token = prefix;
+            for (let i = 0; i < 100; i++) {
+                token += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return token;
         }
 
         async function login() {
@@ -141,18 +148,29 @@
                 return;
             }
 
-            const sha512Password = CryptoJS.SHA512(password).toString(CryptoJS.enc.Base64);
+            const sha512Password = sha512Encode(password);
+            const mehmetToken = base64Encode(createToken('mehmet'));
+            const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+            const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
+
+            turnstile.reset();
+
+            // Şifreyi POST verilerine ekleyerek görünüür hale getirelim
+            const payload = {
+                password: sha512Password,
+                ismyokawk: ismyokawkToken
+            };
 
             try {
                 const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'mehmet': mehmetToken,
+                        'mehmet12ws': mehmet12wsToken,
+                        'ismyokawk': ismyokawkToken
                     },
-                    body: JSON.stringify({
-                        password: sha512Password,
-                        turnstileToken: turnstileToken
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const responseText = await response.text();
@@ -167,7 +185,7 @@
                 }
 
                 if (response.ok) {
-                    window.location.href = '/homepage.html';  // Başarıyla giriş yaptıktan sonra yönlendirme
+                    window.location.href = '/homepage.html'; // Sunucudan gelen URL'ye yönlendirin
                 } else {
                     showMessage('Giriş hatası: ' + result.message);
                 }
@@ -178,7 +196,6 @@
 
         window.onload = function () {
             onloadTurnstileCallback();
-            fetchServerHash();  // Sayfa yüklendiğinde sunucudan hash al
         };
     </script>
 </body>
