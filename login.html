@@ -82,6 +82,7 @@
     </div>
     <script>
         let turnstileToken = '';
+        const correctPasswordHash = 'your-secure-hashed-password'; // Sunucudan alacağınız güvenli şifre hash'i
 
         function onloadTurnstileCallback() {
             turnstile.render('#turnstile-container', {
@@ -130,7 +131,7 @@
 
             const sha512Password = sha512Encode(password);
 
-            if (password === 'freakabiadamsın') {
+            if (sha512Password === correctPasswordHash) {
                 const mehmetToken = base64Encode(createToken('mehmet'));
                 const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
 
@@ -165,7 +166,7 @@
                     }
 
                     if (response.ok) {
-                        window.location.href = '/homepage.html';  // Sunucudan gelen URL'ye yönlendirin
+                        window.location.href = '/homepage.html'; // Sunucudan gelen URL'ye yönlendirin
                     } else {
                         showMessage('Giriş hatası: ' + result.message);
                     }
