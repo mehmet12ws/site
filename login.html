@@ -30,6 +30,24 @@
             position: relative;
         }
 
+        .header-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: #0056b3;
+        }
+
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
@@ -69,30 +87,13 @@
         .error-message {
             color: red;
         }
-
-        .header-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 18px;
-            background-color: #fff;
-            color: #007bff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .header-button:hover {
-            background-color: #e7e7e7;
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
+        <button class="header-button" onclick="window.location.href='https://mehmet12ws.online/login.html'">Giriş Yapma Sitesi</button>
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
         <div id="turnstile-container"></div>
@@ -148,17 +149,12 @@
             }
 
             const sha512Password = sha512Encode(password);
+
             const mehmetToken = base64Encode(createToken('mehmet'));
             const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
             const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
 
             turnstile.reset();
-
-            // Şifreyi POST verilerine ekleyerek görünüür hale getirelim
-            const payload = {
-                password: sha512Password,
-                ismyokawk: ismyokawkToken
-            };
 
             try {
                 const response = await fetch('/login', {
@@ -169,7 +165,10 @@
                         'mehmet12ws': mehmet12wsToken,
                         'ismyokawk': ismyokawkToken
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        password: sha512Password,
+                        ismyokawk: ismyokawkToken
+                    })
                 });
 
                 const responseText = await response.text();
@@ -184,7 +183,7 @@
                 }
 
                 if (response.ok) {
-                    window.location.href = '/homepage.html'; // Sunucudan gelen URL'ye yönlendirin
+                    window.location.href = '/homepage.html';  // Başarıyla giriş yaptıktan sonra yönlendirme
                 } else {
                     showMessage('Giriş hatası: ' + result.message);
                 }
