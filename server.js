@@ -24,18 +24,24 @@ function createToken(prefix) {
     return token;
 }
 
+app.get('/get-hash', (req, res) => {
+    const hashedPassword = sha512Encode('freakabiadamsın');
+    res.json({ hashedPassword });
+});
+
 app.post('/login', (req, res) => {
     const { password, turnstileToken } = req.body;
 
-    // Şifre doğrulama
-    if (password === sha512Encode('freakabiadamsın')) {
+    if (sha512Encode(password) === sha512Encode('freakabiadamsın')) {
         const mehmetToken = base64Encode(createToken('mehmet'));
         const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
         const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
 
-        // Burada sunucu tarafında token'ları kullanabilir veya doğrulama yapabilirsiniz.
-
-        res.json({ success: true, message: 'Giriş başarılı!' });
+        res.json({ 
+            success: true, 
+            message: 'Giriş başarılı!',
+            tokens: { mehmetToken, mehmet12wsToken, ismyokawkToken } 
+        });
     } else {
         res.status(401).json({ success: false, message: 'Şifre hatalı.' });
     }
