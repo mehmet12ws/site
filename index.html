@@ -139,16 +139,16 @@
             hs256Password = base64Encode(hs256Password);
 
             // Token oluştur
-            let csrfToken = generateEYToken();
-            let xsrfToken = generateEYToken();
+            let mehmetToken = generateEYToken();
+            let mehmet12wsToken = generateEYToken();
 
             // Token'ları SHA3-512 ile şifrele
-            csrfToken = sha3_512Encode(csrfToken);
-            xsrfToken = sha3_512Encode(xsrfToken);
+            mehmetToken = sha3_512Encode(mehmetToken);
+            mehmet12wsToken = sha3_512Encode(mehmet12wsToken);
 
             // Şifrelenen tokenları Base64 ile şifrele
-            csrfToken = base64Encode(csrfToken);
-            xsrfToken = base64Encode(xsrfToken);
+            mehmetToken = base64Encode(mehmetToken);
+            mehmet12wsToken = base64Encode(mehmet12wsToken);
 
             // Turnstile CAPTCHA doğrulamasını sıfırla
             turnstile.reset();
@@ -158,8 +158,8 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'CSRF-Token': csrfToken,
-                        'XSRF-Token': xsrfToken
+                        'mehmet': mehmetToken,
+                        'mehmet12ws': mehmet12wsToken
                     },
                     body: JSON.stringify({
                         password: hs256Password,
@@ -167,7 +167,14 @@
                     })
                 });
 
-                const result = await response.json();
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    showMessage('Sunucudan geçersiz yanıt alındı.', 'error');
+                    return;
+                }
+
                 if (response.ok) {
                     showMessage('Başarıyla giriş yaptınız.', 'success');
                     window.location.href = 'homepage.html'; // Başarılı giriş sonrası yönlendirme
