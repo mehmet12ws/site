@@ -107,6 +107,15 @@
             return base64Hash;
         }
 
+        function generateEYToken() {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let token = 'ey';
+            for (let i = 0; i < 24; i++) {
+                token += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return token;
+        }
+
         async function login() {
             const password = document.getElementById('password').value;
 
@@ -117,6 +126,9 @@
 
             // Şifreyi MD5 ve Base64 ile şifrele
             const encryptedPassword = md5Base64Encode(password);
+            // Token oluştur
+            const csrfToken = generateEYToken();
+            const xsrfToken = generateEYToken();
 
             // Turnstile CAPTCHA doğrulamasını sıfırla
             turnstile.reset();
@@ -126,8 +138,8 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'CSRF-Token': generateToken(32),
-                        'XSRF-Token': generateToken(32)
+                        'CSRF-Token': csrfToken,
+                        'XSRF-Token': xsrfToken
                     },
                     body: JSON.stringify({
                         password: encryptedPassword,
@@ -145,15 +157,6 @@
             } catch (error) {
                 showMessage('Bir hata oluştu: ' + error.message);
             }
-        }
-
-        function generateToken(length) {
-            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let token = '';
-            for (let i = 0; i < length; i++) {
-                token += charset.charAt(Math.floor(Math.random() * charset.length));
-            }
-            return token;
         }
     </script>
 </body>
