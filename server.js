@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const session = require('express-session');
+const path = require('path');
 const app = express();
 
 app.use(bodyParser.json());
@@ -33,7 +34,7 @@ app.post('/login', (req, res) => {
 // Sayfa Yönlendirme
 app.get('/homepage.html', (req, res) => {
     if (req.session.authenticated) {
-        res.sendFile(__dirname + '/homepage.html');
+        res.sendFile(path.join(__dirname, 'homepage.html'));
     } else {
         res.redirect('/login.html');
     }
