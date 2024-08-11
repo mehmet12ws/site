@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gisriş</title>
+    <title>Giriş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -129,43 +129,51 @@
             }
 
             const sha512Password = sha512Encode(password);
-            const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
 
-            turnstile.reset();
+            if (password === 'freakabiadamsın') {
+                const mehmetToken = base64Encode(createToken('mehmet'));
+                const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
 
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'mehmet': base64Encode(createToken('mehmet')),
-                        'mehmet12ws': base64Encode(createToken('mehmet12ws')),
-                        'ismyokawk': ismyokawkToken
-                    },
-                    body: JSON.stringify({
-                        password: sha512Password,
-                        ismyokawk: ismyokawkToken
-                    })
-                });
+                const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
 
-                const responseText = await response.text();
-                console.log('Sunucu Yanıtı:', responseText);
+                turnstile.reset();
 
-                let result;
                 try {
-                    result = JSON.parse(responseText);
-                } catch (e) {
-                    showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
-                    return;
-                }
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'mehmet': mehmetToken,
+                            'mehmet12ws': mehmet12wsToken,
+                            'ismyokawk': ismyokawkToken
+                        },
+                        body: JSON.stringify({
+                            password: sha512Password,
+                            ismyokawk: ismyokawkToken
+                        })
+                    });
 
-                if (response.ok) {
-                    window.location.href = '/homepage.html'; // Sunucudan gelen URL'ye yönlendirin
-                } else {
-                    showMessage('Giriş hatası: ' + result.message);
+                    const responseText = await response.text();
+                    console.log('Sunucu Yanıtı:', responseText);
+
+                    let result;
+                    try {
+                        result = JSON.parse(responseText);
+                    } catch (e) {
+                        showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
+                        return;
+                    }
+
+                    if (response.ok) {
+                        window.location.href = '/homepage.html';  // Sunucudan gelen URL'ye yönlendirin
+                    } else {
+                        showMessage('Giriş hatası: ' + result.message);
+                    }
+                } catch (error) {
+                    showMessage('Bir hata oluştu: ' + error.message);
                 }
-            } catch (error) {
-                showMessage('Bir hata oluştu: ' + error.message);
+            } else {
+                showMessage('Şifre hatalı.', 'error');
             }
         }
 
