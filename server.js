@@ -15,7 +15,7 @@ app.post('/login', (req, res) => {
     const expectedPassword = sha512Encode('freakabiadamsın');
 
     // Tokenleri oluşturma ve şifreleme
-    const expectedIsmyokawkToken = sha512Encode('turnstileToken');
+    const expectedIsmyokawkToken = sha512Encode('turnstileToken' + 'eYjsa4sa4sa');
 
     console.log('Gelen Şifre:', password);
     console.log('Beklenen Şifre:', expectedPassword);
