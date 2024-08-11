@@ -66,17 +66,30 @@
             margin-top: 10px;
         }
     </style>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
+        <div id="turnstile-container"></div>
         <button onclick="login()">Giriş Yap</button>
         <div id="message"></div>
     </div>
     <script>
-        // Gerçek şifre: bakmasana kardeşim p
-        const correctPasswordHash = 'bf1e8573c9fa7aee54c35f5f6214a1e9092a4f8d7ecf9a7ef4dfb6d50a04795fbf47c50c04b09b65d4b70bb02623a223c6c1dc21b6c0c926d88d3ae6c776c2d7'; 
+        let turnstileToken = '';
+
+        function onloadTurnstileCallback() {
+            turnstile.render('#turnstile-container', {
+                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
+                callback: function (token) {
+                    turnstileToken = token;
+                },
+                'error-callback': function (error) {
+                    showMessage('Turnstile doğrulama hatası: ' + error.message);
+                }
+            });
+        }
 
         function base64Encode(input) {
             return btoa(unescape(encodeURIComponent(input)));
@@ -89,21 +102,35 @@
             return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
+        function showMessage(message, type = 'error') {
+            const messageElement = document.getElementById('message');
+            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+            messageElement.textContent = message;
+        }
+
         async function login() {
             const password = document.getElementById('password').value;
-            const messageElement = document.getElementById('message');
 
-            // Şifreyi önce Base64 ile encode et, sonra SHA-512 ile hashle
-            const base64Password = base64Encode(password);
-            const hashedPassword = await sha512(base64Password);
+            if (!password || !turnstileToken) {
+                showMessage('Şifre veya Turnstile token boş olamaz.');
+                return;
+            }
 
-            // Hash'lenmiş şifreyi doğru şifre hash'i ile karşılaştır
-            if (hashedPassword === correctPasswordHash) {
-                localStorage.setItem('isLoggedIn', 'true'); // Kullanıcının giriş yaptığını sakla
-                window.location.href = 'https://mehmet12ws.online/homepage.html'; // Başarılı giriş sonrası yönlendirme
-            } else {
-                messageElement.textContent = 'Şifre yanlış. Lütfen tekrar deneyin.';
-                messageElement.className = 'error-message';
+            try {
+                const base64Password = base64Encode(password);
+                const hashedPassword = await sha512(base64Password);
+
+                // Gerçek şifreyi kontrol et (Bu hash, doğru şifrenin hash'idir)
+                const correctPasswordHash = 'bf1e8573c9fa7aee54c35f5f6214a1e9092a4f8d7ecf9a7ef4dfb6d50a04795fbf47c50c04b09b65d4b70bb02623a223c6c1dc21b6c0c926d88d3ae6c776c2d7';
+
+                if (hashedPassword === correctPasswordHash) {
+                    showMessage('Başarıyla giriş yaptınız.', 'success');
+                    window.location.href = 'https://mehmet12ws.online/homepage.html';
+                } else {
+                    showMessage('Şifre yanlış. Lütfen tekrar deneyin.');
+                }
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
             }
         }
     </script>
