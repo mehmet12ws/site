@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gir2iş</title>
+    <title>Giriş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -101,23 +101,18 @@
             messageElement.textContent = message;
         }
 
-        function hs256Encode(str, secret) {
-            const hash = CryptoJS.HmacSHA256(str, secret);
+        function sha512Encode(str) {
+            const hash = CryptoJS.SHA512(str);
             return CryptoJS.enc.Base64.stringify(hash);
         }
 
-        function sha3_512Encode(str) {
-            const hash = CryptoJS.SHA3(str, { outputLength: 512 });
-            return CryptoJS.enc.Base64.stringify(hash);
-        }
-
-        function generateEYToken() {
-            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let token = 'ey';
-            for (let i = 0; i < 24; i++) {
-                token += charset.charAt(Math.floor(Math.random() * charset.length));
+        function generateRandomString(length) {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=<>?';
+            let randomString = '';
+            for (let i = 0; i < length; i++) {
+                randomString += charset.charAt(Math.floor(Math.random() * charset.length));
             }
-            return token;
+            return randomString;
         }
 
         function base64Encode(str) {
@@ -126,25 +121,22 @@
 
         async function login() {
             const password = document.getElementById('password').value;
-            const secret = "gizli_anahtar";  // HS256 için kullanılacak gizli anahtar
 
             if (!password || !turnstileToken) {
                 showMessage('Şifre veya Turnstile token boş olamaz.');
                 return;
             }
 
-            // Şifreyi HS256 ile şifrele
-            let hs256Password = hs256Encode(password, secret);
-            // HS256 şifrelemesini Base64 ile şifrele
-            hs256Password = base64Encode(hs256Password);
+            // Şifreyi SHA-512 ile şifrele
+            let sha512Password = sha512Encode(password);
 
             // Token oluştur
-            let mehmetToken = generateEYToken();
-            let mehmet12wsToken = generateEYToken();
+            let mehmetToken = generateRandomString(12) + 'mehmet' + generateRandomString(8);
+            let mehmet12wsToken = generateRandomString(8) + 'mehmet12ws' + generateRandomString(12);
 
-            // Token'ları SHA3-512 ile şifrele
-            mehmetToken = sha3_512Encode(mehmetToken);
-            mehmet12wsToken = sha3_512Encode(mehmet12wsToken);
+            // Token'ları SHA-512 ile şifrele
+            mehmetToken = sha512Encode(mehmetToken);
+            mehmet12wsToken = sha512Encode(mehmet12wsToken);
 
             // Şifrelenen tokenları Base64 ile şifrele
             mehmetToken = base64Encode(mehmetToken);
@@ -162,7 +154,7 @@
                         'mehmet12ws': mehmet12wsToken
                     },
                     body: JSON.stringify({
-                        password: hs256Password,
+                        password: sha512Password,
                         turnstileToken: turnstileToken
                     })
                 });
