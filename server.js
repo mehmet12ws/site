@@ -1,56 +1,46 @@
 const express = require('express');
-const session = require('express-session');
+const crypto = require('crypto');
 const bodyParser = require('body-parser');
-const path = require('path');
+
 const app = express();
+const port = 3000;
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-}));
-
-// Kullanıcının giriş yapıp yapmadığını kontrol eden middleware
-function isAuthenticated(req, res, next) {
-    if (req.session.authenticated) {
-        return next();
-    } else {
-        res.redirect('/login.html');
-    }
+function sha512Encode(str) {
+    return crypto.createHash('sha512').update(str).digest('base64');
 }
 
-// Giriş yapılmış kullanıcılar için korunan bir route
-app.get('/homepage.html', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'homepage.html'));
-});
+function base64Encode(str) {
+    return Buffer.from(str, 'utf8').toString('base64');
+}
 
-// Giriş yapma işlemi
+function createToken(prefix) {
+    const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+    let token = prefix;
+    for (let i = 0; i < 100; i++) {
+        token += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    return token;
+}
+
 app.post('/login', (req, res) => {
-    // Basit bir kontrol, gerçek durumda daha sağlam bir doğrulama yapılmalı
-    if (req.body.password === 'freakabiadamsın') {
-        req.session.authenticated = true;
-        res.json({ success: true });
+    const { password, turnstileToken } = req.body;
+
+    // Şifre doğrulama
+    if (password === sha512Encode('freakabiadamsın')) {
+        const mehmetToken = base64Encode(createToken('mehmet'));
+        const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+        const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
+
+        // Burada sunucu tarafında token'ları kullanabilir veya doğrulama yapabilirsiniz.
+
+        res.json({ success: true, message: 'Giriş başarılı!' });
     } else {
-        res.status(401).json({ message: 'Giriş hatalı' });
+        res.status(401).json({ success: false, message: 'Şifre hatalı.' });
     }
 });
 
-// Çıkış işlemi
-app.post('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            return res.status(500).json({ message: 'Çıkış hatası' });
-        }
-        res.json({ success: true });
-    });
-});
-
-// Statik dosyalar için route
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.listen(3000, () => {
-    console.log('Sunucu 3000 portunda çalışıyor.');
+app.listen(port, () => {
+    console.log(`Sunucu ${port} portunda çalışıyor`);
 });
