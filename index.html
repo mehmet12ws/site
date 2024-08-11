@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap</title>
+    <title>Giriş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,14 +12,13 @@
             padding: 0;
             color: #fff;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             height: 100vh;
             text-align: center;
         }
 
         .container {
-            margin-top: 80px;
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 12px;
@@ -71,7 +70,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -81,20 +80,26 @@
         <button onclick="login()">Giriş Yap</button>
         <div id="message"></div>
     </div>
-
     <script>
-        let turnstileWidget;
+        let turnstileToken = '';
 
         function onloadTurnstileCallback() {
-            turnstileWidget = Turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk', // Turnstile site key'inizi buraya ekleyin
+            turnstile.render('#turnstile-container', {
+                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
+                callback: function (token) {
+                    turnstileToken = token;
+                },
+                'error-callback': function (error) {
+                    showMessage('Turnstile doğrulama hatası: ' + error.message);
+                }
             });
         }
 
-        // Turnstile API yüklendiğinde çağrılır
-        window.onload = function() {
-            onloadTurnstileCallback();
-        };
+        function showMessage(message, type = 'error') {
+            const messageElement = document.getElementById('message');
+            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
+            messageElement.textContent = message;
+        }
 
         function md5Base64Encode(str) {
             const hash = CryptoJS.MD5(str);
@@ -102,52 +107,44 @@
             return base64Hash;
         }
 
-        function login() {
-            const csrfToken = generateToken(32);
-            const xsrfToken = generateToken(32);
+        async function login() {
             const password = document.getElementById('password').value;
 
-            if (!password) {
-                document.getElementById('message').innerText = 'Lütfen bir şifre girin.';
+            if (!password || !turnstileToken) {
+                showMessage('Şifre veya Turnstile token boş olamaz.');
                 return;
             }
 
-            const base64Password = md5Base64Encode(password);
-            const turnstileResponse = Turnstile.getResponse(turnstileWidget);
+            // Şifreyi MD5 ve Base64 ile şifrele
+            const encryptedPassword = md5Base64Encode(password);
 
-            if (!turnstileResponse) {
-                document.getElementById('message').innerText = 'Lütfen CAPTCHA doğrulamasını tamamlayın.';
-                return;
-            }
+            // Turnstile CAPTCHA doğrulamasını sıfırla
+            turnstile.reset();
 
-            const headers = new Headers({
-                'Content-Type': 'application/json',
-                'CSRF-Token': csrfToken,
-                'XSRF-Token': xsrfToken,
-            });
-
-            const requestOptions = {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify({
-                    password: base64Password,
-                    'turnstile-response': turnstileResponse
-                })
-            };
-
-            fetch('/login', requestOptions)
-                .then(response => {
-                    console.log('HTTP Status:', response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Giriş başarılı:', data);
-                    document.getElementById('message').innerText = 'Giriş işlemi gerçekleştirildi.';
-                })
-                .catch(error => {
-                    console.error('Giriş hatası:', error);
-                    document.getElementById('message').innerText = 'Giriş işlemi başarısız.';
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'CSRF-Token': generateToken(32),
+                        'XSRF-Token': generateToken(32)
+                    },
+                    body: JSON.stringify({
+                        password: encryptedPassword,
+                        turnstileToken: turnstileToken
+                    })
                 });
+
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage('Başarıyla giriş yaptınız.', 'success');
+                    window.location.href = 'homepage.html'; // Başarılı giriş sonrası yönlendirme
+                } else {
+                    showMessage('Giriş hatası: ' + result.message);
+                }
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
+            }
         }
 
         function generateToken(length) {
