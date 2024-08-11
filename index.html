@@ -101,13 +101,13 @@
             messageElement.textContent = message;
         }
 
-        function md5Base64Encode(str) {
-            const hash = CryptoJS.MD5(str);
+        function hs256Encode(str, secret) {
+            const hash = CryptoJS.HmacSHA256(str, secret);
             return CryptoJS.enc.Base64.stringify(hash);
         }
 
-        function sha512Base64Encode(str) {
-            const hash = CryptoJS.SHA512(str);
+        function sha3_512Encode(str) {
+            const hash = CryptoJS.SHA3(str, { outputLength: 512 });
             return CryptoJS.enc.Base64.stringify(hash);
         }
 
@@ -120,24 +120,35 @@
             return token;
         }
 
+        function base64Encode(str) {
+            return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
+        }
+
         async function login() {
             const password = document.getElementById('password').value;
+            const secret = "gizli_anahtar";  // HS256 için kullanılacak gizli anahtar
 
             if (!password || !turnstileToken) {
                 showMessage('Şifre veya Turnstile token boş olamaz.');
                 return;
             }
 
-            // Şifreyi MD5 ve Base64 ile şifrele
-            const md5Password = md5Base64Encode(password);
+            // Şifreyi HS256 ile şifrele
+            let hs256Password = hs256Encode(password, secret);
+            // HS256 şifrelemesini Base64 ile şifrele
+            hs256Password = base64Encode(hs256Password);
 
             // Token oluştur
-            const csrfToken = generateEYToken();
-            const xsrfToken = generateEYToken();
+            let csrfToken = generateEYToken();
+            let xsrfToken = generateEYToken();
 
-            // Token'ları SHA-512 ile şifrele
-            const encryptedCsrfToken = sha512Base64Encode(csrfToken);
-            const encryptedXsrfToken = sha512Base64Encode(xsrfToken);
+            // Token'ları SHA3-512 ile şifrele
+            csrfToken = sha3_512Encode(csrfToken);
+            xsrfToken = sha3_512Encode(xsrfToken);
+
+            // Şifrelenen tokenları Base64 ile şifrele
+            csrfToken = base64Encode(csrfToken);
+            xsrfToken = base64Encode(xsrfToken);
 
             // Turnstile CAPTCHA doğrulamasını sıfırla
             turnstile.reset();
@@ -147,11 +158,11 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'CSRF-Token': encryptedCsrfToken,
-                        'XSRF-Token': encryptedXsrfToken
+                        'CSRF-Token': csrfToken,
+                        'XSRF-Token': xsrfToken
                     },
                     body: JSON.stringify({
-                        password: md5Password,
+                        password: hs256Password,
                         turnstileToken: turnstileToken
                     })
                 });
