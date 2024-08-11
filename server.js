@@ -14,6 +14,10 @@ app.post('/login', (req, res) => {
     // Şifre doğrulama (SHA-512 ile şifrelenmiş 'freakabiadamsın')
     const expectedPassword = sha512Encode('freakabiadamsın');
 
+    console.log('Gelen Şifre:', password);
+    console.log('Beklenen Şifre:', expectedPassword);
+    console.log('ismyokawk Token:', ismyokawkToken);
+
     if (password === expectedPassword) {
         res.json({ message: 'Başarıyla giriş yaptınız.' });
     } else {
