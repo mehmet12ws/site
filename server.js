@@ -5,16 +5,6 @@ const crypto = require('crypto');
 const app = express();
 app.use(bodyParser.json());
 
-// Helper function to generate random string
-function generateRandomString(length) {
-    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?@#$%^&*()-_=+[]{}|;:",.<>?/';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    return result;
-}
-
 app.post('/login', (req, res) => {
     const password = req.body.password;
     const ismyokawkToken = req.body.ismyokawk;
@@ -33,12 +23,7 @@ app.post('/login', (req, res) => {
 
     // Doğru şifre ve başlıkların kontrolü
     if (password === expectedPassword && ismyokawkToken === expectedIsmyokawkToken) {
-        // Giriş başarılı, rastgele bir token üret
-        const randomToken = generateRandomString(50);
-        res.json({
-            message: 'Başarıyla giriş yaptınız.',
-            randomToken: randomToken
-        });
+        res.json({ message: 'Başarıyla giriş yaptınız.' });
     } else {
         res.status(400).json({ message: 'Şifre veya başlıklar hatalı.' });
     }
