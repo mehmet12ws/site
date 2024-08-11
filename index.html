@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gi2riş</title>
+    <title>Giriş Yap</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -61,16 +61,12 @@
             background-color: #0056b3;
         }
 
-        .success-message {
-            color: green;
-        }
-
         .error-message {
             color: red;
+            margin-top: 10px;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -95,94 +91,63 @@
             });
         }
 
+        function base64Encode(input) {
+            return btoa(unescape(encodeURIComponent(input)));
+        }
+
+        async function sha512(input) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input);
+            const hash = await crypto.subtle.digest('SHA-512', data);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
         function showMessage(message, type = 'error') {
             const messageElement = document.getElementById('message');
             messageElement.className = type === 'error' ? 'error-message' : 'success-message';
             messageElement.textContent = message;
         }
 
-        function hs256Encode(str, secret) {
-            const hash = CryptoJS.HmacSHA256(str, secret);
-            return CryptoJS.enc.Base64.stringify(hash);
-        }
-
-        function sha3_512Encode(str) {
-            const hash = CryptoJS.SHA3(str, { outputLength: 512 });
-            return CryptoJS.enc.Base64.stringify(hash);
-        }
-
-        function generateEYToken() {
-            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let token = 'ey';
-            for (let i = 0; i < 24; i++) {
-                token += charset.charAt(Math.floor(Math.random() * charset.length));
-            }
-            return token;
-        }
-
-        function base64Encode(str) {
-            return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
-        }
-
         async function login() {
             const password = document.getElementById('password').value;
-            const secret = "gizli_anahtar";  // HS256 için kullanılacak gizli anahtar
 
             if (!password || !turnstileToken) {
                 showMessage('Şifre veya Turnstile token boş olamaz.');
                 return;
             }
 
-            // Şifreyi HS256 ile şifrele
-            let hs256Password = hs256Encode(password, secret);
-            // HS256 şifrelemesini Base64 ile şifrele
-            hs256Password = base64Encode(hs256Password);
-
-            // Token oluştur
-            let csrfToken = generateEYToken();
-            let xsrfToken = generateEYToken();
-
-            // Token'ları SHA3-512 ile şifrele
-            csrfToken = sha3_512Encode(csrfToken);
-            xsrfToken = sha3_512Encode(xsrfToken);
-
-            // Şifrelenen tokenları Base64 ile şifrele
-            csrfToken = base64Encode(csrfToken);
-            xsrfToken = base64Encode(xsrfToken);
-
-            // Turnstile CAPTCHA doğrulamasını sıfırla
-            turnstile.reset();
-
             try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'CSRF-Token': csrfToken,
-                        'XSRF-Token': xsrfToken
-                    },
-                    body: JSON.stringify({
-                        password: hs256Password,
-                        turnstileToken: turnstileToken
-                    })
-                });
+                const base64Password = base64Encode(password);
+                const hashedPassword = await sha512(base64Password);
 
-                const result = await response.json();
-                if (response.ok) {
-                    showMessage('Başarıyla giriş yaptınız.', 'success');
-                    window.location.href = 'homepage.html'; // Başarılı giriş sonrası yönlendirme
+                const correctPasswordHash = 'bf1e8573c9fa7aee54c35f5f6214a1e9092a4f8d7ecf9a7ef4dfb6d50a04795fbf47c50c04b09b65d4b70bb02623a223c6c1dc21b6c0c926d88d3ae6c776c2d7';
+
+                if (hashedPassword === correctPasswordHash) {
+                    const response = await fetch('https://mehmet12ws.online/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Custom-Header': 'custom_value'
+                        },
+                        body: JSON.stringify({
+                            password: base64Password,
+                            turnstileToken: turnstileToken
+                        })
+                    });
+
+                    if (response.ok) {
+                        showMessage('Başarıyla giriş yaptınız.', 'success');
+                        window.location.href = 'https://mehmet12ws.online/homepage.html';
+                    } else {
+                        showMessage('Giriş hatası: ' + response.statusText);
+                    }
                 } else {
-                    showMessage('Giriş hatası: ' + result.message);
+                    showMessage('Şifre yanlış. Lütfen tekrar deneyin.');
                 }
             } catch (error) {
                 showMessage('Bir hata oluştu: ' + error.message);
             }
         }
-
-        // Turnstile Callback fonksiyonunu çağır
-        window.onload = function () {
-            onloadTurnstileCallback();
-        };
     </script>
 </body>
 </html>
