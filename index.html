@@ -71,7 +71,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -87,9 +87,14 @@
 
         function onloadTurnstileCallback() {
             turnstileWidget = Turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk', // Buraya Turnstile site key'inizi ekleyin
+                sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk', // Turnstile site key'inizi buraya ekleyin
             });
         }
+
+        // Turnstile API yüklendiğinde çağrılır
+        window.onload = function() {
+            onloadTurnstileCallback();
+        };
 
         function md5Base64Encode(str) {
             const hash = CryptoJS.MD5(str);
@@ -101,6 +106,11 @@
             const csrfToken = generateToken(32);
             const xsrfToken = generateToken(32);
             const password = document.getElementById('password').value;
+
+            if (!password) {
+                document.getElementById('message').innerText = 'Lütfen bir şifre girin.';
+                return;
+            }
 
             const base64Password = md5Base64Encode(password);
             const turnstileResponse = Turnstile.getResponse(turnstileWidget);
@@ -126,7 +136,10 @@
             };
 
             fetch('/login', requestOptions)
-                .then(response => response.json())
+                .then(response => {
+                    console.log('HTTP Status:', response.status);
+                    return response.json();
+                })
                 .then(data => {
                     console.log('Giriş başarılı:', data);
                     document.getElementById('message').innerText = 'Giriş işlemi gerçekleştirildi.';
