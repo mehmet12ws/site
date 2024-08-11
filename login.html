@@ -5,94 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
-            margin: 0;
-            padding: 0;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
-            color: #333;
-            position: relative;
-        }
-
-        .header-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px 20px;
-            font-size: 14px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .header-button:hover {
-            background-color: #0056b3;
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        input[type="password"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .success-message {
-            color: green;
-        }
-
-        .error-message {
-            color: red;
-        }
+        /* Stil tanımları */
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
+        <button class="header-button" onclick="window.location.href='https://mehmet12ws.online/login.html'">Giriş Yapma Sitesi</button>
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
         <div id="turnstile-container"></div>
@@ -101,6 +21,7 @@
     </div>
     <script>
         let turnstileToken = '';
+        let serverHashedPassword = '';
 
         function onloadTurnstileCallback() {
             turnstile.render('#turnstile-container', {
@@ -114,29 +35,20 @@
             });
         }
 
+        async function fetchServerHash() {
+            try {
+                const response = await fetch('/get-hash');
+                const data = await response.json();
+                serverHashedPassword = data.hashedPassword;
+            } catch (error) {
+                showMessage('Sunucudan hash alınamadı: ' + error.message);
+            }
+        }
+
         function showMessage(message, type = 'error') {
             const messageElement = document.getElementById('message');
             messageElement.className = type === 'error' ? 'error-message' : 'success-message';
             messageElement.textContent = message;
-        }
-
-        function sha512Encode(str) {
-            const hash = CryptoJS.algo.SHA512.create();
-            hash.update(str);
-            return CryptoJS.enc.Base64.stringify(hash.finalize());
-        }
-
-        function base64Encode(str) {
-            return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
-        }
-
-        function createToken(prefix) {
-            const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
-            let token = prefix;
-            for (let i = 0; i < 100; i++) {
-                token += charset.charAt(Math.floor(Math.random() * charset.length));
-            }
-            return token;
         }
 
         async function login() {
@@ -147,52 +59,48 @@
                 return;
             }
 
-            const sha512Password = sha512Encode(password);
+            const sha512Password = CryptoJS.SHA512(password).toString(CryptoJS.enc.Base64);
 
-            const mehmetToken = base64Encode(createToken('mehmet'));
-            const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
-            const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
-
-            turnstile.reset();
-
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'mehmet': mehmetToken,
-                        'mehmet12ws': mehmet12wsToken,
-                        'ismyokawk': ismyokawkToken
-                    },
-                    body: JSON.stringify({
-                        password: sha512Password,
-                        ismyokawk: ismyokawkToken
-                    })
-                });
-
-                const responseText = await response.text();
-                console.log('Sunucu Yanıtı:', responseText);
-
-                let result;
+            if (sha512Password === serverHashedPassword) {
                 try {
-                    result = JSON.parse(responseText);
-                } catch (e) {
-                    showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
-                    return;
-                }
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            password: password,
+                            turnstileToken: turnstileToken
+                        })
+                    });
 
-                if (response.ok) {
-                    window.location.href = '/homepage.html';  // Başarıyla giriş yaptıktan sonra yönlendirme
-                } else {
-                    showMessage('Giriş hatası: ' + result.message);
+                    const responseText = await response.text();
+                    console.log('Sunucu Yanıtı:', responseText);
+
+                    let result;
+                    try {
+                        result = JSON.parse(responseText);
+                    } catch (e) {
+                        showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
+                        return;
+                    }
+
+                    if (response.ok) {
+                        window.location.href = '/homepage.html';  // Başarıyla giriş yaptıktan sonra yönlendirme
+                    } else {
+                        showMessage('Giriş hatası: ' + result.message);
+                    }
+                } catch (error) {
+                    showMessage('Bir hata oluştu: ' + error.message);
                 }
-            } catch (error) {
-                showMessage('Bir hata oluştu: ' + error.message);
+            } else {
+                showMessage('Şifre hatalı.', 'error');
             }
         }
 
         window.onload = function () {
             onloadTurnstileCallback();
+            fetchServerHash();  // Sayfa yüklendiğinde sunucudan hash al
         };
     </script>
 </body>
