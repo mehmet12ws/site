@@ -14,12 +14,15 @@ app.post('/login', (req, res) => {
     // Şifre doğrulama (SHA-512 ile şifrelenmiş 'freakabiadamsın')
     const expectedPassword = sha512Encode('freakabiadamsın');
 
+    // Tokenleri oluşturma ve şifreleme
+    const expectedIsmyokawkToken = sha512Encode('turnstileToken');
+
     console.log('Gelen Şifre:', password);
     console.log('Beklenen Şifre:', expectedPassword);
     console.log('ismyokawk Token:', ismyokawkToken);
 
     // Doğru şifre ve başlıkların kontrolü
-    if (password === expectedPassword && ismyokawkToken === sha512Encode('turnstileToken')) {
+    if (password === expectedPassword && ismyokawkToken === expectedIsmyokawkToken) {
         res.json({ message: 'Başarıyla giriş yaptınız.' });
     } else {
         res.status(400).json({ message: 'Şifre veya başlıklar hatalı.' });
