@@ -108,16 +108,10 @@
                 return;
             }
 
-            // SHA-512
+            // Şifreleme işlemleri
             const sha512First = sha512Encode(password);
-
-            // Base64
             const base64Encoded = base64Encode(sha512First);
-
-            // MD5
             const md5Encoded = md5Encode(base64Encoded);
-
-            // SHA-512
             const finalSha512 = sha512Encode(md5Encoded);
 
             try {
@@ -129,7 +123,17 @@
                     body: JSON.stringify({ password: finalSha512 })
                 });
 
-                const result = await response.json();
+                const responseText = await response.text();
+                console.log('Sunucu Yanıtı:', responseText); // Yanıtı loglayın
+
+                // Yanıtı JSON formatına dönüştürmeyi deneyin
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
+                    return;
+                }
 
                 if (response.ok) {
                     showMessage('Şifre başarıyla kaydedildi.', 'success');
