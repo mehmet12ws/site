@@ -18,27 +18,8 @@
             text-align: center;
         }
 
-        header {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-bottom: 2px solid #ccc;
-            position: fixed;
-            top: 0;
-            left: 0;
-            text-align: center;
-            color: #333;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        header p {
-            margin: 0;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
         .container {
-            margin-top: 80px; /* Header'ın altında boşluk bırakmak için */
+            margin-top: 80px;
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 12px;
@@ -91,11 +72,6 @@
     </style>
 </head>
 <body>
-    <header>
-        <p>Hoşgeldiniz! Lütfen giriş yapın.</p>
-        <p id="csrf-info">CSRF Token: <span id="csrf-token">loading...</span></p>
-        <p id="xsrf-info">XSRF Token: <span id="xsrf-token">loading...</span></p>
-    </header>
     <div class="container">
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
@@ -114,39 +90,31 @@
             return token;
         }
 
-        // URL Encode işlemi
-        function urlEncode(str) {
-            return encodeURIComponent(str);
-        }
-
-        // Token'ları güncelle
-        function updateTokens() {
+        // HTTP başlıklarına token ekleyerek POST isteği yap
+        function login() {
             const csrfToken = generateToken(32); // 32 karakter uzunluğunda token
             const xsrfToken = generateToken(32); // 32 karakter uzunluğunda token
-            document.getElementById('csrf-token').textContent = csrfToken;
-            document.getElementById('xsrf-token').textContent = xsrfToken;
-        }
-
-        // Giriş işlemi
-        function login() {
-            updateTokens(); // Token'ları güncelle
-
-            const csrfToken = document.getElementById('csrf-token').textContent;
-            const xsrfToken = document.getElementById('xsrf-token').textContent;
             const password = document.getElementById('password').value;
 
-            // URL Encoded token'ları güncelle
-            console.log('Giriş Yapılıyor...');
-            console.log('Şifre:', password);
-            console.log('CSRF Token:', csrfToken);
-            console.log('XSRF Token:', xsrfToken);
-            
-            // Mesaj göstermek
-            document.getElementById('message').innerText = 'Giriş işlemi gerçekleştirildi.';
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'CSRF-Token': csrfToken, // CSRF token'ı başlıkta gönder
+                    'XSRF-Token': xsrfToken  // XSRF token'ı başlıkta gönder
+                },
+                body: JSON.stringify({ password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Giriş başarılı:', data);
+                document.getElementById('message').innerText = 'Giriş işlemi gerçekleştirildi.';
+            })
+            .catch(error => {
+                console.error('Giriş hatası:', error);
+                document.getElementById('message').innerText = 'Giriş işlemi başarısız.';
+            });
         }
-
-        // Sayfa yüklendiğinde token'ları güncelle
-        window.onload = updateTokens;
     </script>
 </body>
 </html>
