@@ -120,12 +120,27 @@
                 const base64Password = base64Encode(password);
                 const hashedPassword = await sha512(base64Password);
 
-                // Gerçek şifreyi kontrol et (Bu hash, doğru şifrenin hash'idir)
                 const correctPasswordHash = 'bf1e8573c9fa7aee54c35f5f6214a1e9092a4f8d7ecf9a7ef4dfb6d50a04795fbf47c50c04b09b65d4b70bb02623a223c6c1dc21b6c0c926d88d3ae6c776c2d7';
 
                 if (hashedPassword === correctPasswordHash) {
-                    showMessage('Başarıyla giriş yaptınız.', 'success');
-                    window.location.href = 'https://mehmet12ws.online/homepage.html';
+                    const response = await fetch('https://mehmet12ws.online/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Custom-Header': 'custom_value'
+                        },
+                        body: JSON.stringify({
+                            password: base64Password,
+                            turnstileToken: turnstileToken
+                        })
+                    });
+
+                    if (response.ok) {
+                        showMessage('Başarıyla giriş yaptınız.', 'success');
+                        window.location.href = 'https://mehmet12ws.online/homepage.html';
+                    } else {
+                        showMessage('Giriş hatası: ' + response.statusText);
+                    }
                 } else {
                     showMessage('Şifre yanlış. Lütfen tekrar deneyin.');
                 }
