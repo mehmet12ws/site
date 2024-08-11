@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş</title>
+    <title>Gi31riş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -119,6 +119,13 @@
             return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
         }
 
+        function createToken(tokenType) {
+            const randomString1 = generateRandomString(8);
+            const randomString2 = generateRandomString(8);
+            const tokenContent = `${randomString1}${tokenType}${randomString2}`;
+            return sha512Encode(tokenContent);
+        }
+
         async function login() {
             const password = document.getElementById('password').value;
 
@@ -128,19 +135,11 @@
             }
 
             // Şifreyi SHA-512 ile şifrele
-            let sha512Password = sha512Encode(password);
+            const sha512Password = sha512Encode(password);
 
             // Token oluştur
-            let mehmetToken = generateRandomString(12) + 'mehmet' + generateRandomString(8);
-            let mehmet12wsToken = generateRandomString(8) + 'mehmet12ws' + generateRandomString(12);
-
-            // Token'ları SHA-512 ile şifrele
-            mehmetToken = sha512Encode(mehmetToken);
-            mehmet12wsToken = sha512Encode(mehmet12wsToken);
-
-            // Şifrelenen tokenları Base64 ile şifrele
-            mehmetToken = base64Encode(mehmetToken);
-            mehmet12wsToken = base64Encode(mehmet12wsToken);
+            const mehmetToken = base64Encode(createToken('mehmet'));
+            const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
 
             // Turnstile CAPTCHA doğrulamasını sıfırla
             turnstile.reset();
