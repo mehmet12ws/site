@@ -3,80 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Sayfa</title>
+    <title>Giriş Yap</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff6f61, #d9a7c7, #d6e0f0);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             margin: 0;
             padding: 0;
             color: #fff;
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
             justify-content: center;
             align-items: center;
+            height: 100vh;
             text-align: center;
         }
 
-        .hero {
+        .container {
             background: rgba(255, 255, 255, 0.9);
-            color: #333;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
+            max-width: 500px;
             width: 100%;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            margin: 0;
+            box-sizing: border-box;
             color: #333;
         }
 
-        .hero p {
-            font-size: 24px;
-            margin-top: 10px;
-            color: #555;
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
         }
 
-        footer {
-            background-color: rgba(0, 0, 0, 0.4);
-            color: #fff;
-            padding: 20px;
-            position: fixed;
-            bottom: 0;
+        input[type="password"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
             width: 100%;
-            text-align: center;
-            font-size: 14px;
+            box-sizing: border-box;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
+        button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="hero">
-        <h1>Hoşgeldiniz!</h1>
-        <p>Test amaçlı kurdum, beler relax</p>
+    <div class="container">
+        <h1>Giriş Yap</h1>
+        <input type="password" id="password" placeholder="Şifrenizi girin">
+        <button onclick="login()">Giriş Yap</button>
+        <div id="message"></div>
     </div>
-    <footer>
-        <p>© 2024 Tüm hakları saklıdır.</p>
-    </footer>
     <script>
-        (function() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn !== 'true') {
-                alert('Bu sayfaya erişmek için giriş yapmanız gerekiyor.');
-                window.location.href = 'index.html'; // Giriş sayfasının URL'si
+        const correctPassword = "GerçekŞifre123"; // Gerçek şifre
+
+        function login() {
+            const password = document.getElementById('password').value;
+            const messageElement = document.getElementById('message');
+
+            if (password === correctPassword) {
+                localStorage.setItem('isLoggedIn', 'true'); // Kullanıcının giriş yaptığını sakla
+                window.location.href = 'https://mehmet12ws.online/homepage.html'; // Başarılı giriş sonrası yönlendirme
+            } else {
+                messageElement.textContent = 'Şifre yanlış. Lütfen tekrar deneyin.';
+                messageElement.className = 'error-message';
             }
-        })();
+        }
     </script>
 </body>
 </html>
