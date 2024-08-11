@@ -45,6 +45,10 @@
             box-sizing: border-box;
         }
 
+        .button-container {
+            margin-top: 20px;
+        }
+
         button {
             display: inline-block;
             padding: 15px 30px;
@@ -54,11 +58,18 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-transform: uppercase;
         }
 
         button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            background-color: #003d7a;
+            transform: scale(0.98);
         }
 
         .success-message {
@@ -78,6 +89,9 @@
         <input type="password" id="password" placeholder="Şifrenizi girin">
         <div id="turnstile-container"></div>
         <button onclick="login()">Giriş Yap</button>
+        <div class="button-container">
+            <button onclick="redirectToLogin()">Giriş Yapma Sitesi</button>
+        </div>
         <div id="message"></div>
     </div>
     <script>
@@ -165,7 +179,8 @@
                     }
 
                     if (result.success) {
-                        window.location.href = '/homepage.html'; // Başarıyla giriş yaptıktan sonra yönlendirme
+                        // Başarıyla giriş yaptıktan sonra yönlendirme
+                        window.location.href = 'https://mehmet12ws.online/login.html';
                     } else {
                         showMessage('Giriş hatası: ' + result.message);
                     }
@@ -175,6 +190,10 @@
             } else {
                 showMessage('Şifre hatalı.', 'error');
             }
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'https://mehmet12ws.online/login.html';
         }
 
         window.onload = function () {
