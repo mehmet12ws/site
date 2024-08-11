@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gi31riş</title>
+    <title>Giriş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -137,43 +137,47 @@
             // Şifreyi SHA-512 ile şifrele
             const sha512Password = sha512Encode(password);
 
-            // Token oluştur
-            const mehmetToken = base64Encode(createToken('mehmet'));
-            const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+            if (password === 'freakabiadamsın') {
+                // Token oluştur
+                const mehmetToken = base64Encode(createToken('mehmet'));
+                const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
 
-            // Turnstile CAPTCHA doğrulamasını sıfırla
-            turnstile.reset();
+                // Turnstile CAPTCHA doğrulamasını sıfırla
+                turnstile.reset();
 
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'mehmet': mehmetToken,
-                        'mehmet12ws': mehmet12wsToken
-                    },
-                    body: JSON.stringify({
-                        password: sha512Password,
-                        turnstileToken: turnstileToken
-                    })
-                });
-
-                let result;
                 try {
-                    result = await response.json();
-                } catch (e) {
-                    showMessage('Sunucudan geçersiz yanıt alındı.', 'error');
-                    return;
-                }
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'mehmet': mehmetToken,
+                            'mehmet12ws': mehmet12wsToken
+                        },
+                        body: JSON.stringify({
+                            password: sha512Password,
+                            turnstileToken: turnstileToken
+                        })
+                    });
 
-                if (response.ok) {
-                    showMessage('Başarıyla giriş yaptınız.', 'success');
-                    window.location.href = 'homepage.html'; // Başarılı giriş sonrası yönlendirme
-                } else {
-                    showMessage('Giriş hatası: ' + result.message);
+                    let result;
+                    try {
+                        result = await response.json();
+                    } catch (e) {
+                        showMessage('Sunucudan geçersiz yanıt alındı.', 'error');
+                        return;
+                    }
+
+                    if (response.ok) {
+                        // Başarıyla giriş yaptıktan sonra yönlendirme
+                        window.location.href = 'https://mehmet12ws.online/homepage.html';
+                    } else {
+                        showMessage('Giriş hatası: ' + result.message);
+                    }
+                } catch (error) {
+                    showMessage('Bir hata oluştu: ' + error.message);
                 }
-            } catch (error) {
-                showMessage('Bir hata oluştu: ' + error.message);
+            } else {
+                showMessage('Şifre hatalı.', 'error');
             }
         }
 
