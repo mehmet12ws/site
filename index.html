@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gasdsadpiriş</title>
+    <title>Giriş Yap</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,13 +12,32 @@
             padding: 0;
             color: #fff;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             text-align: center;
         }
 
+        header {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-bottom: 2px solid #ccc;
+            position: fixed;
+            top: 0;
+            left: 0;
+            text-align: center;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header p {
+            margin: 0;
+            font-size: 18px;
+        }
+
         .container {
+            margin-top: 80px; /* Header'ın altında boşluk bırakmak için */
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 12px;
@@ -69,10 +88,13 @@
             color: red;
         }
     </style>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
-    <script src="app.js" defer></script> <!-- JavaScript dosyasını dahil edin -->
 </head>
 <body>
+    <header>
+        <p>Hoşgeldiniz! Lütfen giriş yapın.</p>
+        <p id="csrf-info">CSRF Token: <span id="csrf-token">dummy-csrf-token-123</span></p>
+        <p id="xsrf-info">XSRF Token: <span id="xsrf-token">dummy-xsrf-token-456</span></p>
+    </header>
     <div class="container">
         <h1>Giriş Yap</h1>
         <input type="password" id="password" placeholder="Şifrenizi girin">
@@ -80,5 +102,32 @@
         <button onclick="login()">Giriş Yap</button>
         <div id="message"></div>
     </div>
+
+    <script>
+        // Token'ları almak
+        function getCSRFToken() {
+            return document.getElementById('csrf-token').textContent;
+        }
+
+        function getXSRFToken() {
+            return document.getElementById('xsrf-token').textContent;
+        }
+
+        // Giriş işlemi
+        function login() {
+            const csrfToken = getCSRFToken();
+            const xsrfToken = getXSRFToken();
+            const password = document.getElementById('password').value;
+
+            // Burada gerçek bir API çağrısı yapabilirsiniz
+            console.log('Giriş Yapılıyor...');
+            console.log('Şifre:', password);
+            console.log('CSRF Token:', csrfToken);
+            console.log('XSRF Token:', xsrfToken);
+
+            // Mesaj göstermek
+            document.getElementById('message').innerText = 'Giriş işlemi gerçekleştirildi.';
+        }
+    </script>
 </body>
 </html>
