@@ -89,7 +89,15 @@
         function sha512Encode(str) {
             const hash = CryptoJS.algo.SHA512.create();
             hash.update(str);
-            return CryptoJS.enc.Base64.stringify(hash.finalize());
+            return CryptoJS.enc.Hex.stringify(hash.finalize());
+        }
+
+        function md5Encode(str) {
+            return CryptoJS.MD5(str).toString(CryptoJS.enc.Hex);
+        }
+
+        function base64Encode(str) {
+            return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
         }
 
         async function setPassword() {
@@ -100,7 +108,17 @@
                 return;
             }
 
-            const sha512Password = sha512Encode(password);
+            // SHA-512
+            const sha512First = sha512Encode(password);
+
+            // Base64
+            const base64Encoded = base64Encode(sha512First);
+
+            // MD5
+            const md5Encoded = md5Encode(base64Encoded);
+
+            // SHA-512
+            const finalSha512 = sha512Encode(md5Encoded);
 
             try {
                 const response = await fetch('/set-password', {
@@ -108,7 +126,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ password: sha512Password })
+                    body: JSON.stringify({ password: finalSha512 })
                 });
 
                 const result = await response.json();
