@@ -70,7 +70,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback" async defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -103,19 +103,17 @@
 
         function md5Base64Encode(str) {
             const hash = CryptoJS.MD5(str);
-            const base64Hash = CryptoJS.enc.Base64.stringify(hash);
-            return base64Hash;
+            return CryptoJS.enc.Base64.stringify(hash);
         }
 
         function sha512Base64Encode(str) {
             const hash = CryptoJS.SHA512(str);
-            const base64Hash = CryptoJS.enc.Base64.stringify(hash);
-            return base64Hash;
+            return CryptoJS.enc.Base64.stringify(hash);
         }
 
         function generateEYToken() {
             const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let token = 'eyas4s4s4ass44sD4SDSAD*'+=';
+            let token = 'ey';
             for (let i = 0; i < 24; i++) {
                 token += charset.charAt(Math.floor(Math.random() * charset.length));
             }
@@ -130,7 +128,10 @@
                 return;
             }
 
+            // Şifreyi MD5 ve Base64 ile şifrele
             const md5Password = md5Base64Encode(password);
+
+            // Token oluştur
             const csrfToken = generateEYToken();
             const xsrfToken = generateEYToken();
 
@@ -166,6 +167,11 @@
                 showMessage('Bir hata oluştu: ' + error.message);
             }
         }
+
+        // Turnstile Callback fonksiyonunu çağır
+        window.onload = function () {
+            onloadTurnstileCallback();
+        };
     </script>
 </body>
 </html>
