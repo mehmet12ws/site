@@ -39,63 +39,10 @@ function sha512Encode(str) {
     return CryptoJS.enc.Base64.stringify(hash.finalize());
 }
 
-function base64Encode(str) {
-    return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
-}
-
-function md5Encode(str) {
-    return CryptoJS.MD5(str).toString();
-}
-
-function createToken(prefix) {
-    const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
-    let token = prefix;
-    for (let i = 0; i < 100; i++) {
-        token += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    return token;
-}
-
-// Şifre belirleme işlemi
-app.post('/set-password', (req, res) => {
+// Admin girişi
+app.post('/admin-login', (req, res) => {
     const { password } = req.body;
-
-    if (!password) {
-        return res.status(400).json({ message: 'Şifre boş olamaz.' });
-    }
-
-    // Şifreleme işlemleri
-    const sha512First = sha512Encode(password);
-    const base64Encoded = base64Encode(sha512First);
-    const md5Encoded = md5Encode(base64Encoded);
-    const finalSha512 = sha512Encode(md5Encoded);
-
-    const query = 'INSERT INTO users (username, password) VALUES (?, ?) ON DUPLICATE KEY UPDATE password = ?';
-    db.query(query, ['admin', finalSha512, finalSha512], (err) => {
-        if (err) {
-            console.error('Veritabanı hatası:', err);
-            return res.status(500).json({ message: 'Veritabanı hatası' });
-        }
-        res.status(200).json({ message: 'Şifre başarıyla kaydedildi.' });
-    });
-});
-
-// Giriş işlemi
-app.post('/login', (req, res) => {
-    const { password } = req.body;
-    const mehmetToken = base64Encode(createToken('mehmet'));
-    const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
-    const ismyokawkToken = sha512Encode('eYjsa4sa4sa'); // Örnek sabit değer
-
-    if (!password) {
-        return res.status(400).json({ message: 'Şifre boş olamaz.' });
-    }
-
-    // Şifreleme işlemleri
-    const sha512First = sha512Encode(password);
-    const base64Encoded = base64Encode(sha512First);
-    const md5Encoded = md5Encode(base64Encoded);
-    const finalSha512 = sha512Encode(md5Encoded);
+    const hashedPassword = sha512Encode(password);
 
     const query = 'SELECT password FROM users WHERE username = ?';
     db.query(query, ['admin'], (err, results) => {
@@ -104,18 +51,64 @@ app.post('/login', (req, res) => {
             return res.status(500).json({ message: 'Veritabanı hatası' });
         }
 
-        if (results.length === 0) {
-            return res.status(401).json({ message: 'Geçersiz kullanıcı' });
+        if (results.length === 0 || results[0].password !== hashedPassword) {
+            return res.status(401).json({ message: 'Geçersiz şifre' });
         }
 
-        const user = results[0];
+        req.session.user = 'authenticated';
+        res.status(200).json({ message: 'Giriş başarılı' });
+    });
+});
 
-        if (finalSha512 === user.password) {
-            req.session.user = 'authenticated';
-            res.status(200).json({ message: 'Giriş başarılı', redirectUrl: '/homepage.html' });
-        } else {
-            res.status(401).json({ message: 'Geçersiz şifre' });
+// Kullanıcı oluşturma
+app.post('/create-user', (req, res) => {
+    const { username, password, balance } = req.body;
+    const query = 'INSERT INTO users (username, password, balance) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE password = ?, balance = ?';
+    db.query(query, [username, password, balance, password, balance], (err) => {
+        if (err) {
+            console.error('Veritabanı hatası:', err);
+            return res.status(500).json({ message: 'Veritabanı hatası' });
         }
+        res.status(200).json({ message: 'Kullanıcı başarıyla oluşturuldu' });
+    });
+});
+
+// Bakiye ekleme
+app.post('/add-balance', (req, res) => {
+    const { username, amount } = req.body;
+    const query = 'UPDATE users SET balance = balance + ? WHERE username = ?';
+    db.query(query, [amount, username], (err) => {
+        if (err) {
+            console.error('Veritabanı hatası:', err);
+            return res.status(500).json({ message: 'Veritabanı hatası' });
+        }
+        res.status(200).json({ message: 'Bakiye başarıyla eklendi' });
+    });
+});
+
+// Bakiye silme
+app.post('/remove-balance', (req, res) => {
+    const { username, amount } = req.body;
+    const query = 'UPDATE users SET balance = balance - ? WHERE username = ?';
+    db.query(query, [amount, username], (err) => {
+        if (err) {
+            console.error('Veritabanı hatası:', err);
+            return res.status(500).json({ message: 'Veritabanı hatası' });
+        }
+        res.status(200).json({ message: 'Bakiye başarıyla silindi' });
+    });
+});
+
+// Şifre değiştirme
+app.post('/change-password', (req, res) => {
+    const { username, password } = req.body;
+    const query = 'UPDATE users SET password = ? WHERE username = ?';
+    db.query(query, [password, username], (err) => {
+        if (err) {
+            console.error('Veritabanı hatası:', err);
+            return res.status(500).json({ message: 'Veritabanı hatası' });
+        }
+        res.status(200).json({ message: 'Şifre başarıyla değiştirildi' });
     });
 });
 
