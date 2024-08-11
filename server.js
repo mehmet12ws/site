@@ -13,7 +13,7 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-// Kullanıcının giriş yapıp yapmadığını kontrol eden bir middleware
+// Kullanıcının giriş yapıp yapmadığını kontrol eden middleware
 function isAuthenticated(req, res, next) {
     if (req.session.authenticated) {
         return next();
@@ -29,6 +29,7 @@ app.get('/homepage.html', isAuthenticated, (req, res) => {
 
 // Giriş yapma işlemi
 app.post('/login', (req, res) => {
+    // Basit bir kontrol, gerçek durumda daha sağlam bir doğrulama yapılmalı
     if (req.body.password === 'freakabiadamsın') {
         req.session.authenticated = true;
         res.json({ success: true });
@@ -37,7 +38,7 @@ app.post('/login', (req, res) => {
     }
 });
 
-// Giriş çıkış işlemi
+// Çıkış işlemi
 app.post('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -47,7 +48,7 @@ app.post('/logout', (req, res) => {
     });
 });
 
-// Diğer statik dosyalar
+// Statik dosyalar için route
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(3000, () => {
