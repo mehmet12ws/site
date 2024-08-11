@@ -1,59 +1,32 @@
-async function login() {
-    const password = document.getElementById('password').value;
+const express = require('express');
+const bodyParser = require('body-parser');
+const crypto = require('crypto');
 
-    if (!password || !turnstileToken) {
-        showMessage('Şifre veya Turnstile token boş olamaz.');
-        return;
-    }
+const app = express();
+app.use(bodyParser.json());
 
-    // Şifreyi SHA-512 ile şifrele
-    const sha512Password = sha512Encode(password);
+app.post('/login', (req, res) => {
+    const { password } = req.body;
+    const mehmetToken = req.headers['mehmet'];
+    const mehmet12wsToken = req.headers['mehmet12ws'];
+    const ismyokawkToken = req.headers['ismyokawk'];
 
-    if (password === 'freakabiadamsın') {
-        // Token oluştur
-        const mehmetToken = base64Encode(createToken('mehmet'));
-        const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+    // Şifre doğrulama (SHA-512 ile şifrelenmiş 'freakabiadamsın')
+    const expectedPassword = sha512Encode('freakabiadamsın');
 
-        // Turnstile CAPTCHA doğrulamasını sıfırla
-        turnstile.reset();
-
-        try {
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'mehmet': mehmetToken,
-                    'mehmet12ws': mehmet12wsToken
-                },
-                body: JSON.stringify({
-                    password: sha512Password,
-                    turnstileToken: turnstileToken
-                })
-            });
-
-            // Yanıtın ham halini kontrol et
-            const responseText = await response.text(); // Ham yanıtı al
-            console.log('Sunucu Yanıtı:', responseText);
-
-            // JSON formatında yanıtı işle
-            let result;
-            try {
-                result = JSON.parse(responseText);
-            } catch (e) {
-                showMessage('Yanıt JSON formatında değil.', 'error');
-                return;
-            }
-
-            if (response.ok) {
-                // Başarıyla giriş yaptıktan sonra yönlendirme
-                window.location.href = 'https://mehmet12ws.online/homepage.html';
-            } else {
-                showMessage('Giriş hatası: ' + result.message);
-            }
-        } catch (error) {
-            showMessage('Bir hata oluştu: ' + error.message);
-        }
+    if (password === expectedPassword) {
+        res.json({ message: 'Başarıyla giriş yaptınız.' });
     } else {
-        showMessage('Şifre hatalı.', 'error');
+        res.status(400).json({ message: 'Şifre hatalı.' });
     }
+});
+
+function sha512Encode(str) {
+    const hash = crypto.createHash('sha512');
+    hash.update(str);
+    return hash.digest('base64');
 }
+
+app.listen(3000, () => {
+    console.log('Sunucu başlatıldı');
+});
