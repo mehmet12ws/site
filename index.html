@@ -91,7 +91,6 @@
             });
         }
 
-        // MD5 ile şifreyi hash'le ve Base64 ile kodla
         function md5Base64Encode(str) {
             const hash = CryptoJS.MD5(str);
             const base64Hash = CryptoJS.enc.Base64.stringify(hash);
@@ -104,7 +103,6 @@
             const password = document.getElementById('password').value;
 
             const base64Password = md5Base64Encode(password);
-
             const turnstileResponse = Turnstile.getResponse(turnstileWidget);
 
             if (!turnstileResponse) {
@@ -112,28 +110,31 @@
                 return;
             }
 
-            fetch('/login', {
+            const headers = new Headers({
+                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken,
+                'XSRF-Token': xsrfToken,
+            });
+
+            const requestOptions = {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'CSRF-Token': csrfToken,
-                    'XSRF-Token': xsrfToken,
-                    'Authorization': 'Basic ' + base64Password
-                },
+                headers: headers,
                 body: JSON.stringify({
                     password: base64Password,
                     'turnstile-response': turnstileResponse
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Giriş başarılı:', data);
-                document.getElementById('message').innerText = 'Giriş işlemi gerçekleştirildi.';
-            })
-            .catch(error => {
-                console.error('Giriş hatası:', error);
-                document.getElementById('message').innerText = 'Giriş işlemi başarısız.';
-            });
+            };
+
+            fetch('/login', requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Giriş başarılı:', data);
+                    document.getElementById('message').innerText = 'Giriş işlemi gerçekleştirildi.';
+                })
+                .catch(error => {
+                    console.error('Giriş hatası:', error);
+                    document.getElementById('message').innerText = 'Giriş işlemi başarısız.';
+                });
         }
 
         function generateToken(length) {
