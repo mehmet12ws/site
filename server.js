@@ -40,7 +40,8 @@ app.post('/set-password', (req, res) => {
     db.query(query, ['admin', password, password], (err) => {
         if (err) {
             console.error('Veritabanı hatası:', err);
-            return res.status(500).json({ message: 'Veritabanı hatası' });
+            res.status(500).json({ message: 'Veritabanı hatası' });
+            return;
         }
 
         res.status(200).json({ message: 'Şifre başarıyla kaydedildi.' });
@@ -54,6 +55,7 @@ app.post('/login', (req, res) => {
     const query = 'SELECT password FROM users WHERE username = ?';
     db.query(query, ['admin'], (err, results) => {
         if (err) {
+            console.error('Veritabanı hatası:', err);
             res.status(500).json({ message: 'Veritabanı hatası' });
             return;
         }
