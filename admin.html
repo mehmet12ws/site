@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Şifre Belirleme</title>
+    <title>Admin Paneli</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,20 +23,14 @@
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
             box-sizing: border-box;
             color: #333;
             position: relative;
         }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        input[type="password"] {
+        input[type="text"], input[type="password"], input[type="number"] {
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
@@ -62,87 +56,136 @@
             background-color: #0056b3;
         }
 
-        .success-message {
-            color: green;
-        }
-
-        .error-message {
+        .message {
             color: red;
+            font-weight: bold;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Şifre Belirle</h1>
-        <input type="password" id="password" placeholder="Yeni şifreyi girin">
-        <button onclick="setPassword()">Şifreyi Belirle</button>
-        <div id="message"></div>
+        <h1>Admin Paneli</h1>
+        <input type="password" id="admin-password" placeholder="Admin Şifresi">
+        <button onclick="loginAdmin()">Giriş Yap</button>
+        <div id="admin-section" style="display:none;">
+            <h2>Kullanıcı Yönetimi</h2>
+            <input type="text" id="username" placeholder="Kullanıcı Adı">
+            <input type="password" id="user-password" placeholder="Kullanıcı Şifresi">
+            <input type="number" id="balance" placeholder="Bakiye">
+            <button onclick="createUser()">Kullanıcı Oluştur</button>
+            <button onclick="addBalance()">Bakiye Ekle</button>
+            <button onclick="removeBalance()">Bakiye Sil</button>
+            <button onclick="changePassword()">Şifre Değiştir</button>
+            <div id="message" class="message"></div>
+        </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
-        function showMessage(message, type = 'error') {
-            const messageElement = document.getElementById('message');
-            messageElement.className = type === 'error' ? 'error-message' : 'success-message';
-            messageElement.textContent = message;
-        }
-
         function sha512Encode(str) {
             const hash = CryptoJS.algo.SHA512.create();
             hash.update(str);
-            return CryptoJS.enc.Hex.stringify(hash.finalize());
+            return CryptoJS.enc.Base64.stringify(hash.finalize());
         }
 
-        function md5Encode(str) {
-            return CryptoJS.MD5(str).toString(CryptoJS.enc.Hex);
-        }
-
-        function base64Encode(str) {
-            return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
-        }
-
-        async function setPassword() {
-            const password = document.getElementById('password').value;
-
-            if (!password) {
-                showMessage('Şifre boş olamaz.');
-                return;
-            }
-
-            // Şifreleme işlemleri
-            const sha512First = sha512Encode(password);
-            const base64Encoded = base64Encode(sha512First);
-            const md5Encoded = md5Encode(base64Encoded);
-            const finalSha512 = sha512Encode(md5Encoded);
+        async function loginAdmin() {
+            const password = document.getElementById('admin-password').value;
+            const hashedPassword = sha512Encode(password);
 
             try {
-                const response = await fetch('/set-password', {
+                const response = await fetch('/admin-login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ password: finalSha512 })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: hashedPassword })
                 });
 
-                const responseText = await response.text();
-                console.log('Sunucu Yanıtı:', responseText); // Yanıtı loglayın
-
-                // Yanıtı JSON formatına dönüştürmeyi deneyin
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (e) {
-                    showMessage('Yanıt JSON formatında değil: ' + responseText, 'error');
-                    return;
-                }
-
+                const result = await response.json();
                 if (response.ok) {
-                    showMessage('Şifre başarıyla kaydedildi.', 'success');
+                    document.getElementById('admin-section').style.display = 'block';
                 } else {
-                    showMessage('Şifre kaydedilemedi: ' + result.message);
+                    showMessage(result.message);
                 }
             } catch (error) {
                 showMessage('Bir hata oluştu: ' + error.message);
             }
+        }
+
+        async function createUser() {
+            const username = document.getElementById('username').value;
+            const userPassword = document.getElementById('user-password').value;
+            const hashedPassword = sha512Encode(userPassword);
+            const balance = document.getElementById('balance').value;
+
+            try {
+                const response = await fetch('/create-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password: hashedPassword, balance })
+                });
+
+                const result = await response.json();
+                showMessage(result.message);
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
+            }
+        }
+
+        async function addBalance() {
+            const username = document.getElementById('username').value;
+            const amount = document.getElementById('balance').value;
+
+            try {
+                const response = await fetch('/add-balance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, amount })
+                });
+
+                const result = await response.json();
+                showMessage(result.message);
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
+            }
+        }
+
+        async function removeBalance() {
+            const username = document.getElementById('username').value;
+            const amount = document.getElementById('balance').value;
+
+            try {
+                const response = await fetch('/remove-balance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, amount })
+                });
+
+                const result = await response.json();
+                showMessage(result.message);
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
+            }
+        }
+
+        async function changePassword() {
+            const username = document.getElementById('username').value;
+            const newPassword = document.getElementById('user-password').value;
+            const hashedPassword = sha512Encode(newPassword);
+
+            try {
+                const response = await fetch('/change-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password: hashedPassword })
+                });
+
+                const result = await response.json();
+                showMessage(result.message);
+            } catch (error) {
+                showMessage('Bir hata oluştu: ' + error.message);
+            }
+        }
+
+        function showMessage(message) {
+            document.getElementById('message').textContent = message;
         }
     </script>
 </body>
