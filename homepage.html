@@ -3,92 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap</title>
+    <title>Ana Sayfa</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            background: linear-gradient(135deg, #ff6f61, #d9a7c7, #d6e0f0);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             margin: 0;
             padding: 0;
             color: #fff;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             text-align: center;
         }
 
-        .container {
+        .hero {
             background: rgba(255, 255, 255, 0.9);
+            color: #333;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
+            max-width: 800px;
             width: 100%;
-            box-sizing: border-box;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin: 0;
             color: #333;
         }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        input[type="password"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: red;
+        .hero p {
+            font-size: 24px;
             margin-top: 10px;
+            color: #555;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Giriş Yap</h1>
-        <input type="password" id="password" placeholder="Şifrenizi girin">
-        <button onclick="login()">Giriş Yap</button>
-        <div id="message"></div>
+    <div class="hero">
+        <h1>Hoşgeldiniz!</h1>
+        <p>Test amaçlı kurdum, beler relax</p>
     </div>
+    <footer>
+        <p id="token-info"></p>
+    </footer>
     <script>
-        const correctPassword = "GerçekŞifre123"; // Gerçek şifre
-
-        function login() {
-            const password = document.getElementById('password').value;
-            const messageElement = document.getElementById('message');
-
-            if (password === correctPassword) {
-                localStorage.setItem('isLoggedIn', 'true'); // Kullanıcının giriş yaptığını sakla
-                window.location.href = 'https://mehmet12ws.online/homepage.html'; // Başarılı giriş sonrası yönlendirme
-            } else {
-                messageElement.textContent = 'Şifre yanlış. Lütfen tekrar deneyin.';
-                messageElement.className = 'error-message';
-            }
+        function sha512Encode(str) {
+            const hash = CryptoJS.SHA512(str);
+            return CryptoJS.enc.Base64.stringify(hash);
         }
+
+        function generateRandomString(length) {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=<>?';
+            let randomString = '';
+            for (let i = 0; i < length; i++) {
+                randomString += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return randomString;
+        }
+
+        function createToken(tokenType) {
+            const randomString1 = generateRandomString(8);
+            const randomString2 = generateRandomString(8);
+            const tokenContent = `${randomString1}${tokenType}${randomString2}`;
+            return sha512Encode(tokenContent);
+        }
+
+        function displayTokens() {
+            const mehmetToken = createToken('mehmet');
+            const mehmet12wsToken = createToken('mehmet12ws');
+            const tokenInfo = `mehmet Token: ${mehmetToken}\nmehmet12ws Token: ${mehmet12wsToken}`;
+            document.getElementById('token-info').textContent = tokenInfo;
+        }
+
+        window.onload = displayTokens;
     </script>
 </body>
 </html>
