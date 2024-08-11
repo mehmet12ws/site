@@ -1,17 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const session = require('express-session');
 const path = require('path');
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
-app.use(session({
-    secret: 'your-secret-key', // Oturum anahtarınızı buraya koyun
-    resave: false,
-    saveUninitialized: true
-}));
 
 // Giriş İşlemi
 app.post('/login', (req, res) => {
@@ -21,23 +15,18 @@ app.post('/login', (req, res) => {
     const mehmet12wsToken = req.headers['mehmet12ws'];
 
     const expectedPassword = sha512Encode('freakabiadamsın');
-    const expectedIsmyokawkToken = sha512Encode('eYjsa4sa4sa'); // Turnstile token ile uyumlu token
+    const expectedIsmyokawkToken = sha512Encode('eYjsa4sa4sa');
 
     if (password === expectedPassword && ismyokawkToken === expectedIsmyokawkToken) {
-        req.session.authenticated = true; // Oturumda doğrulama bilgisi ayarla
-        res.json({ message: 'Başarıyla giriş yaptınız.' });
+        res.json({ message: 'Başarıyla giriş yaptınız.' }); // JSON formatında yanıt
     } else {
-        res.status(400).json({ message: 'Şifre veya başlıklar hatalı.' });
+        res.status(400).json({ message: 'Şifre veya başlıklar hatalı.' }); // JSON formatında yanıt
     }
 });
 
 // Sayfa Yönlendirme
 app.get('/homepage.html', (req, res) => {
-    if (req.session.authenticated) {
-        res.sendFile(path.join(__dirname, 'homepage.html'));
-    } else {
-        res.redirect('/login.html');
-    }
+    res.sendFile(path.join(__dirname, 'homepage.html'));
 });
 
 // Şifreyi SHA-512 ile şifreleme
