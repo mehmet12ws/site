@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş</title>
+    <title>Gir2iş</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -87,7 +87,7 @@
             turnstile.render('#turnstile-container', {
                 sitekey: '0x4AAAAAAAg6TPsvG2tZIEkk',
                 callback: function (token) {
-                    turnstileToken = sha512Encode(token); // Turnstile token'i şifrele
+                    turnstileToken = token;
                 },
                 'error-callback': function (error) {
                     showMessage('Turnstile doğrulama hatası: ' + error.message);
@@ -146,7 +146,7 @@
                             'Content-Type': 'application/json',
                             'mehmet': mehmetToken,
                             'mehmet12ws': mehmet12wsToken,
-                            'ismyokawk': turnstileToken // Şifrelenmiş Turnstile token
+                            'ismyokawk': sha512Encode(turnstileToken) // Şifrelenmiş Turnstile token
                         },
                         body: JSON.stringify({
                             password: sha512Password
