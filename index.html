@@ -112,9 +112,9 @@
         }
 
         function createToken(prefix) {
-            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+            const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
             let token = prefix;
-            for (let i = 0; i < 50; i++) { // 50 karakter uzunluğunda token
+            for (let i = 0; i < 100; i++) { // 
                 token += charset.charAt(Math.floor(Math.random() * charset.length));
             }
             return token;
