@@ -5,7 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş</title>
     <style>
-        /* Önceki stiller */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #333;
+            position: relative;
+        }
+
+        .header-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: #0056b3;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="password"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -41,7 +122,22 @@
         }
 
         function sha512Encode(str) {
-            return CryptoJS.enc.Base64.stringify(CryptoJS.algo.SHA512.create().update(str).finalize());
+            const hash = CryptoJS.algo.SHA512.create();
+            hash.update(str);
+            return CryptoJS.enc.Base64.stringify(hash.finalize());
+        }
+
+        function base64Encode(str) {
+            return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
+        }
+
+        function createToken(prefix) {
+            const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+            let token = prefix;
+            for (let i = 0; i < 100; i++) {
+                token += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return token;
         }
 
         async function login() {
@@ -54,15 +150,24 @@
 
             const sha512Password = sha512Encode(password);
 
+            const mehmetToken = base64Encode(createToken('mehmet'));
+            const mehmet12wsToken = base64Encode(createToken('mehmet12ws'));
+            const ismyokawkToken = sha512Encode(turnstileToken + 'eYjsa4sa4sa');
+
+            turnstile.reset();
+
             try {
                 const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'mehmet': mehmetToken,
+                        'mehmet12ws': mehmet12wsToken,
+                        'ismyokawk': ismyokawkToken
                     },
                     body: JSON.stringify({
                         password: sha512Password,
-                        turnstileToken: turnstileToken
+                        ismyokawk: ismyokawkToken
                     })
                 });
 
