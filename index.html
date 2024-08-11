@@ -107,9 +107,15 @@
             return base64Hash;
         }
 
+        function sha512Base64Encode(str) {
+            const hash = CryptoJS.SHA512(str);
+            const base64Hash = CryptoJS.enc.Base64.stringify(hash);
+            return base64Hash;
+        }
+
         function generateEYToken() {
             const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let token = 'ey';
+            let token = 'eyas4s4s4ass44sD4SDSAD*'+=';
             for (let i = 0; i < 24; i++) {
                 token += charset.charAt(Math.floor(Math.random() * charset.length));
             }
@@ -124,11 +130,13 @@
                 return;
             }
 
-            // Şifreyi MD5 ve Base64 ile şifrele
-            const encryptedPassword = md5Base64Encode(password);
-            // Token oluştur
+            const md5Password = md5Base64Encode(password);
             const csrfToken = generateEYToken();
             const xsrfToken = generateEYToken();
+
+            // Token'ları SHA-512 ile şifrele
+            const encryptedCsrfToken = sha512Base64Encode(csrfToken);
+            const encryptedXsrfToken = sha512Base64Encode(xsrfToken);
 
             // Turnstile CAPTCHA doğrulamasını sıfırla
             turnstile.reset();
@@ -138,11 +146,11 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'CSRF-Token': csrfToken,
-                        'XSRF-Token': xsrfToken
+                        'CSRF-Token': encryptedCsrfToken,
+                        'XSRF-Token': encryptedXsrfToken
                     },
                     body: JSON.stringify({
-                        password: encryptedPassword,
+                        password: md5Password,
                         turnstileToken: turnstileToken
                     })
                 });
