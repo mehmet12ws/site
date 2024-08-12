@@ -42,7 +42,7 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             margin-bottom: 20px;
-            width: 100%;
+            width: %;
             box-sizing: border-box;
         }
 
@@ -131,9 +131,9 @@
         }
 
         function createToken(prefix) {
-            const charset = 'ABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+            const charset = 'FREAFREAKFREAKFREAKKABİMADAMDIRABCDEasdassa4a4?Asesadsa4a?sedFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
             let token = prefix;
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 150; i++) {
                 token += charset.charAt(Math.floor(Math.random() * charset.length));
             }
             return token;
