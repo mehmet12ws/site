@@ -1,620 +1,85 @@
-
 <!DOCTYPE html>
-<html class="loading" lang="en" data-textdirection="ltr">
+<html lang="tr">
 <head>
-<link rel="stylesheet" type="text/css" href="app-assets/vendors/css/vendors.min.css">
-<link rel="stylesheet" type="text/css" href="app-assets/vendors/css/charts/apexcharts.css">
-<link rel="stylesheet" type="text/css" href="app-assets/vendors/css/extensions/tether-theme-arrows.css">
-<link rel="stylesheet" type="text/css" href="app-assets/vendors/css/extensions/tether.min.css">
-<link rel="stylesheet" type="text/css" href="app-assets/vendors/css/extensions/shepherd-theme-default.css">
-<link rel="stylesheet" type="text/css" href="app-assets/css/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="app-assets/css/bootstrap-extended.css">
-<link rel="stylesheet" type="text/css" href="app-assets/css/colors.css">
-<link rel="stylesheet" type="text/css" href="app-assets/css/components.css">
-<link rel="stylesheet" type="text/css" href="app-assets/css/themes/dark-layout.css">
-<link rel="stylesheet" type="text/css" href="app-assets/css/themes/semi-dark-layout.css">
-<link rel="stylesheet" type="text/css" href="app-assets/css/core/menu/menu-types/horizontal-menu1.css">
-</head>
-<body class="horizontal-layout horizontal-menu dark-layout 2-columns  navbar-floating footer-static  " data-open="hover" data-menu="horizontal-menu" data-col="2-columns" data-layout="dark-layout">
-<nav class="header-navbar navbar-expand-lg navbar navbar-with-menu navbar-fixed navbar-brand-center">
-<div class="navbar-header d-xl-block d-none">
-<ul class="nav navbar-nav flex-row justify-content-center">
-<li class="nav-item"><a class="navbar-brand" style="font-weight: bold;" href="/">
-
-
-
-<div class="brand-logo"></div>&nbsp;&nbsp;Dstat.CC&nbsp;</a></li>
-</ul>
-</div>
-<div class="navbar-wrapper">
-<div class="navbar-container content">
-<div class="navbar-collapse" id="navbar-mobile">
-<div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
-<ul class="nav navbar-nav">
-<li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon feather icon-menu"></i></a></li>
-</ul>
-<ul class="nav navbar-nav bookmark-icons">
-<li class="nav-item d-none d-lg-block"><a class="nav-link" href="https://t.me/dstatcc" target="_blank" data-toggle="tooltip" data-placement="top" title="Telegram"><i class="fa-brands fa-telegram fa-xl" style="color: #ffffff;"></i></i></a></li>
-<li class="nav-item d-none d-lg-block"><a class="nav-link" href="https://uptime.dstat.cc" target="_blank" data-toggle="tooltip" data-placement="top" title="Server Status"><i class="fa-solid fa-server fa-xl" style="color: #f5f5f5;"></i></a></li>
-</ul>
-</div>
-<ul class="nav navbar-nav float-right">
-<li class="dropdown nav-item"><a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-us"></i><span class="selected-language">English</span></a>
-<div class="dropdown-menu" aria-labelledby="dropdown-flag">
-<a id="LANGen" value="en" class="dropdown-item"><i class="flag-icon flag-icon-us"></i> English</a>
-<a id="LANGcnsp" value="cnsp" class="dropdown-item"><i class="flag-icon flag-icon-cn"></i> 汉语(CN Simplified)</a>
-<a id="LANGcntd" value="cnsp" class="dropdown-item"><i class="flag-icon flag-icon-cn"></i> 漢语(CN Traditional）</a>
-<a id="LANGde" value="de" class="dropdown-item"><i class="flag-icon flag-icon-de"></i> German</a>
-<a id="LANGru" value="ru" class="dropdown-item"><i class="flag-icon flag-icon-ru"></i> Russian</a>
-<a id="LANGes" value="es" class="dropdown-item"><i class="flag-icon flag-icon-es"></i> Spanish</a>
-<a id="LANGhi" value="hi" class="dropdown-item"><i class="flag-icon flag-icon-in"></i> Hindi</a>
-<a id="LANGar" value="ar" class="dropdown-item"><i class="flag-icon flag-icon-ae"></i> Arabic</a>
-</div>
-</li>
-<li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon feather icon-maximize"></i></a></li>
-</li>
-
-<li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i></a>
-<ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
-<li class="dropdown-menu-header">
-<div class="dropdown-header m-0 p-2">
-<h3 class="white">Notifications</h3><span class="notification-title"></span>
-</div>
-</li>
-<li class="scrollable-container media-list"><a class="d-flex justify-content-between" href="javascript:void(0)">
-<div class="media d-flex align-items-start">
-<div class="media-left"><i class="feather icon-check-circle font-medium-5 info"></i></div>
-<div class="media-body">
-<h6 class="info media-heading">We added a new Logo</h6><small class="text-center notification-text"> We are happy to get your feedback!</small>
-</div>
-</a>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</nav><div class="horizontal-menu-wrapper">
-<div class="header-navbar navbar-brand-center navbar-expand-sm navbar navbar-horizontal floating-nav navbar-dark navbar-without-dd-arrow navbar-shadow menu-border" role="navigation" data-menu="menu-wrapper">
-<div class="navbar-header">
-<ul class="nav navbar-nav flex-row">
-<li class="nav-item mr-auto"><a class="navbar-brand" href="/">
-<div class="brand-logo"></div>
-<h2 class="brand-text mb-0">Dstat.CC</h2>
-</a></li>
-<li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="feather icon-x d-block d-xl-none font-medium-4 primary toggle-icon"></i><i class="toggle-icon feather icon-disc font-medium-4 d-none d-xl-block collapse-toggle-icon primary" data-ticon="icon-disc"></i></a></li>
-</ul>
-</div>
-
-<div class="navbar-container main-menu-content" data-menu="menu-container">
-
-<ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
-<li class="nav-item"><a class="nav-link" href="/"><i class="fa-solid fa-house fa-beat"></i><span style="font-weight:bold" data-i18n="Dashboard">Dashboard</span></a>
-</li>
-<li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown"><i class="fa-solid fa-code fa-beat"></i><span style="font-weight:bold" data-i18n="Tools">Tools</span></a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="cloudflare" data-toggle="dropdown" data-i18n="CloudFlare_Resolver"><i class="fa-brands fa-cloudflare"></i>CloudFlare Resolver</a>
-</li>
-<li data-menu><a class="dropdown-item" target="_blank" href="https://check-host.cc/" data-toggle="dropdown" data-i18n="Host_Check"><i class="fa-solid fa-list-check"></i></i>Host Check</a>
-</li>
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="Form Elements"><i class="fa-solid fa-hard-drive"></i>TCP/UDP Proxy</a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="tsproxy" data-toggle="dropdown" data-i18n="ts_proxy"><i class="feather icon-chevron-right"></i>UDP | TeamSpeak Proxy &nbsp;</a>
-</li>
-
-
-</ul>
-
-</ul>
-</li>
-<li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown"><i class="fa-sharp fa-solid fa-layer-group fa-beat"></i><span style="font-weight:bold" data-i18n="Forms &amp; Tables">Live Layer 4</span></a>
-<ul class="dropdown-menu">
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="Form Elements"><i class="fa-solid fa-shield-halved"></i>L4 Massive</a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="#" data-toggle="dropdown"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Soon..." < span> Soon...</span></a> </ul>
-</li>
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="Form Elements"><i class="fa-solid fa-shield-halved"></i>L4 Non Protected</a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="l4nonprotected?id=Litnics" data-toggle="dropdown"><img src="/img/flags/US.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Litnics" < span> Litnics <span class="badge badge-pill badge-success">50 Gbit/s</span></a> </ul>
-</li>
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="L4_Protected"><i class="fa-solid fa-shield"></i>L4 Protected</a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="l4protected?id=Aeza-DE" data-toggle="dropdown"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Aeza-DE" < span> Aeza-DE <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Aeza-FI" data-toggle="dropdown"><img src="/img/flags/FI.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Aeza-FI" < span> Aeza-FI <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Aeza-NL" data-toggle="dropdown"><img src="/img/flags/NL.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Aeza-NL" < span> Aeza-NL <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Amazon" data-toggle="dropdown"><img src="/img/flags/US.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Amazon" < span> Amazon <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Aurologic UAM" data-toggle="dropdown"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Aurologic UAM" < span> Aurologic UAM <span class="badge badge-pill center-layout badge-success">10 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Beget" data-toggle="dropdown"><img src="/img/flags/RU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Beget" < span> Beget <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Cloudflare" data-toggle="dropdown"><img src="/img/flags/US.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Cloudflare" < span> Cloudflare <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=ColoCrossing" data-toggle="dropdown"><img src="/img/flags/US.svg" height="16" width="16"><i class="feather"></i><span data-i18n="ColoCrossing" < span> ColoCrossing <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Contabo" data-toggle="dropdown"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Contabo" < span> Contabo <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Datacamp-1" data-toggle="dropdown"><img src="/img/flags/CH.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Datacamp-1" < span> Datacamp-1 <span class="badge badge-pill center-layout badge-success">10 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Digitalocean" data-toggle="dropdown"><img src="/img/flags/US.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Digitalocean" < span> Digitalocean <span class="badge badge-pill center-layout badge-success">1-10 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Google Cloud" data-toggle="dropdown"><img src="/img/flags/GB.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Google Cloud" < span> Google Cloud <span class="badge badge-pill center-layout badge-success">1-10 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Hetzner-1" data-toggle="dropdown"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Hetzner-1" < span> Hetzner-1 <span class="badge badge-pill center-layout badge-success">5-10 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Microsoft" data-toggle="dropdown"><img src="/img/flags/NL.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Microsoft" < span> Microsoft <span class="badge badge-pill center-layout badge-success">1-20 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=NForce" data-toggle="dropdown"><img src="/img/flags/NL.svg" height="16" width="16"><i class="feather"></i><span data-i18n="NForce" < span> NForce <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=OVH Anti DDos-1" data-toggle="dropdown"><img src="/img/flags/CA.svg" height="16" width="16"><i class="feather"></i><span data-i18n="OVH Anti DDos-1" < span> OVH Anti DDos-1 <span class="badge badge-pill center-layout badge-success">20 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Scaleway" data-toggle="dropdown"><img src="/img/flags/FR.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Scaleway" < span> Scaleway <span class="badge badge-pill center-layout badge-success">1 Gbit/s</span></a><li data-menu><a class="dropdown-item" href="l4protected?id=Worldstream" data-toggle="dropdown"><img src="/img/flags/NL.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Worldstream" < span> Worldstream <span class="badge badge-pill center-layout badge-success">10 Gbit/s</span></a> <li data-menu="a"><a class="dropdown-item" data-toggle="dropdown" data-i18n="L7_Dstat-PL4">&nbsp;</a>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="dropdown nav-item mr-auto" data-menu="dropdown"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown"><i class="fa-sharp fa-solid fa-chart-line fa-beat"></i><span style="font-weight:bold" data-i18n="Pages">Live Layer 7</span></a>
-<ul class="dropdown-menu">
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="Form Elements"><i class="fa-solid fa-shield-halved"></i>L7 Massive &nbsp;<div class="badge badge-pill badge-glow badge-success">New</div></a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="l7special-1" data-toggle="dropdown" data-i18n="L7_SpecialDstat-1"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i>Cloudflare-1(CF-Business) &nbsp;<span class="badge badge-pill badge-success">Ꝏ Mio</span></a>
-</li>
-</ul>
-</li>
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="L7_Non_Protected"><i class="fa-solid fa-shield-halved"></i>L7 Non Protected</a>
-<ul class="dropdown-menu">
-</li>
-<li data-menu><a class="dropdown-item" href="l7?id=Hetzner1"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Hetzner1" < span> Hetzner1 <span class="badge badge-pill badge-success">200 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=Hetzner2"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Hetzner2" < span> Hetzner2 <span class="badge badge-pill badge-success">200 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=Hetzner3"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Hetzner3" < span> Hetzner3 <span class="badge badge-pill badge-success">200 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=Hetzner4"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Hetzner4" < span> Hetzner4 <span class="badge badge-pill badge-success">60 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=MULTACOM-CORPORATION"><img src="/img/flags/US.svg" height="16" width="16"><i class="feather"></i><span data-i18n="MULTACOM-CORPORATION" < span> MULTACOM-CORPORATION <span class="badge badge-pill badge-success">500</span></a><li data-menu><a class="dropdown-item" href="l7?id=Selectel"><img src="/img/flags/NL.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Selectel" < span> Selectel <span class="badge badge-pill badge-success">250 K</span></a> </ul>
-</li>
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="L7_Non_ProtectedSSL"><i class="fa-solid fa-shield-halved"></i>L7 Non Protected SSL &nbsp;&nbsp; </a>
-<ul class="dropdown-menu">
-</li>
-<li data-menu><a class="dropdown-item" href="l7ssl?id=CloudFlare-nonprotected"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="CloudFlare-nonprotected" < span> CloudFlare-nonprotected <span class="badge badge-pill badge-success">200 K</span></a><li data-menu><a class="dropdown-item" href="l7ssl?id=FDCservers-1"><img src="/img/flags/NL.svg" height="16" width="16"><i class="feather"></i><span data-i18n="FDCservers-1" < span> FDCservers-1 <span class="badge badge-pill badge-success">250 K</span></a><li data-menu><a class="dropdown-item" href="l7ssl?id=Hetzner-1"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Hetzner-1" < span> Hetzner-1 <span class="badge badge-pill badge-success">3 K</span></a><li data-menu><a class="dropdown-item" href="l7ssl?id=Hetzner-2"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Hetzner-2" < span> Hetzner-2 <span class="badge badge-pill badge-success">40 K</span></a> </ul>
-</li>
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="L7_Protected"><i class="fa-solid fa-shield"></i>L7 Protected</a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="l7?id=CloudFlare(CAPTCHA)"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="CloudFlare(CAPTCHA)" < span> CloudFlare(CAPTCHA) <span class="badge badge-pill badge-success">50 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=CloudFlare(NoSec)"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="CloudFlare(NoSec)" < span> CloudFlare(NoSec) <span class="badge badge-pill badge-success">100 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=CloudFlare(UAM)"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="CloudFlare(UAM)" < span> CloudFlare(UAM) <span class="badge badge-pill badge-success">100 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=CloudFlare(UAM2)"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="CloudFlare(UAM2)" < span> CloudFlare(UAM2) <span class="badge badge-pill badge-success">100 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=Tor-Hidden-ServiceV3"><img src="/img/flags/DE.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Tor-Hidden-ServiceV3" < span> Tor-Hidden-ServiceV3 <span class="badge badge-pill badge-success">50 K</span></a><li data-menu><a class="dropdown-item" href="l7?id=vShield"><img src="/img/flags/CA.svg" height="16" width="16"><i class="feather"></i><span data-i18n="vShield" < span> vShield <span class="badge badge-pill badge-success">500 K</span></a> <li data-menu><a class="dropdown-item" href="l7custom-3" data-toggle="dropdown" data-i18n="L7_l7customDstat-3"><img src="/img/flags/US.svg" height="16" width="16"><i class="feather"></i>DDoS Filter&nbsp;<span class="badge badge-pill badge-success">10 K</span></a>
-</li>
-</ul>
-</li>
-
-<li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown" data-i18n="L7_Protected"><i class="fa-solid fa-shield"></i>L7 Protected Custom</a>
-<ul class="dropdown-menu">
-<li data-menu><a class="dropdown-item" href="l7custom?id=Bowlan"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Bowlan" < span> Bowlan <span class="badge badge-pill badge-success">100 K</span></a><li data-menu><a class="dropdown-item" href="l7custom?id=Cantboot.me"><img src="/img/flags/FR.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Cantboot.me" < span> Cantboot.me <span class="badge badge-pill badge-success">200 K</span></a><li data-menu><a class="dropdown-item" href="l7custom?id=Cantboot.me-Filter"><img src="/img/flags/FR.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Cantboot.me-Filter" < span> Cantboot.me-Filter <span class="badge badge-pill badge-success">200 K</span></a><li data-menu><a class="dropdown-item" href="l7custom?id=Crime.pw"><img src="/img/flags/FR.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Crime.pw" < span> Crime.pw <span class="badge badge-pill badge-success">100 K</span></a><li data-menu><a class="dropdown-item" href="l7custom?id=Helium"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Helium" < span> Helium <span class="badge badge-pill badge-success">100 K</span></a><li data-menu><a class="dropdown-item" href="l7custom?id=Polido"><img src="/img/flags/EU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="Polido" < span> Polido <span class="badge badge-pill badge-success">100 K</span></a><li data-menu><a class="dropdown-item" href="l7custom?id=VMwall"><img src="/img/flags/RU.svg" height="16" width="16"><i class="feather"></i><span data-i18n="VMwall" < span> VMwall <span class="badge badge-pill badge-success">100 K</span></a> 
-
-</ul>
-</li>
-</ul>
-<li class="nav-item"><a class="nav-link" href="booterreview"><i class="fa-solid fa-chart-simple fa-beat"></i><span style="font-weight:bold" data-i18n="Booter_Review" href="booterreview">Booter Review &nbsp;</span> <div class="badge badge-pill badge-glow badge-success">TIP!</div></a>
-</li>
-</div>
-</div>
-</div><!DOCTYPE html>
-<head>
-<meta charset="utf-8">
-<meta name="description" content="We offer a free L7(Layer7)/L4(Layer4) Dstat. Here you can check the power of a Booter, Stresser, Server or your own scripts against different filter. You can test your Power against CloudFlare or DDoS Guard too. ">
-<meta name="keywords" content="L7,L4,XML,XML-RPC,DDoS,DDOS,dstat,CloudFlare,DDoSGuard,stresstest,filter,stats,resolver,brouteforce,whois,power check,free dstat,ddos power check,whois check,Layer 7,L7 dstat,L4 dstat,dstatcc,dstat,layer7,layer4,l7,l4,layer7 dstat,layer4 dstat">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dstat.CC - Layer 4 & Layer 7 Dstats - Fuck all other DSTATS</title>
-<title id="pageTitle">Dstat.CC - Layer 4 & Layer 7 Dstats - Fuck all other DSTATS</title>
-<script>
-        var titles = [
-            "Dstat.CC - Layer 4 & Layer 7 Dstats - Fuck all other DSTATS",
-            "Dstat.CC - Layer 4 Dstats",
-            "Dstat.CC - Layer 7 Dstats",
-            "Dstat.CC - Tools",
-        ];
-
-        function updateTitleAutomatically() {
-            setInterval(function() {
-                titles.push(titles.shift());
-                document.title = titles[0];
-            }, 10000);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Oyunu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+            overflow: hidden;
         }
-
-        updateTitleAutomatically();
-    </script>
-
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
-
-
-
-
-
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-
-
-<script src="app-assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
-<link rel="stylesheet" type="text/css" href="app-assets/vendors/css/extensions/sweetalert2.min.css">
-<script src="https://kit.fontawesome.com/19e3dfa217.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-
-
-<!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        .game-container {
+            position: relative;
+            width: 600px;
+            height: 200px;
+            background-color: #f2f2f2;
+            border: 2px solid #333;
+            overflow: hidden;
+        }
+        .dino {
+            position: absolute;
+            bottom: 0;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+        }
+        .cactus {
+            position: absolute;
+            bottom: 0;
+            width: 20px;
+            height: 50px;
+            background-color: #333;
+            animation: moveCactus 1.5s linear infinite;
+        }
+        @keyframes moveCactus {
+            from {
+                right: -20px;
+            }
+            to {
+                right: 600px;
+            }
+        }
+    </style>
 </head>
-</body>
-</body><style type="text/css">
-    /* Firefox */
-    * {
-        scrollbar-width: auto;
-        scrollbar-color: #10163a #262c49;
-    }
-
-    /* Chrome, Edge, and Safari */
-    *::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    *::-webkit-scrollbar-track {
-        background: #262c49;
-    }
-
-    *::-webkit-scrollbar-thumb {
-        background-color: #10163a;
-        border-radius: 10px;
-        border: 3px solid #10163a;
-    }
-</style>
-<div class="app-content content">
-<div class="content-overlay"></div>
-<div class="content-wrapper">
-<div class="content-header row">
-</div>
 <body>
-<div class="content-body">
-<section id="dashboard-analytics">
-<div class="row">
-<div class="col-12">
-<div class="card">
-<div class="card-header">
-<br style="visibility: hidden;">
-<br style="visibility: hidden;">
-<br style="visibility: hidden;">
-<h4 class="mb-0" id="ipandtext">Please enable your JavaScript</h4>
-<br style="visibility: hidden;">
-<br style="visibility: hidden;">
-</div>
-<section id="apexchart">
-<section id="sweet-alert-position">
-<div class="card">
-<div class="card-header">
-<br style="visibility: hidden;">
-<div style="text-align: center;">
-<button type="button" id="copyToClipboard" class="btn btn-danger mr-1 mb-1" onclick="setClipboard()" data-href="http://116.202.37.24"><i class="fa-regular fa-clipboard"></i> Copy URL</button>
-<button type="button" class="btn btn-info mr-1 mb-1" onclick="window.open('https://check-host.cc/?m=INFO&target=http://116.202.37.24', '_blank')"><i class="fa-solid fa-circle-info"></i> Whois</button>
-<button type="button" class="btn btn-info mr-1 mb-1" onclick="window.open('https://check-host.cc/?m=HTTP&target=http://116.202.37.24', '_blank')"><i class="fa-solid fa-list-check"></i> HTTP Check</button>
-</div>
-<br style="visibility: hidden;">
-</div>
-<div class="card-content">
-<div class="card-body">
-<div class="animate__animated animate__fadeInDown" id="L7dstat"></div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<div class="modal fade" id="FAQ" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="exampleModalCenterTitle">More about this DSTAT and the filter!</h5>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body">
-<br><div style="text-align: center;"><h3>Please hit the graph only some minutes and not over hours!</h3></div>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sidenav-overlay"></div>
-<div class="drag-target"></div>
-<footer class="footer footer-static footer-light">
-<p class="clearfix blue-grey lighten-2 mb-0"><span class="float-md-left d-block d-md-inline-block mt-25">Copyright &copy; 2018-<script>document.write(new Date().getFullYear())</script><a class="text-bold-800 grey darken-2" href="https://dstat.cc" target="_blank">Dstat.CC</a>All rights Reserved | Version 1.3</span><span class="float-md-right d-none d-md-block">Hand-crafted & Made with<i class="feather icon-heart pink"></i></span>
-<button class="btn btn-primary btn-icon scroll-top" type="button"><i class="feather icon-arrow-up"></i></button>
-</p>
-</footer>
-<script src="app-assets/vendors/js/vendors.min.js"></script>
+    <div class="game-container">
+        <div class="dino" id="dino"></div>
+        <div class="cactus" id="cactus"></div>
+    </div>
 
-<script src="resources/languages/locale.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
-<script src="app-assets/js/core/app-menu.js"></script>
-<script src="app-assets/js/core/app.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="../bower_components/dstat/highcharts.js"></script>
+    <script>
+        const dino = document.getElementById("dino");
+        const cactus = document.getElementById("cactus");
+
+        document.addEventListener("keydown", function(event) {
+            jump();
+        });
+
+        function jump() {
+            if (dino.classList != "jump") {
+                dino.classList.add("jump");
+
+                setTimeout(function() {
+                    dino.classList.remove("jump");
+                }, 300);
+            }
+        }
+
+        let isAlive = setInterval(function() {
+            let dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue("top"));
+            let cactusLeft = parseInt(window.getComputedStyle(cactus).getPropertyValue("left"));
+
+            if (cactusLeft < 50 && cactusLeft > 0 && dinoTop >= 140) {
+                alert("Oyun Bitti!");
+            }
+        }, 10);
+    </script>
 </body>
-<script language="JavaScript">
-
-    function setClipboard() {
-        var tempInput = document.createElement("input");
-        value = document.getElementById("copyToClipboard").getAttribute("data-href");
-        tempInput.style = "position: absolute; left: -1000px; top: -1000px";
-        tempInput.value = value;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand("copy");
-        document.body.removeChild(tempInput);
-    }
-	
-	
-	$('#copyToClipboard').on('click', function () {
-	  Swal.fire({
-      
-      type: 'success',
-      title: 'URL Copy to Clipboard!',
-      showConfirmButton: false,
-      timer: 1500,
-      confirmButtonClass: 'btn btn-primary',
-      buttonsStyling: false,
-    })
-  })
-	
-
-    //$(function() {
-    $(window).ready(function () {
-			if (navigator.userAgent.indexOf("Googlebot") !== -1){
-                document.getElementById("ipandtext").innerHTML = "Dear Google - please do NOT INDEX THIS! - If you are not Google, chnage your UA!!";
-            } else {
-                document.getElementById("ipandtext").innerHTML = "Live Layer 7 DSTAT Hetzner1    » http://116.202.37.24 « ";
-            }
-            var chart;
-            var previous = null;
-
-
-            var chart; // global
-            var pointx = null;
-            var ip = "http://116.202.37.24";
-            var target_ip;
-			
-
-			$("#LANGen").on("click", function(){ setlangCookie("en"); });
-			$("#LANGde").on("click", function(){ setlangCookie("de"); });
-			$("#LANGcnsp").on("click", function(){ setlangCookie("cnsp"); });
-			$("#LANGcntd").on("click", function(){ setlangCookie("cntd"); });
-			$("#LANGru").on("click", function(){ setlangCookie("ru"); });
-			$("#LANGes").on("click", function(){ setlangCookie("es"); });
-			$("#LANGhi").on("click", function(){ setlangCookie("hi"); });
-			$("#LANGar").on("click", function(){ setlangCookie("ar"); });
-
-			function setlangCookie(langX) {
-				//localStorage.setItem('lang', langX);
-				document.cookie = "lang="+langX+"; expires=Fri, 31 Dec 9999 23:59:59 GMT;path=/;secure"; 
-				location.reload();
-			} 
-			
-			
-            target_ip = ip.split(".");
-            target_ip[2] = " * ";
-            target_ip = target_ip.join('.');
-			var activeXhr;
-			var mychart;
-			setup();
-        /*a7list = $('a#l7Link');
-        for ( i = 0; i < a7list.length; i++ ) {
-            $(a7list[i]).on("click", event => {
-                event.preventDefault();
-
-                var key = $(event.currentTarget).data("key");
-                // console.log($.xhrPool);
-                sessionStorage.setItem("l7k", key);
-                initiateChart("L7dstat");
-                setIpandText();
-                // parseFile();
-            });
-        }*/
-
-
-		//Setup
-		
-		function setup() {
-            initiateChart("L7dstat");
-            sessionStorage.setItem("l7k", 'Hetzner1');
-            //setIpandText();
-            parseFile();
-        };
-
-        function getUrlParameter(xhr, sParam) {
-            // var sPageURL = window.location.search.substring(1),
-            var sPageURL = new URL(xhr.url).search.substring(1),
-                sURLVariables = sPageURL.split('&'),
-                sParameterName,
-                i;
-            // console.log(xhr);
-            for (i = 0; i < sURLVariables.length; i++) {
-                sParameterName = sURLVariables[i].split('=');
-
-                if (sParameterName[0] === sParam) {
-                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-                }
-            }
-        };
-
-        function setIpandText() {
-            id = sessionStorage.getItem("l7k");
-            $.ajax({
-                url: "https://dstat.cc/api/l7s.php?id=" + id,
-                dataType: "text",
-                method: "get",
-                //timeout: 3000,
-                error: function(){
-                    //console.log("Catching timeout");
-                    setTimeout(setIpandText, 3000);
-                },
-                cache: false
-            }).done(function(data) {
-                jd = JSON.parse(data);
-                <!---document.getElementById("ipandtext").innerHTML = "Live Layer 7 DSTAT: " + jd.id + "    » " + jd.server + " «"; -->
-                document.getElementById("copyToClipboard").setAttribute("data-href", jd.server);
-            });
-        }
-
-        function parseFile()
-        {
-            id = sessionStorage.getItem("l7k");
-
-            if ( id == "" )
-                return;
-
-            activeXhr = $.ajax({
-                url: "https://dstat.cc/api/L7request.php?id=" + id,
-                dataType: "text",
-                method: "get",
-                timeout: 1000,
-                error: function(){
-                    console.log("Catching timeout");
-                    setTimeout(parseFile, 3000);
-                },
-                cache: false
-            }).done(
-                function(data) {
-                    // sp = new URLSearchParams($(this)[0].url);
-                    // console.log(sp);
-                    if ( getUrlParameter($(this)[0], "id") == sessionStorage.getItem("l7k") ) {
-                        var current = 0;
-                        var lastvalid = 0;
-                        var part = data.split(' ')[9];
-                        var series = mychart.series[0], current = parseInt(part);
-
-                        //console.log("Current", current,"previous",previous);
-                        //console.log(current-previous);
-                        if((current>0&&(current-previous)>0&&(current-previous)<990000000)||(current>0&&(current-previous)>0&&previous==null)) {
-                            shift = series.data.length > 40;
-
-                            if (previous !== null) {
-                                series.addPoint(
-                                    [Math.floor($.now()),
-                                        current-previous
-                                    ],
-                                    true,
-                                    shift
-                                );
-                            }
-                            lastvalid = current-previous;
-                            previous = current;
-                        } else {
-                            previous=null;
-                            console.log("Bad response");
-                        }
-                    }
-                    // call it again after one second
-                    setTimeout(parseFile, 1000);
-                }).fail(function( jqXHR, textStatus, errorThrown) {
-                console.log("No Internet connection");
-            });
-        }
-
-        function initiateChart(divid){
-            Highcharts.createElement('link', {
-                href: '//fonts.googleapis.com/css?family=Unica+One',
-                rel: 'stylesheet',
-                type: 'text/css',
-
-            }, null, document.getElementsByTagName('head')[0]);
-
-            var options = {
-
-                plotOptions: {
-                    series: {
-                        events: {
-                            legendItemClick: function(event) {
-                                event.preventDefault();
-                            }
-                        }
-                    }
-                },
-                chart: {
-                    zoomType: '',
-                    renderTo: divid,
-                    style: {
-                        fontFamily: "'Unica One', sans-serif",
-
-                    },
-                    //plotBorderColor: '#606063'
-                    backgroundColor: '#10163a',
-
-
-
-                },
-
-                title:{
-                    text: '» Layer 7 Dstat by DSTAT.CC «',
-                    style: {
-                        color: "#c2c6dc",
-                        textTransform: 'uppercase',
-                        fontSize: '20px',
-                    }
-                },
-
-                tooltip: {
-                    backgroundColor: '#10163a',
-                    style: {
-                        color: '#F0F0F0'
-                    }
-                },
-
-                xAxis: {
-                    type: 'datetime',
-                    dateTimeLabelFormats: {
-                        day: '%a'
-                    },
-                    gridLineColor: '#707073',
-                    labels: {
-                        style: {
-                            color: '#E0E0E3'
-                        }
-                    },
-                    lineColor: '#707073',
-                    minorGridLineColor: '#505053',
-                    tickColor: '#707073',
-                    title: {
-                        style: {
-                            color: '#A0A0A3'
-                        }
-                    }
-                },
-
-                yAxis: {
-                    labels: {
-                        style: {
-                            color: '#c2c6dc'
-                        },
-                    },
-
-                    title: {
-                        text: 'Requests/Sec',
-                        margin: 80,
-                        style: {
-                            color: '#c2c6dc'
-                        }
-                    }
-                },
-
-                credits: {
-                    enabled: false
-                },
-
-                legend :{
-                    useHTML: true,
-                    symbolWidth: 0,
-                    labelFormatter: function () {
-                        return '<div>' +
-                            '<div style="display: inline-block; margin-right:5px"> </div>' +
-                            "<span style='color: #c2c6dc;'> " + this.name +  " </span>" +
-                            '</div>'
-                    }
-
-                },
-
-                subtitle: {
-                    style: {
-                        color: '#c2c6dc',
-                        font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
-                    }
-                },
-
-                series: [{
-                    type: 'area',
-                    //shadowSize: 0,
-                    name: 'Total Requests',
-
-                    //color: '#ea5455',
-                    //color: '#c4162a',
-                    color: '#8e0027',
-                    data: []
-                }]
-            };
-            mychart = new Highcharts.Chart(options);
-        }
-
-    });
-</script>
 </html>
