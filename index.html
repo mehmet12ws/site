@@ -3,116 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinozor Oyunu</title>
+    <title>Giriş Yapma Sitesi</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f7f7f7;
             overflow: hidden;
-        }
-
-        .game-container {
+            background: #000;
             position: relative;
-            width: 800px;
-            height: 200px;
-            background-color: #fff;
-            overflow: hidden;
-            border: 2px solid #333;
         }
 
-        .ground {
+        /* Dinamik ve canlı arka plan efekti */
+        .background {
             position: absolute;
-            bottom: 0;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 20px;
-            background: url('ground.png') repeat-x;
-            background-size: contain;
+            height: 100%;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            background-size: 200% 200%;
+            animation: gradient 10s ease infinite, move 20s linear infinite;
+            z-index: -1;
         }
 
-        .dino {
+        @keyframes gradient {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        @keyframes move {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        h1 {
             position: absolute;
-            bottom: 20px;
-            left: 50px;
-            width: 44px;
-            height: 47px;
-            background: url('dino.png') no-repeat;
-            background-size: contain;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            margin: 0;
+            color: #fff;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .cactus {
-            position: absolute;
-            bottom: 20px;
-            right: -50px;
-            width: 34px;
-            height: 70px;
-            background: url('cactus.png') no-repeat;
-            background-size: contain;
-            animation: moveCactus 2s linear infinite;
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #333;
+            text-align: center;
+            position: relative;
         }
 
-        @keyframes moveCactus {
-            from {
-                right: -50px;
-            }
-            to {
-                right: 800px;
-            }
+        .button-container {
+            margin-top: 20px;
         }
 
-        .jump {
-            animation: jump 0.5s ease-out forwards;
+        button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-transform: uppercase;
         }
 
-        @keyframes jump {
-            0% {
-                bottom: 20px;
-            }
-            50% {
-                bottom: 100px;
-            }
-            100% {
-                bottom: 20px;
-            }
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            background-color: #003d7a;
+            transform: scale(0.98);
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="ground"></div>
-        <div class="dino" id="dino"></div>
-        <div class="cactus" id="cactus"></div>
+    <div class="background"></div>
+    <h1></h1>
+    <div class="container">
+        <div class="button-container">
+            <button onclick="redirectToLogin()">Giriş Yapma Sitesine Gitmek İçin Tıkla</button>
+        </div>
     </div>
     <script>
-        const dino = document.getElementById("dino");
-        const cactus = document.getElementById("cactus");
-
-        document.addEventListener("keydown", function(event) {
-            jump();
-        });
-
-        function jump() {
-            if (dino.classList != "jump") {
-                dino.classList.add("jump");
-
-                setTimeout(function() {
-                    dino.classList.remove("jump");
-                }, 500);
-            }
+        function redirectToLogin() {
+            window.location.href = 'https://mehmet12ws.online/login.html';
         }
-
-        let isAlive = setInterval(function() {
-            let dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
-            let cactusLeft = parseInt(window.getComputedStyle(cactus).getPropertyValue("right"));
-
-            if (cactusLeft < 90 && cactusLeft > 70 && dinoTop <= 40) {
-                alert("Oyun Bitti!");
-            }
-        }, 10);
     </script>
 </body>
 </html>
