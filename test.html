@@ -15,6 +15,8 @@
         <button type="submit">İstek Gönder</button>
     </form>
 
+    <div id="loadingMessage" style="display:none;">İşlem yapılıyor, lütfen bekleyin...</div>
+    <div id="taskIdMessage" style="display:none;"></div>
     <div id="result"></div>
 
     <script>
@@ -22,6 +24,11 @@
             event.preventDefault();
 
             const apiKey = document.getElementById('apiKey').value;
+
+            // Yükleniyor mesajını göster
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('result').innerText = '';
+            document.getElementById('taskIdMessage').style.display = 'none';
 
             // 2Captcha API isteği
             const createTaskUrl = "https://2captcha.com/in.php";
@@ -40,6 +47,10 @@
                 if (data.status === 1) {
                     const taskId = data.request;
 
+                    // Görev ID'sini göster
+                    document.getElementById('taskIdMessage').style.display = 'block';
+                    document.getElementById('taskIdMessage').innerText = `Görev ID'si: ${taskId}`;
+
                     // Görev sonucu almak için bekleme
                     setTimeout(() => {
                         const getResultUrl = `https://2captcha.com/res.php?key=${encodeURIComponent(apiKey)}&action=get&id=${taskId}&json=1`;
@@ -48,19 +59,28 @@
                         fetch(getResultUrl)
                         .then(response => response.json())
                         .then(resultData => {
+                            document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
+
                             if (resultData.status === 1) {
                                 document.getElementById('result').innerText = 'Çözüm: ' + resultData.request;
                             } else {
                                 document.getElementById('result').innerText = 'Hata: ' + resultData.request;
                             }
                         })
-                        .catch(error => console.error('Error:', error));
+                        .catch(error => {
+                            document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
+                            document.getElementById('result').innerText = 'Bir hata oluştu: ' + error;
+                        });
                     }, 20000); // 20 saniye bekle
                 } else {
+                    document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
                     document.getElementById('result').innerText = 'Görev oluşturulamadı: ' + data.request;
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
+                document.getElementById('result').innerText = 'Bir hata oluştu: ' + error;
+            });
         });
     </script>
 </body>
