@@ -8,7 +8,7 @@
 <body>
     <h2>Turnstile Çözümü İsteği Gönder</h2>
 
-    <form id="apiForm" method="POST">
+    <form id="apiForm">
         <label for="apiKey">2Captcha API Key:</label>
         <input type="text" id="apiKey" name="apiKey" required><br><br>
 
@@ -22,21 +22,42 @@
             event.preventDefault();
 
             const apiKey = document.getElementById('apiKey').value;
-            const data = `apiKey=${encodeURIComponent(apiKey)}`;
 
-            fetch('/send_request', {
+            // 2Captcha API isteği
+            const createTaskUrl = "https://2captcha.com/in.php";
+            const requestBody = `method=turnstile&key=${encodeURIComponent(apiKey)}&sitekey=0x4AAAAAAABFlgIgsFUIYITx&pageurl=https://me.miniclip.com/login&json=1`;
+
+            // Görev oluşturma isteği gönder
+            fetch(createTaskUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: data
+                body: requestBody
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    document.getElementById('result').innerText = 'Çözüm: ' + data.gRecaptchaResponse;
+                if (data.status === 1) {
+                    const taskId = data.request;
+
+                    // Görev sonucu almak için bekleme
+                    setTimeout(() => {
+                        const getResultUrl = `https://2captcha.com/res.php?key=${encodeURIComponent(apiKey)}&action=get&id=${taskId}&json=1`;
+
+                        // Sonuç isteğini gönder
+                        fetch(getResultUrl)
+                        .then(response => response.json())
+                        .then(resultData => {
+                            if (resultData.status === 1) {
+                                document.getElementById('result').innerText = 'Çözüm: ' + resultData.request;
+                            } else {
+                                document.getElementById('result').innerText = 'Hata: ' + resultData.request;
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    }, 20000); // 20 saniye bekle
                 } else {
-                    document.getElementById('result').innerText = 'Hata: ' + data.message;
+                    document.getElementById('result').innerText = 'Görev oluşturulamadı: ' + data.request;
                 }
             })
             .catch(error => console.error('Error:', error));
