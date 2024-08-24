@@ -3,85 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turnstile API İsteği</title>
+    <title>2Captcha JavaScript İle Çözüm</title>
 </head>
 <body>
-    <h2>Turnstile Çözümü İsteği Gönder</h2>
+    <h1>2Captcha Çözümü</h1>
+    <form id="captchaForm">
+        <label for="captcha_sitekey">Site Key:</label>
+        <input type="text" id="captcha_sitekey" name="captcha_sitekey" required><br><br>
 
-    <form id="apiForm">
-        <label for="apiKey">2Captcha API Key:</label>
-        <input type="text" id="apiKey" name="apiKey" required><br><br>
+        <label for="captcha_page_url">Page URL:</label>
+        <input type="text" id="captcha_page_url" name="captcha_page_url" required><br><br>
 
-        <button type="submit">İstek Gönder</button>
+        <button type="submit">CAPTCHA Çöz</button>
     </form>
 
-    <div id="loadingMessage" style="display:none;">İşlem yapılıyor, lütfen bekleyin...</div>
-    <div id="taskIdMessage" style="display:none;"></div>
     <div id="result"></div>
 
     <script>
-        document.getElementById('apiForm').addEventListener('submit', function(event) {
+        document.getElementById('captchaForm').addEventListener('submit', function(event) {
             event.preventDefault();
+            
+            const siteKey = document.getElementById('captcha_sitekey').value;
+            const pageUrl = document.getElementById('captcha_page_url').value;
+            const apiKey = 'YOUR_2CAPTCHA_API_KEY'; // Buraya 2Captcha API anahtarınızı ekleyin
 
-            const apiKey = document.getElementById('apiKey').value;
+            const url = `https://2captcha.com/in.php?key=${apiKey}&method=userrecaptcha&googlekey=${siteKey}&pageurl=${pageUrl}&json=1`;
 
-            // Yükleniyor mesajını göster
-            document.getElementById('loadingMessage').style.display = 'block';
-            document.getElementById('result').innerText = '';
-            document.getElementById('taskIdMessage').style.display = 'none';
-
-            // 2Captcha API isteği
-            const createTaskUrl = "https://2captcha.com/in.php";
-            const requestBody = `method=turnstile&key=${encodeURIComponent(apiKey)}&sitekey=0x4AAAAAAABFlgIgsFUIYITx&pageurl=https://me.miniclip.com/login&json=1`;
-
-            // Görev oluşturma isteği gönder
-            fetch(createTaskUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: requestBody
+            fetch(url, {
+                method: 'GET',
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 1) {
-                    const taskId = data.request;
-
-                    // Görev ID'sini göster
-                    document.getElementById('taskIdMessage').style.display = 'block';
-                    document.getElementById('taskIdMessage').innerText = `Görev ID'si: ${taskId}`;
-
-                    // Görev sonucu almak için bekleme
-                    setTimeout(() => {
-                        const getResultUrl = `https://2captcha.com/res.php?key=${encodeURIComponent(apiKey)}&action=get&id=${taskId}&json=1`;
-
-                        // Sonuç isteğini gönder
-                        fetch(getResultUrl)
-                        .then(response => response.json())
-                        .then(resultData => {
-                            document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
-
-                            if (resultData.status === 1) {
-                                document.getElementById('result').innerText = 'Çözüm: ' + resultData.request;
-                            } else {
-                                document.getElementById('result').innerText = 'Hata: ' + resultData.request;
-                            }
-                        })
-                        .catch(error => {
-                            document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
-                            document.getElementById('result').innerText = 'Bir hata oluştu: ' + error;
-                        });
-                    }, 20000); // 20 saniye bekle
+                    const captchaId = data.request;
+                    checkCaptchaResult(apiKey, captchaId);
                 } else {
-                    document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
-                    document.getElementById('result').innerText = 'Görev oluşturulamadı: ' + data.request;
+                    document.getElementById('result').textContent = 'CAPTCHA isteği başarısız: ' + data.request;
                 }
-            })
-            .catch(error => {
-                document.getElementById('loadingMessage').style.display = 'none'; // Yükleniyor mesajını gizle
-                document.getElementById('result').innerText = 'Bir hata oluştu: ' + error;
             });
         });
+
+        function checkCaptchaResult(apiKey, captchaId) {
+            const url = `https://2captcha.com/res.php?key=${apiKey}&action=get&id=${captchaId}&json=1`;
+            setTimeout(() => {
+                fetch(url, {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 1) {
+                        document.getElementById('result').textContent = 'CAPTCHA Çözüldü: ' + data.request;
+                    } else if (data.request === 'CAPCHA_NOT_READY') {
+                        document.getElementById('result').textContent = 'CAPTCHA çözülüyor, lütfen bekleyin...';
+                        checkCaptchaResult(apiKey, captchaId); // Sonuç hazır değilse tekrar dene
+                    } else {
+                        document.getElementById('result').textContent = 'CAPTCHA Çözülemedi: ' + data.request;
+                    }
+                });
+            }, 5000); // 5 saniye bekleyin
+        }
     </script>
 </body>
 </html>
