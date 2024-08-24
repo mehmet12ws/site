@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turnstile API İsteği</title>
+</head>
+<body>
+    <h2>Turnstile Çözümü İsteği Gönder</h2>
+
+    <form id="apiForm" method="POST">
+        <label for="apiKey">2Captcha API Key:</label>
+        <input type="text" id="apiKey" name="apiKey" required><br><br>
+
+        <button type="submit">İstek Gönder</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('apiForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const apiKey = document.getElementById('apiKey').value;
+            const data = `apiKey=${encodeURIComponent(apiKey)}`;
+
+            fetch('/send_request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('result').innerText = 'Çözüm: ' + data.gRecaptchaResponse;
+                } else {
+                    document.getElementById('result').innerText = 'Hata: ' + data.message;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
