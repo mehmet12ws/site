@@ -3,21 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lolicode API İşlemi</title>
+    <title>Turnstile API İsteği</title>
 </head>
 <body>
-    <h2>API İsteği Gönder</h2>
+    <h2>Turnstile Çözümü İsteği Gönder</h2>
 
-    <form id="apiForm">
-        <label for="apiKey">API Key:</label>
+    <form id="apiForm" method="POST">
+        <label for="apiKey">2Captcha API Key:</label>
         <input type="text" id="apiKey" name="apiKey" required><br><br>
-
-        <label for="selection">Seçim Yap:</label>
-        <select id="selection" name="selection" required>
-            <option value="1">Seçim 1</option>
-            <option value="2">Seçim 2</option>
-            <option value="3">Seçim 3</option>
-        </select><br><br>
 
         <button type="submit">İstek Gönder</button>
     </form>
@@ -29,58 +22,22 @@
             event.preventDefault();
 
             const apiKey = document.getElementById('apiKey').value;
-            const selection = document.getElementById('selection').value;
+            const data = `apiKey=${encodeURIComponent(apiKey)}`;
 
-            let apiURL;
-            let requestBody;
-
-            // Kullanıcının seçimine göre API isteğini yapılandırıyoruz
-            if (selection === "1") {
-                apiURL = "https://api.ez-captcha.com/createTask";
-                requestBody = JSON.stringify({
-                    clientKey: apiKey,
-                    task: {
-                        websiteURL: "https://www.google.com/recaptcha/api2/demo",
-                        websiteKey: "6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-",
-                        type: "ReCaptchaV2TaskProxyless",
-                        isInvisible: false
-                    }
-                });
-            } else if (selection === "2") {
-                apiURL = "https://api.ez-captcha.com/createTask";
-                requestBody = JSON.stringify({
-                    clientKey: apiKey,
-                    task: {
-                        websiteURL: "https://discord.com/register",
-                        websiteKey: "4c672d35-0701-42b2-88c3-78380b0db560",
-                        type: "HcaptchaTaskProxyless"
-                    }
-                });
-            } else if (selection === "3") {
-                apiURL = "https://2captcha.com/in.php";
-                requestBody = JSON.stringify({
-                    method: "turnstile",
-                    key: apiKey,
-                    sitekey: "0x4AAAAAAABFlgIgsFUIYITx",
-                    pageurl: "https://me.miniclip.com/login",
-                    json: 1
-                });
-            }
-
-            // API isteğini gönderme
-            fetch(apiURL, {
-                method: "POST",
+            fetch('/send_request', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-                    "Pragma": "no-cache",
-                    "Accept": "*/*"
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: requestBody
+                body: data
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    document.getElementById('result').innerText = 'Çözüm: ' + data.gRecaptchaResponse;
+                } else {
+                    document.getElementById('result').innerText = 'Hata: ' + data.message;
+                }
             })
             .catch(error => console.error('Error:', error));
         });
