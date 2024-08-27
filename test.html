@@ -98,7 +98,7 @@
             
             const siteKey = document.getElementById('captcha_sitekey').value;
             const pageUrl = document.getElementById('captcha_page_url').value;
-            const apiKey = '9243ef65a854e0801b510d306e952dfc'; // Buraya 2Captcha API anahtarınızı ekleyin
+            const apiKey = 'API_KEYINIZ'; // Buraya 2Captcha API anahtarınızı ekleyin
 
             const url = `https://2captcha.com/in.php?key=${apiKey}&method=userrecaptcha&googlekey=${siteKey}&pageurl=${pageUrl}&json=1`;
 
@@ -114,6 +114,9 @@
                 } else {
                     document.getElementById('result').textContent = 'CAPTCHA isteği başarısız: ' + data.request;
                 }
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = 'Hata oluştu: ' + error.message;
             });
         });
 
@@ -129,12 +132,15 @@
                         document.getElementById('result').textContent = 'CAPTCHA Çözüldü: ' + data.request;
                     } else if (data.request === 'CAPCHA_NOT_READY') {
                         document.getElementById('result').textContent = 'CAPTCHA çözülüyor, lütfen bekleyin...';
-                        checkCaptchaResult(apiKey, captchaId); // Sonuç hazır değilse tekrar dene
+                        setTimeout(() => checkCaptchaResult(apiKey, captchaId), 10000); // 10 saniye bekleyin ve tekrar kontrol edin
                     } else {
                         document.getElementById('result').textContent = 'CAPTCHA Çözülemedi: ' + data.request;
                     }
+                })
+                .catch(error => {
+                    document.getElementById('result').textContent = 'Hata oluştu: ' + error.message;
                 });
-            }, 5000); // 5 saniye bekleyin
+            }, 10000); // İlk kontrol için 10 saniye bekleyin
         }
     </script>
 </body>
