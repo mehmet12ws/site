@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mehmet12ws</title>
+    <title>Giriş Yapma Sitesi</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -99,30 +99,12 @@
     <h1></h1>
     <div class="container">
         <div class="button-container">
-            <button onclick="checkHeader()">Başlığı Kontrol Et</button>
+            <button onclick="redirectToLogin()">Giriş Yapma Sitesine Gitmek İçin Tıkla</button>
         </div>
     </div>
     <script>
-        // 'mehmet12ws_armor' başlığının base64 kodlanmış hali
-        const base64HeaderValue = btoa('mehmet12ws_armor');
-
-        function checkHeader() {
-            fetch('https://mehmet12ws.online')
-                .then(response => {
-                    // Yanıt başlıklarında 'mehmet12ws_armor' başlığını kontrol et
-                    const headerValue = response.headers.get('mehmet12ws_armor');
-                    if (headerValue === base64HeaderValue) {
-                        // Başlık doğru ise
-                        alert('Başlık doğru: İsteği kabul etmiyorum.');
-                    } else {
-                        // Başlık doğru değilse
-                        alert('Başlık doğru değil.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Hata:', error);
-                    alert('Bir hata oluştu.');
-                });
+        function redirectToLogin() {
+            window.location.href = 'https://mehmet12ws.online/login.html';
         }
     </script>
 </body>
