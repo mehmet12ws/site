@@ -121,29 +121,31 @@
             color: #bdc3c7;
         }
 
-        /* Arka plan animasyonu */
-        @keyframes backgroundAnimation {
-            0% { background-color: #1a1a2e; }
-            50% { background-color: #16213e; }
-            100% { background-color: #1a1a2e; }
-        }
-
-        /* Arka plan animasyonu uygulama */
-        body {
-            animation: backgroundAnimation 10s infinite alternate;
+        /* Yeni istatistik alanı stili */
+        .statistics {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #b2bec3;
         }
     </style>
     <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>
+        let acceptedRequests = 0;
+        let blockedRequests = 0;
+
         window.onload = function() {
             if (sessionStorage.getItem("turnstilePassed")) {
                 showMaintenanceMessage();
+            } else {
+                blockedRequests++; // Engellenen isteği artır
+                updateStatistics(); // İstatistikleri güncelle
             }
         };
 
         // Cloudflare Turnstile CAPTCHA doğrulaması
         function onSuccess(token) {
+            acceptedRequests++; // Kabul edilen isteği artır
             sessionStorage.setItem("turnstilePassed", "true");
             // 2-3 saniye bekle ve ardından bakım mesajını göster
             setTimeout(showMaintenanceMessage, 2000); // 2000ms = 2 saniye
@@ -169,6 +171,11 @@
                 }
             }, 1000);
         }
+
+        function updateStatistics() {
+            document.getElementById('statistics').textContent = 
+                `Kabul Edilen İstekler: ${acceptedRequests} | Engellenen İstekler: ${blockedRequests}`;
+        }
     </script>
 </head>
 <body>
@@ -184,6 +191,8 @@
                 </div>
             </div>
         </div>
+        <!-- İstatistikler -->
+        <div id="statistics" class="statistics">Kabul Edilen İstekler: 0 | Engellenen İstekler: 1</div>
         <!-- Doğrulama Sonrası Başarı Mesajı -->
         <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
         <!-- Doğrulama Başarısız Olursa Hata Mesajı -->
