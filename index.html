@@ -107,7 +107,8 @@
         // Cloudflare Turnstile CAPTCHA doğrulaması
         function onSuccess(token) {
             sessionStorage.setItem("turnstilePassed", "true");
-            showMaintenanceMessage();
+            // 2-3 saniye bekle ve ardından bakım mesajını göster
+            setTimeout(showMaintenanceMessage, 2000); // 2000ms = 2 saniye
         }
 
         function showMaintenanceMessage() {
