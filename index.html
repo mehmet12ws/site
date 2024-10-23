@@ -138,14 +138,15 @@
     <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>
-        let acceptedRequests = 0;
-        let blockedRequests = 0;
+        let acceptedRequests = parseInt(localStorage.getItem("acceptedRequests")) || 0;
+        let blockedRequests = parseInt(localStorage.getItem("blockedRequests")) || 0;
 
         window.onload = function() {
             if (sessionStorage.getItem("turnstilePassed")) {
                 showMaintenanceMessage();
             } else {
                 blockedRequests++; // Engellenen isteği artır
+                localStorage.setItem("blockedRequests", blockedRequests);
                 updateStatistics(); // İstatistikleri güncelle
             }
         };
@@ -154,12 +155,14 @@
         function onSuccess(token) {
             acceptedRequests++; // Kabul edilen isteği artır
             sessionStorage.setItem("turnstilePassed", "true");
+            localStorage.setItem("acceptedRequests", acceptedRequests);
             // 2-3 saniye bekle ve ardından bakım mesajını göster
             setTimeout(showMaintenanceMessage, 2000); // 2000ms = 2 saniye
         }
 
         function onError() {
             blockedRequests++; // Engellenen isteği artır
+            localStorage.setItem("blockedRequests", blockedRequests);
             updateStatistics(); // İstatistikleri güncelle
         }
 
@@ -191,7 +194,7 @@
     </script>
 </head>
 <body>
-    <div id="statistics" class="statistics">Kabul Edilen İstekler: 0 | Engellenen İstekler: 0</div>
+    <div id="statistics" class="statistics">Kabul Edilen İstekler: 0 | Engellenen İstekler: 1</div>
     <div class="container">
         <div class="captcha-container">
             <div class="title">DDoS Koruması - mehmet12ws ARMOR</div>
