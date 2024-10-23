@@ -123,9 +123,16 @@
 
         /* Yeni istatistik alanı stili */
         .statistics {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #b2bec3;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border-radius: 8px;
+            z-index: 5;
+            font-size: 16px;
         }
     </style>
     <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
@@ -149,6 +156,11 @@
             sessionStorage.setItem("turnstilePassed", "true");
             // 2-3 saniye bekle ve ardından bakım mesajını göster
             setTimeout(showMaintenanceMessage, 2000); // 2000ms = 2 saniye
+        }
+
+        function onError() {
+            blockedRequests++; // Engellenen isteği artır
+            updateStatistics(); // İstatistikleri güncelle
         }
 
         function showMaintenanceMessage() {
@@ -179,6 +191,7 @@
     </script>
 </head>
 <body>
+    <div id="statistics" class="statistics">Kabul Edilen İstekler: 0 | Engellenen İstekler: 0</div>
     <div class="container">
         <div class="captcha-container">
             <div class="title">DDoS Koruması - mehmet12ws ARMOR</div>
@@ -187,12 +200,11 @@
                 <!-- Cloudflare Turnstile  -->
                 <div class="cf-turnstile" 
                      data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" 
-                     data-callback="onSuccess">
+                     data-callback="onSuccess"
+                     data-error="onError"> <!-- Hata durumunu yakalamak için -->
                 </div>
             </div>
         </div>
-        <!-- İstatistikler -->
-        <div id="statistics" class="statistics">Kabul Edilen İstekler: 0 | Engellenen İstekler: 1</div>
         <!-- Doğrulama Sonrası Başarı Mesajı -->
         <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
         <!-- Doğrulama Başarısız Olursa Hata Mesajı -->
