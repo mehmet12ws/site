@@ -3,118 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planlı Bakım Çalışması</title>
+    <title>Gelişmiş Güvenlik Sistemi - DDoS Koruması</title>
     <style>
+        /* Genel stil ayarları */
         body {
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #111;
-            color: #fff;
-            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
         }
 
         .container {
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #2d2d44;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
         }
 
-        .icon {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
-            border: 5px solid #0fa;
-            border-radius: 50%;
-            border-top: 5px solid transparent;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00bfa5;
         }
 
         .message {
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #b2bec3;
         }
 
-        .countdown {
-            color: #0fa;
-            font-size: 20px;
-            margin-top: 10px;
+        .captcha-wrapper {
+            margin-bottom: 20px;
         }
 
-        .hidden {
+        .success-message {
             display: none;
+            color: #00e676;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            display: none;
+            color: #ff1744;
+            font-size: 18px;
+            margin-top: 20px;
         }
 
         .footer {
-            font-size: 10px;
-            color: #555;
-            position: absolute;
-            bottom: 200px;
+            font-size: 12px;
+            color: #7f8fa6;
+            margin-top: 20px;
         }
     </style>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>
         window.onload = function() {
-            if (sessionStorage.getItem("captchaPassed")) {
-                document.getElementById("maintenance-container").classList.remove("hidden");
-                document.getElementById("captcha-container").classList.add("hidden");
-                startCountdown();
+            if (sessionStorage.getItem("turnstilePassed")) {
+                showSuccessMessage();
             }
         };
 
-        function onSubmit(token) {
-            sessionStorage.setItem("captchaPassed", "true");
-            document.getElementById("maintenance-container").classList.remove("hidden");
-            document.getElementById("captcha-container").classList.add("hidden");
-            startCountdown();
+        // Cloudflare Turnstile CAPTCHA doğrulaması
+        function onSuccess(token) {
+            sessionStorage.setItem("turnstilePassed", "true");
+            showSuccessMessage();
         }
 
-        function startCountdown() {
-            var countdownElement = document.getElementById('countdown');
-            var countdown = 10;
+        function showSuccessMessage() {
+            document.querySelector('.captcha-container').style.display = 'none';
+            document.querySelector('.success-message').style.display = 'block';
+        }
 
-            var countdownInterval = setInterval(function() {
-                countdownElement.textContent = countdown + " saniye sonra sayfa yenilenecek.";
-                countdown--;
-                
-                if (countdown < 0) {
-                    clearInterval(countdownInterval);
-                    location.reload();
-                }
-            }, 1000);
+        function showErrorMessage() {
+            document.querySelector('.captcha-container').style.display = 'none';
+            document.querySelector('.error-message').style.display = 'block';
         }
     </script>
 </head>
 <body>
-    <div id="captcha-container" class="container">
-        <div class="message">Lütfen CAPTCHA doğrulaması yapınız.</div>
-        <form action="?" method="POST">
-            <div class="g-recaptcha"
-                 data-sitekey="6LeStGkqAAAAAK6PXVWxjNzYMdc8hHwf1vcJSZQ7" 
-                 data-callback="onSubmit">
+    <div class="container">
+        <div class="captcha-container">
+            <div class="title">mehmet12ws ARMOR</div>
+            <div class="message">DDoS Gerekçesiyle Turnistleyi Geçmeniz Gerek.</div>
+            <div class="captcha-wrapper">
+                <!-- Cloudflare Turnstile CAPTCHA Bileşeni -->
+                <div class="cf-turnstile" 
+                     data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" 
+                     data-callback="onSuccess">
+                </div>
             </div>
-        </form>
-        <div class="footer">DDOS ARMOR</div> <!-- Buraya yerleştirildi -->
-    </div>
-
-    <div id="maintenance-container" class="container hidden">
-        <div class="icon"></div>
-        <div class="message">Planlı Bakım Çalışması !</div>
-        <p>WebSitemizde bir düzenleme yapıyoruz bu nedenle sitemiz bakım modundadır.<br>
-        Daha sonra tekrar ziyaret edebilir veya bu sayfayı açık bırakarak site aktif olduğunda otomatik erişim sağlayabilirsiniz.</p>
-        <p id="countdown" class="countdown">10 saniye sonra sayfa yenilenecek.</p>
+        </div>
+        <!-- Doğrulama Sonrası Başarı Mesajı -->
+        <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
+        <!-- Doğrulama Başarısız Olursa Hata Mesajı -->
+        <div class="error-message">Yanlış Oldu Tekrar Dene</div>
+        <div class="footer">mehmet12ws ARMOR - Aktif</div>
     </div>
 </body>
 </html>
