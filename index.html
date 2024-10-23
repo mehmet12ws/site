@@ -94,6 +94,19 @@
             font-size: 20px;
             margin-top: 10px;
         }
+
+        .maintenance-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #f39c12;
+        }
+
+        .maintenance-description {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #bdc3c7;
+        }
     </style>
     <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -136,7 +149,7 @@
 <body>
     <div class="container">
         <div class="captcha-container">
-            <div class="title">DDoS Koruması - mehmet12ws ARMOR</div>
+            <div class="title">DDoS Koruması - mehmet12ws ARMIR</div>
             <div class="message">Siteye devam etmek için doğrulama yapmanız gerekmektedir.</div>
             <div class="captcha-wrapper">
                 <!-- Cloudflare Turnstile  -->
@@ -155,9 +168,9 @@
         <!-- Bakım Mesajı -->
         <div class="maintenance-message">
             <div class="icon"></div>
-            <div class="message">Planlı Bakım Çalışması!</div>
-            <p>Web sitemizde bir düzenleme yapıyoruz bu nedenle sitemiz bakım modundadır.<br>
-            Daha sonra tekrar ziyaret edebilir veya bu sayfayı açık bırakarak site aktif olduğunda otomatik erişim sağlayabilirsiniz.</p>
+            <div class="maintenance-title">Planlı Bakım Çalışması</div>
+            <div class="maintenance-description">Web sitemizde bazı güncellemeler yapıyoruz. Bu nedenle sitemiz geçici olarak kapalıdır.</div>
+            <p>Daha sonra tekrar ziyaret edebilir veya bu sayfayı açık bırakarak site aktif olduğunda otomatik erişim sağlayabilirsiniz.</p>
             <p id="countdown" class="countdown">10 saniye sonra sayfa yenilenecek.</p>
         </div>
     </div>
