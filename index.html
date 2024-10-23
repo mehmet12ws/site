@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -10,6 +9,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -21,6 +21,10 @@
 
         .container {
             max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .icon {
@@ -48,31 +52,64 @@
             font-size: 20px;
             margin-top: 10px;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            font-size: 10px;
+            color: #555;
+            position: absolute;
+            bottom: 200px;
+        }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
+        window.onload = function() {
+            if (sessionStorage.getItem("captchaPassed")) {
+                document.getElementById("maintenance-container").classList.remove("hidden");
+                document.getElementById("captcha-container").classList.add("hidden");
+                startCountdown();
+            }
+        };
+
+        function onSubmit(token) {
+            sessionStorage.setItem("captchaPassed", "true");
+            document.getElementById("maintenance-container").classList.remove("hidden");
+            document.getElementById("captcha-container").classList.add("hidden");
+            startCountdown();
+        }
+
         function startCountdown() {
             var countdownElement = document.getElementById('countdown');
             var countdown = 10;
 
-            
             var countdownInterval = setInterval(function() {
                 countdownElement.textContent = countdown + " saniye sonra sayfa yenilenecek.";
                 countdown--;
-
+                
                 if (countdown < 0) {
                     clearInterval(countdownInterval);
                     location.reload();
                 }
             }, 1000);
         }
-
-        window.onload = function() {
-            startCountdown();
-        };
     </script>
 </head>
 <body>
-    <div class="container">
+    <div id="captcha-container" class="container">
+        <div class="message">Lütfen CAPTCHA doğrulaması yapınız.</div>
+        <form action="?" method="POST">
+            <div class="g-recaptcha"
+                 data-sitekey="6LeStGkqAAAAAK6PXVWxjNzYMdc8hHwf1vcJSZQ7" 
+                 data-callback="onSubmit">
+            </div>
+        </form>
+        <div class="footer">DDOS ARMOR</div> <!-- Buraya yerleştirildi -->
+    </div>
+
+    <div id="maintenance-container" class="container hidden">
         <div class="icon"></div>
         <div class="message">Planlı Bakım Çalışması !</div>
         <p>WebSitemizde bir düzenleme yapıyoruz bu nedenle sitemiz bakım modundadır.<br>
