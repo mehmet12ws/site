@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gelişmiş Güvenlik Sistemi - DDoS Koruması</title>
+    <title>Planlı Bakım Çalışması</title>
     <style>
-        /* Genel stil ayarları */
+        /* Genel Stil Ayarları */
         body {
             margin: 0;
             padding: 0;
@@ -13,7 +13,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #1a1a2e;
+            background-color: #1f1f2e;
             color: #e0e0e0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
@@ -22,93 +22,116 @@
         .container {
             max-width: 600px;
             width: 100%;
-            padding: 20px;
-            background-color: #2d2d44;
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            padding: 40px 30px;
+            background-color: #252540;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
             border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1.2s ease-in-out;
         }
 
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #00bfa5;
+        /* Fade-in animasyonu */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border: 5px solid #0fa;
+            border-radius: 50%;
+            border-top: 5px solid transparent;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .message {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #0fa;
+        }
+
+        .description {
             font-size: 18px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: #b2bec3;
         }
 
-        .captcha-wrapper {
-            margin-bottom: 20px;
-        }
-
-        .success-message {
-            display: none;
-            color: #00e676;
+        .countdown {
+            color: #0fa;
             font-size: 20px;
-            margin-top: 20px;
-        }
-
-        .error-message {
-            display: none;
-            color: #ff1744;
-            font-size: 18px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .footer {
             font-size: 12px;
             color: #7f8fa6;
-            margin-top: 20px;
+            margin-top: 30px;
         }
     </style>
-    <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>
+        function startCountdown() {
+            var countdownElement = document.getElementById('countdown');
+            var countdown = 10;
+
+            var countdownInterval = setInterval(function() {
+                countdownElement.textContent = countdown + " saniye sonra sayfa yenilenecek.";
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    location.reload();
+                }
+            }, 1000);
+        }
+
+        function onCaptchaSuccess() {
+            document.getElementById("captcha-container").style.display = "none"; // CAPTCHA ekranını gizle
+            document.getElementById("maintenance-container").style.display = "block"; // Bakım ekranını göster
+            startCountdown();
+        }
+
         window.onload = function() {
-            if (sessionStorage.getItem("turnstilePassed")) {
-                showSuccessMessage();
-            }
+            // Başlangıçta bakım ekranını gizle
+            document.getElementById("maintenance-container").style.display = "none";
         };
-
-        // Cloudflare Turnstile CAPTCHA doğrulaması
-        function onSuccess(token) {
-            sessionStorage.setItem("turnstilePassed", "true");
-            showSuccessMessage();
-        }
-
-        function showSuccessMessage() {
-            document.querySelector('.captcha-container').style.display = 'none';
-            document.querySelector('.success-message').style.display = 'block';
-        }
-
-        function showErrorMessage() {
-            document.querySelector('.captcha-container').style.display = 'none';
-            document.querySelector('.error-message').style.display = 'block';
-        }
     </script>
 </head>
 <body>
-    <div class="container">
-        <div class="captcha-container">
-            <div class="title">mehmet12ws ARMOR</div>
-            <div class="message">DDoS Gerekçesiyle Turnistleyi Geçmeniz Gerek.</div>
-            <div class="captcha-wrapper">
-                <!-- Cloudflare Turnstile CAPTCHA Bileşeni -->
-                <div class="cf-turnstile" 
-                     data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" 
-                     data-callback="onSuccess">
-                </div>
+    <!-- CAPTCHA Ekranı -->
+    <div id="captcha-container" class="container">
+        <div class="message">Lütfen CAPTCHA doğrulaması yapınız.</div>
+        <form action="?" method="POST" onsubmit="onCaptchaSuccess(); return false;"> <!-- Burada WAF ile birlikte CAPTCHA doğrulama yapılır -->
+            <div class="g-recaptcha"
+                 data-sitekey="6LeStGkqAAAAAK6PXVWxjNzYMdc8hHwf1vcJSZQ7" 
+                 data-callback="onCaptchaSuccess">
             </div>
-        </div>
-        <!-- Doğrulama Sonrası Başarı Mesajı -->
-        <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
-        <!-- Doğrulama Başarısız Olursa Hata Mesajı -->
-        <div class="error-message">Yanlış Oldu Tekrar Dene</div>
-        <div class="footer">mehmet12ws ARMOR - Aktif</div>
+            <button type="submit">Doğrula</button>
+        </form>
+        <div class="footer">mehmet12ws ARMOR</div>
     </div>
+
+    <!-- Bakım Ekranı -->
+    <div id="maintenance-container" class="container">
+        <div class="icon"></div>
+        <div class="message">Planlı Bakım Çalışması!</div>
+        <p class="description">Web sitemizde bir düzenleme yapıyoruz, bu nedenle sitemiz bakım modundadır.<br>
+        Daha sonra tekrar ziyaret edebilir veya bu sayfayı açık bırakarak site aktif olduğunda otomatik erişim sağlayabilirsiniz.</p>
+        <p id="countdown" class="countdown">10 saniye sonra sayfa yenilenecek.</p>
+        <div class="footer">mehmet12ws ARMOR</div>
+    </div>
+    
+    <!-- Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>
