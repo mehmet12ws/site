@@ -111,13 +111,10 @@
     <!-- CAPTCHA Ekranı -->
     <div id="captcha-container" class="container">
         <div class="message">Lütfen CAPTCHA doğrulaması yapınız.</div>
-        <form action="?" method="POST" onsubmit="onCaptchaSuccess(); return false;"> <!-- Burada WAF ile birlikte CAPTCHA doğrulama yapılır -->
-            <div class="g-recaptcha"
-                 data-sitekey="6LeStGkqAAAAAK6PXVWxjNzYMdc8hHwf1vcJSZQ7" 
-                 data-callback="onCaptchaSuccess">
-            </div>
-            <button type="submit">Doğrula</button>
-        </form>
+        <div class="g-recaptcha"
+             data-sitekey="6LeStGkqAAAAAK6PXVWxjNzYMdc8hHwf1vcJSZQ7" 
+             data-callback="onCaptchaSuccess">
+        </div>
         <div class="footer">mehmet12ws ARMOR</div>
     </div>
 
