@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> mehmet12ws </title>
+    <title>Planlı Bakım Çalışması</title>
     <style>
-        /* Genel stil ayarları */
         body {
             margin: 0;
             padding: 0;
@@ -13,102 +12,70 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #1a1a2e;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
             text-align: center;
         }
 
         .container {
-            max-width: 600px;
-            width: 100%;
-            padding: 20px;
-            background-color: #2d2d44;
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
+            max-width: 500px;
         }
 
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #00bfa5;
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border: 5px solid #0fa;
+            border-radius: 50%;
+            border-top: 5px solid transparent;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .message {
-            font-size: 18px;
-            margin-bottom: 25px;
-            color: #b2bec3;
-        }
-
-        .captcha-wrapper {
-            margin-bottom: 20px;
-        }
-
-        .success-message {
-            display: none;
-            color: #00e676;
             font-size: 20px;
-            margin-top: 20px;
+            margin-bottom: 10px;
         }
 
-        .error-message {
-            display: none;
-            color: #ff1744;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        .footer {
-            font-size: 12px;
-            color: #7f8fa6;
-            margin-top: 20px;
+        .countdown {
+            color: #0fa;
+            font-size: 20px;
+            margin-top: 10px;
         }
     </style>
-    <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>
+        function startCountdown() {
+            var countdownElement = document.getElementById('countdown');
+            var countdown = 10;
+
+            var countdownInterval = setInterval(function() {
+                countdownElement.textContent = countdown + " saniye sonra sayfa yenilenecek.";
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    location.reload();
+                }
+            }, 1000);
+        }
+
         window.onload = function() {
-            if (sessionStorage.getItem("turnstilePassed")) {
-                showSuccessMessage();
-            }
+            startCountdown();
         };
-
-        // Cloudflare Turnstile CAPTCHA doğrulaması
-        function onSuccess(token) {
-            sessionStorage.setItem("turnstilePassed", "true");
-            showSuccessMessage();
-        }
-
-        function showSuccessMessage() {
-            document.querySelector('.captcha-container').style.display = 'none';
-            document.querySelector('.success-message').style.display = 'block';
-        }
-
-        function showErrorMessage() {
-            document.querySelector('.captcha-container').style.display = 'none';
-            document.querySelector('.error-message').style.display = 'block';
-        }
     </script>
 </head>
 <body>
     <div class="container">
-        <div class="captcha-container">
-            <div class="title">DDoS Koruması - mehmet12ws ARMIR</div>
-            <div class="message">Siteye devam etmek için doğrulama yapmanız gerekmektedir.</div>
-            <div class="captcha-wrapper">
-                <!-- Cloudflare Turnstile  -->
-                <div class="cf-turnstile" 
-                     data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" 
-                     data-callback="onSuccess">
-                </div>
-            </div>
-        </div>
-        <!-- Doğrulama Sonrası Başarı Mesajı -->
-        <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
-        <!-- Doğrulama Başarısız Olursa Hata Mesajı -->
-        <div class="error-message">CAPTCHA doğrulaması başarısız oldu. Lütfen tekrar deneyin.</div>
-        <div class="footer">mehmet12ws ARMOR - Güvenlik Önlemleri Aktif</div>
+        <div class="icon"></div>
+        <div class="message">Planlı Bakım Çalışması !</div>
+        <p>WebSitemizde bir düzenleme yapıyoruz bu nedenle sitemiz bakım modundadır.<br>
+        Daha sonra tekrar ziyaret edebilir veya bu sayfayı açık bırakarak site aktif olduğunda otomatik erişim sağlayabilirsiniz.</p>
+        <p id="countdown" class="countdown">10 saniye sonra sayfa yenilenecek.</p>
     </div>
 </body>
 </html>
