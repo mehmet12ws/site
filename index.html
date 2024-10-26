@@ -1,3 +1,29 @@
+<?php
+// İstek sayısını saklamak için bir dosya kullanıyoruz
+$countFile = 'request_count.txt';
+$statusFile = 'request_status.txt';
+
+// İstek sayısını güncelle
+if (file_exists($countFile)) {
+    $count = (int)file_get_contents($countFile);
+} else {
+    $count = 0;
+}
+$count++;
+file_put_contents($countFile, $count);
+
+// İstek bilgileri ve durumunu loglamak için zaman ve IP bilgilerini al
+date_default_timezone_set('Europe/Istanbul');
+$time = date('Y-m-d H:i:s');
+$ip = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'];
+$method = $_SERVER['REQUEST_METHOD'];
+
+// İstek geçme veya bloklanma durumu (örnek: sadece GET isteklerine izin veriliyorsa)
+$status = ($method === "GET") ? "Geçti" : "Bloklandı";
+file_put_contents($statusFile, $status);
+
+// HTML İçeriği
+?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -168,6 +194,9 @@
                      data-callback="onSuccess">
                 </div>
             </div>
+            <!-- Gelen İstek Sayısı ve Durumu -->
+            <div class="message">Gelen İstek Sayısı: <?php echo $count; ?></div>
+            <div class="message">Son İstek Durumu: <?php echo $status; ?></div>
         </div>
         <!-- Doğrulama Sonrası Başarı Mesajı -->
         <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
