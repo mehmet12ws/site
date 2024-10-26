@@ -4,397 +4,185 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mehmet12ws</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Genel stil ayarları */
         body {
             margin: 0;
-            font-family: 'Roboto', sans-serif;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1));
-            color: #fff;
+            padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: flex-start;
             height: 100vh;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            overflow: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
             padding: 20px;
+            background-color: #2d2d44;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            z-index: 1;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px #61dafb;
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00bfa5;
         }
 
-        h2 {
-            font-size: 2rem;
-            margin: 20px 0;
-            text-shadow: 0 0 15px #61dafb;
+        .message {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #b2bec3;
         }
 
-        #my-video {
-            width: 80%;
-            max-width: 700px;
-            border: none; /* Çerçeve rengi kaldırıldı */
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+        .captcha-wrapper {
             margin-bottom: 20px;
         }
 
-        .video-controls {
-            display: flex;
+        .success-message {
+            display: none;
+            color: #00e676;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            display: none;
+            color: #ff1744;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #7f8fa6;
+            margin-top: 20px;
+        }
+
+        .maintenance-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 20px;
+            border-radius: 0;
+            z-index: 10;
+            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
-            padding: 10px;
+        }
+
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border: 5px solid #0fa;
+            border-radius: 50%;
+            border-top: 5px solid transparent;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown {
+            color: #0fa;
+            font-size: 20px;
             margin-top: 10px;
         }
 
-        .control-button {
-            background: none;
-            border: none;
-            color: #61dafb;
-            font-size: 1.5rem;
-            margin: 0 15px;
-            cursor: pointer;
-            transition: color 0.3s, transform 0.3s;
+        .maintenance-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #f39c12;
         }
 
-        .control-button:hover {
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        .telegram-link {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            color: #61dafb;
-            text-decoration: none;
-            transition: color 0.3s;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .telegram-link:hover {
-            color: #fff;
-        }
-
-.in-video-telegram {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            color: #61dafb;
-            display: none;
-        }
-        .channel-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 40px;
-            height: auto;
-        }
-
-        .channel-list {
-            padding: 0;
-            list-style: none;
-            text-align: center;
-        }
-
-        .channel-item {
-            cursor: pointer;
-            margin: 15px 0;
-            padding: 20px;
-            border: 3px solid #61dafb;
-            border-radius: 15px;
-            background-color: rgba(97, 218, 251, 0.2);
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .channel-item:hover {
-            background-color: rgba(97, 218, 251, 0.4);
-            transform: translateY(-3px);
-        }
-
-        .counter {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: #61dafb;
-        }
-
-        .flex-row {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .sub-channel-container {
-            margin: 0 20px;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            h2 {
-                font-size: 1.8rem;
-            }
-
-            #my-video {
-                width: 90%;
-            }
-
-            .telegram-link {
-                font-size: 1.2rem;
-            }
-
-            .in-video-telegram {
-                font-size: 1rem;
-            }
-
-            .flex-row {
-                flex-direction: column;
-            }
-        }
-
-        :fullscreen {
-            background: black;
-            color: #fff;
-        }
-
-        :fullscreen #my-video {
-            border: none; /* Tam ekran modunda kenarlık kaldır */
-            box-shadow: none;
+        .maintenance-description {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #bdc3c7;
         }
     </style>
+    <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>
+        window.onload = function() {
+            if (sessionStorage.getItem("turnstilePassed")) {
+                showMaintenanceMessage();
+            }
+        };
+
+        // Cloudflare Turnstile CAPTCHA doğrulaması
+        function onSuccess(token) {
+            sessionStorage.setItem("turnstilePassed", "true");
+            // 2-3 saniye bekle ve ardından bakım mesajını göster
+            setTimeout(showMaintenanceMessage, 2000); // 2000ms = 2 saniye
+        }
+
+        function showMaintenanceMessage() {
+            document.querySelector('.captcha-container').style.display = 'none';
+            document.querySelector('.maintenance-message').style.display = 'flex';
+            startCountdown();
+        }
+
+        function startCountdown() {
+            var countdownElement = document.getElementById('countdown');
+            var countdown = 10;
+
+            var countdownInterval = setInterval(function() {
+                countdownElement.textContent = countdown + " saniye sonra sayfa yenilenecek.";
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    location.reload(); // Sayfa yenileme
+                }
+            }, 1000);
+        }
+    </script>
 </head>
 <body>
-    <h1>mehmet12ws</h1>
-    
-    <video id="my-video" controls></video>
-    <div class="in-video-telegram" id="in-video-telegram">📱 t.me/MehmetSports</div>
-    
-    <div class="video-controls">
-        <button class="control-button" id="play-pause" onclick="togglePlay()">▶️</button>
-        <button class="control-button" id="mute" onclick="toggleMute()">🔊</button>
-        <button class="control-button" id="fullscreen" onclick="toggleFullscreen()">🔁</button>
-        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="setVolume(this.value)" />
+    <div class="container">
+        <div class="captcha-container">
+            <div class="title">DDoS Koruması - mehmet12ws ARMOR</div>
+            <div class="message">Siteye devam etmek için doğrulama yapmanız gerekmektedir.</div>
+            <div class="captcha-wrapper">
+                <!-- Cloudflare Turnstile  -->
+                <div class="cf-turnstile" 
+                     data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" 
+                     data-callback="onSuccess">
+                </div>
+            </div>
+        </div>
+        <!-- Doğrulama Sonrası Başarı Mesajı -->
+        <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
+        <!-- Doğrulama Başarısız Olursa Hata Mesajı -->
+        <div class="error-message">CAPTCHA doğrulaması başarısız oldu. Lütfen tekrar deneyin.</div>
+        <div class="footer">mehmet12ws ARMOR - Güvenlik Önlemleri Aktif</div>
+
+        <!-- Bakım Mesajı -->
+        <div class="maintenance-message">
+            <div class="icon"></div>
+            <div class="maintenance-title">Planlı Bakım Çalışması</div>
+            <div class="maintenance-description">Web sitemizde bazı güncellemeler yapıyoruz. Bu nedenle sitemiz geçici olarak kapalıdır.</div>
+            <p>Daha sonra tekrar ziyaret edebilir veya bu sayfayı açık bırakarak site aktif olduğunda otomatik erişim sağlayabilirsiniz.</p>
+            <p id="countdown" class="countdown">10 saniye sonra sayfa yenilenecek.</p>
+        </div>
     </div>
-
-    <a href="https://t.me/MehmetSports" class="telegram-link" target="_blank">📱 Güncel Link İçin Telegramımıza Katılın</a>
-
-      <div class="channel-container">
-        <h2>Günün Maçı</h2>
-        <ul class="channel-list">
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzI2OTMyOTkwMTMyYWYyMWU0NzE4OWM=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">İzlanda-Türkiye</span>
-                <span class="date">90 Dakika</span>
-            </li>
-        </ul>
-    </div>
-    
-    
-    <div class="flex-row">
-    <div class="sub-channel-container">
-        <h2>Tabii Spor</h2>
-        <ul class="channel-list">
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzM4MzA2OTEzMTY2ZWY3ZjQ4YzE5YmY=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">Tabii Spor - 1</span>
-                <span class="date"> - Maç Zamanı Aktif!</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzI1NDY4NTc3MDgxNTkxZjYzNzlhZTA=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">Tabii Spor - 2</span>
-                <span class="date"> - Maç Zamanı Aktif!</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzE0ODk0MzA3NTQ0YWY3ODQwYmM1NWU=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">Tabii Spor - 3</span>
-                <span class="date"> - Maç Zamanı Aktif!</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzM4MzkzMzIxOTgyY2YyMjVjNTM4MjI=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">Tabii Spor - 4</span>
-                <span class="date"> - Maç Zamanı Aktif!</span>
-            </li>
-        </ul>
-    </div>
-
-    <div class="sub-channel-container">
-        <h2>BeinSports </h2>
-        <ul class="channel-list">
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzE0NTM2OTIzMTQyMzc3MWI1OTUyODk=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">BeinSports1 - Yedek Yayın 1</span>
-                <span class="date">Maç Zamanı Aktif</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzIxMTM0NjIzOTg0M2RkZWRlOGZhYmM=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">BeinSports1 - Yedek Yayın 2</span>
-                <span class="date">7/24</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzI0MDM0MjUwMzE4NzNhNDMwMGQxZTQ=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">BeinSports1 - Yedek Yayın 3</span>
-                <span class="date">7/24</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzM2OTQ2NjI0NzU2NTVmZmNiYTZiNDc=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">BeinSports 2 - Yedek Yayın 1</span>
-                <span class="date">7/24</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzM0MTAxNjc1NjBmZDdiMmY0ZjQ2YmI=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">BeinSports 3 - Yedek Yayın 1</span>
-                <span class="date">7/24</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzE2MTk1MzQ2M2VhMWU4YmFmYmFkY2E=')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">BeinSports 4 - Yedek Yayın 1</span>
-                <span class="date">7/24</span>
-            </li>
-        </ul>
-    </div>
-
-    <div class="sub-channel-container">
-    <h2>E4xen</h2>
-    <ul class="channel-list">
-        <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzEwOTE0MDM5MTI1NTk2NWNlM2NiMDc=')">
-            <span class="status">CANLI</span>
-            <span class="channel-name">E4xen  1 - FEED</span>
-            <span class="date">7/24</span>
-        </li>
-        <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzEyMDQyMDA4MDE2OTFlMDg5Nzk2YmE=')">
-            <span class="status">CANLI</span>
-            <span class="channel-name">E4xen 1 - Yedek</span>
-            <span class="date">7/24</span>
-        </li>
-        <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzM2NzMwMzcwNTQwZDc3MjNlMjhiNDQ=')">
-            <span class="status">CANLI</span>
-            <span class="channel-name">E4xen 2 - HD</span>
-            <span class="date">7/24</span>
-        </li>
-        <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzM2NzMwMzcwNTQwZDc3MjNlMjhiNDQ=')">
-            <span class="status">CANLI</span>
-            <span class="channel-name">E4xen 2 - UHD</span>
-            <span class="date">7/24</span>
-        </li>
-    </ul>
-</div>
-
-       
-       <div class="sub-channel-container">
-        <h2>S-Sport</h2>
-        <ul class="channel-list">
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzkzNjkwODI3NDlmNmE4NmY4NTBjMQ==')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">S-Sport - Yedek Yayın 1</span>
-                <span class="date">7/24</span>
-            </li>
-            <li class="channel-item" onclick="changeChannel('https://ozweb.duckdns.org/cdn/getrok/1.m3u8?v=aHR0cHM6Ly93d3cub2hhLnRvL29oYS10di9wbGF5LzkzNjkwODI3NDlmNmE4NmY4NTBjMQ==')">
-                <span class="status">CANLI</span>
-                <span class="channel-name">S-Sport 2 - Yedek Yayın 1</span>
-                <span class="date">7/24</span>                
-            </li>
-        </ul>
-    </div>
-</div>
-
-    <div class="counter">Toplam Ziyaretçi <span id="visit-count">0</span> </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script>
-        // Ziyaret sayısını almak için counter.php'yi çağır
-        fetch('counter.php')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('visit-count').innerText = data;
-            });
-
-        const video = document.getElementById('my-video');
-        const playPauseBtn = document.getElementById('play-pause');
-        const muteBtn = document.getElementById('mute');
-        const fullscreenBtn = document.getElementById('fullscreen');
-        const inVideoTelegram = document.getElementById('in-video-telegram');
-
-        let hls;
-
-        function changeChannel(src) {
-            if (hls) {
-                hls.destroy();
-            }
-if (Hls.isSupported()) {
-    hls = new Hls({
-        liveSyncDurationCount: 4,
-    });
-    hls.loadSource(src);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        video.play();
-        playPauseBtn.innerHTML = '⏸️';
-        inVideoTelegram.style.display = 'block';
-        // video.currentTime = video.duration - 4; // Bu satırı kaldırdık.
-    });
-} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = src;
-    video.addEventListener('loadedmetadata', function () {
-        video.play();
-        playPauseBtn.innerHTML = '⏸️';
-        inVideoTelegram.style.display = 'block';
-        // video.currentTime = video.duration - 4; // Bu satırı kaldırdık.
-    });
-}
-}
-
-        function togglePlay() {
-            if (video.paused) {
-                video.play();
-                playPauseBtn.innerHTML = '⏸️';
-            } else {
-                video.pause();
-                playPauseBtn.innerHTML = '▶️';
-            }
-        }
-
-        function toggleMute() {
-            video.muted = !video.muted;
-            muteBtn.innerHTML = video.muted ? '🔇' : '🔊';
-        }
-
-        function setVolume(value) {
-            video.volume = value;
-        }
-
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                video.requestFullscreen().catch(err => {
-                    console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        // Tam ekran modunda ışıkları gizle
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                document.body.style.background = 'black'; // Tam ekran arka plan rengi
-            } else {
-                document.body.style.background = 'radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1))'; // Normal arka plan rengi
-            }
-        });
-    </script>
 </body>
 </html>
