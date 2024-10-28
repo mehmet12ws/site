@@ -1,32 +1,3 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// İstek sayısını saklamak için bir dosya kullanıyoruz
-$countFile = 'request_count.txt';
-$statusFile = 'request_status.txt';
-
-// İstek sayısını güncelle
-if (file_exists($countFile)) {
-    $count = (int)file_get_contents($countFile);
-} else {
-    $count = 0;
-}
-$count++;
-file_put_contents($countFile, $count);
-
-// İstek bilgileri ve durumunu loglamak için zaman ve IP bilgilerini al
-date_default_timezone_set('Europe/Istanbul');
-$time = date('Y-m-d H:i:s');
-$ip = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'];
-$method = $_SERVER['REQUEST_METHOD'];
-
-// İstek geçme veya bloklanma durumu (örnek: sadece GET isteklerine izin veriliyorsa)
-$status = ($method === "GET") ? "Geçti" : "Bloklandı";
-file_put_contents($statusFile, $status);
-
-// HTML İçeriği
-?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -72,20 +43,146 @@ file_put_contents($statusFile, $status);
             margin-bottom: 25px;
             color: #b2bec3;
         }
-        
+
+        .captcha-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            display: none;
+            color: #00e676;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            display: none;
+            color: #ff1744;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
         .footer {
             font-size: 12px;
             color: #7f8fa6;
             margin-top: 20px;
         }
+
+        .maintenance-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 20px;
+            border-radius: 0;
+            z-index: 10;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border: 5px solid #0fa;
+            border-radius: 50%;
+            border-top: 5px solid transparent;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown {
+            color: #0fa;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        .maintenance-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #f39c12;
+        }
+
+        .maintenance-description {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #bdc3c7;
+        }
     </style>
+    <!-- Cloudflare Turnstile JavaScript Kütüphanesi -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>
+        window.onload = function() {
+            if (sessionStorage.getItem("turnstilePassed")) {
+                showMaintenanceMessage();
+            }
+        };
+
+        // Cloudflare Turnstile CAPTCHA doğrulaması
+        function onSuccess(token) {
+            sessionStorage.setItem("turnstilePassed", "true");
+            // 2-3 saniye bekle ve ardından bakım mesajını göster
+            setTimeout(showMaintenanceMessage, 2000); // 2000ms = 2 saniye
+        }
+
+        function showMaintenanceMessage() {
+            document.querySelector('.captcha-container').style.display = 'none';
+            document.querySelector('.maintenance-message').style.display = 'flex';
+            startCountdown();
+        }
+
+        function startCountdown() {
+            var countdownElement = document.getElementById('countdown');
+            var countdown = 10;
+
+            var countdownInterval = setInterval(function() {
+                countdownElement.textContent = countdown + " saniye sonra sayfa yenilenecek.";
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    location.reload(); // Sayfa yenileme
+                }
+            }, 1000);
+        }
+    </script>
 </head>
 <body>
     <div class="container">
-        <div class="title">Hoş Geldiniz!</div>
-        <div class="message">Gelen İstek Sayısı: <?php echo $count; ?></div>
-        <div class="message">Son İstek Durumu: <?php echo $status; ?></div>
-        <div class="footer">mehmet12ws - Güvenlik Önlemleri Aktif</div>
+        <div class="captcha-container">
+            <div class="title">DDoS Koruması - mehmet12ws ARMOR</div>
+            <div class="message">Siteye devam etmek için doğrulama yapmanız gerekmektedir.</div>
+            <div class="captcha-wrapper">
+                <!-- Cloudflare Turnstile  -->
+                <div class="cf-turnstile" 
+                     data-sitekey="0x4AAAAAAAg6TPsvG2tZIEkk" 
+                     data-callback="onSuccess">
+                </div>
+            </div>
+        </div>
+        <!-- Doğrulama Sonrası Başarı Mesajı -->
+        <div class="success-message">Doğrulama başarılı! Artık siteye erişebilirsiniz.</div>
+        <!-- Doğrulama Başarısız Olursa Hata Mesajı -->
+        <div class="error-message">CAPTCHA doğrulaması başarısız oldu. Lütfen tekrar deneyin.</div>
+        <div class="footer">mehmet12ws ARMOR - Güvenlik Önlemleri Aktif</div>
+
+        <!-- Bakım Mesajı -->
+        <div class="maintenance-message">
+            <div class="icon"></div>
+            <div class="maintenance-title">Planlı Bakım Çalışması</div>
+            <div class="maintenance-description">Web sitemizde bazı güncellemeler yapıyoruz. Bu nedenle sitemiz geçici olarak kapalıdır.</div>
+            <p>Daha sonra tekrar ziyaret edebilir veya bu sayfayı açık bırakarak site aktif olduğunda otomatik erişim sağlayabilirsiniz.</p>
+            <p id="countdown" class="countdown">10 saniye sonra sayfa yenilenecek.</p>
+        </div>
     </div>
 </body>
 </html>
